@@ -22,15 +22,17 @@ class CreateUserForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Create user",
+                "legend" => "Ny användare",
             ],
             [
                 "username" => [
                     "type"        => "text",
+                    "label"        => "Användarnamn",
                 ],
 
                 "password" => [
                     "type"        => "password",
+                    "label"        => "Lösenord",
                 ],
 
                 "password-again" => [
@@ -38,11 +40,12 @@ class CreateUserForm extends FormModel
                     "validation" => [
                         "match" => "password"
                     ],
+                    "label"        => "Bekräfta lösenord",
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Create user",
+                    "value" => "Spara",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -67,7 +70,7 @@ class CreateUserForm extends FormModel
         // Check password matches
         if ($password !== $passwordAgain ) {
             $this->form->rememberValues();
-            $this->form->addOutput("Password did not match.");
+            $this->form->addOutput("Lösenordet matchade inte.");
             return false;
         }
 
@@ -84,7 +87,7 @@ class CreateUserForm extends FormModel
         $user->setPassword($password);
         $user->save();
 
-        $this->form->addOutput("User was created.");
+        $this->form->addOutput("Användaren skapades.");
         return true;
     }
 }

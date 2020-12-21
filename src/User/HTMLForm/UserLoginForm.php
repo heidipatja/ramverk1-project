@@ -23,24 +23,26 @@ class UserLoginForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "User Login"
+                "legend" => "Logga in"
             ],
             [
                 "user" => [
                     "type"        => "text",
+                    "label"        => "Användarnamn",
                     //"description" => "Here you can place a description.",
                     //"placeholder" => "Here is a placeholder",
                 ],
 
                 "password" => [
                     "type"        => "password",
+                    "label"        => "Lösenord",
                     //"description" => "Here you can place a description.",
                     //"placeholder" => "Here is a placeholder",
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Login",
+                    "value" => "Logga in",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -67,11 +69,11 @@ class UserLoginForm extends FormModel
 
         if (!$res) {
            $this->form->rememberValues();
-           $this->form->addOutput("User or password did not match.");
+           $this->form->addOutput("Användarnamn eller lösenord matchade inte.");
            return false;
         }
 
-        $this->form->addOutput("User " . $user->username . " logged in.");
+        $this->form->addOutput("Användaren " . $user->username . " loggade in.");
         return true;
     }
 }
