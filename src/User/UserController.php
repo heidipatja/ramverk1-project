@@ -85,7 +85,7 @@ class UserController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "A login page",
+            "title" => "Logga in",
         ]);
     }
 
@@ -111,7 +111,7 @@ class UserController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "A create user page",
+            "title" => "Ny användare",
         ]);
     }
 }
