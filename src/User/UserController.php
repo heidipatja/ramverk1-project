@@ -67,7 +67,7 @@ class UserController implements ContainerInjectableInterface
 
 
     /**
-     * Description.
+     * Login page
      *
      * @param datatype $variable Description
      *
@@ -95,7 +95,23 @@ class UserController implements ContainerInjectableInterface
 
 
     /**
-     * Description.
+     * Logout route
+     * Clear user information from session and redirect
+     *
+     * @return object as a response object
+     */
+    public function logoutAction() : object
+    {
+        $session = $this->di->get("session");
+        $session->delete("username");
+
+        return $this->di->get("response")->redirect("user/login")->send();
+    }
+
+
+
+    /**
+     * Create new user account
      *
      * @param datatype $variable Description
      *

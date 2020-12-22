@@ -28,4 +28,8 @@ namespace Anax\View;
     <div class="user-edit-button">
         <a class="button save edit" href="<?= url("user/update/" . $user->id) ?>">Redigera</a>
     </div>
+
+    <div class="user-logout">
+        <a class="button logout" href="<?= url("user/logout") ?>">Logga ut</a>
+    </div>
 </div>
