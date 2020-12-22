@@ -26,6 +26,6 @@ namespace Anax\View;
     </div>
 
     <div class="user-edit-button">
-        <a class="button save edit" href="<?= url("user/edit") ?>">Redigera</a>
+        <a class="button save edit" href="<?= url("user/update/" . $user->id) ?>">Redigera</a>
     </div>
 </div>

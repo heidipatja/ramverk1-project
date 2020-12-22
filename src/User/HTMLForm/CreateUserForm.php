@@ -23,6 +23,7 @@ class CreateUserForm extends FormModel
             [
                 "id" => __CLASS__,
                 "legend" => "Ny användare",
+                "escape-values" => false
             ],
             [
                 "username" => [

@@ -6,6 +6,7 @@ use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
 use Hepa19\User\HTMLForm\UserLoginForm;
 use Hepa19\User\HTMLForm\CreateUserForm;
+use Hepa19\User\HTMLForm\UpdateUserForm;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -114,6 +115,30 @@ class UserController implements ContainerInjectableInterface
 
         return $page->render([
             "title" => "Ny användare",
+        ]);
+    }
+
+
+
+    /**
+     * Edit user
+     *
+     * @param integer $id get details on user with id.
+     *
+     * @return object as a response object
+     */
+    public function updateAction($id) : object
+    {
+        $page = $this->di->get("page");
+        $form = new UpdateUserForm($this->di, $id);
+        $form->check();
+
+        $page->add("anax/v2/article/default", [
+            "content" => $form->getHTML(),
+        ]);
+
+        return $page->render([
+            "title" => "Redigera användare",
         ]);
     }
 
