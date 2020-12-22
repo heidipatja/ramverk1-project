@@ -30,6 +30,11 @@ class CreateUserForm extends FormModel
                     "label"        => "Användarnamn",
                 ],
 
+                "email" => [
+                    "type"        => "email",
+                    "label"        => "E-post",
+                ],
+
                 "password" => [
                     "type"        => "password",
                     "label"        => "Lösenord",
@@ -64,6 +69,7 @@ class CreateUserForm extends FormModel
     {
         // Get values from the submitted form
         $username       = $this->form->value("username");
+        $email      = $this->form->value("email");
         $password      = $this->form->value("password");
         $passwordAgain = $this->form->value("password-again");
 
@@ -74,20 +80,42 @@ class CreateUserForm extends FormModel
             return false;
         }
 
-        // Save to database
-        // $db = $this->di->get("dbqb");
-        // $password = password_hash($password, PASSWORD_DEFAULT);
-        // $db->connect()
-        //    ->insert("User", ["username", "password"])
-        //    ->execute([$username])
-        //    ->fetch();
-        $user = new User();
-        $user->setDb($this->di->get("dbqb"));
-        $user->username = $username;
-        $user->setPassword($password);
-        $user->save();
+        try {
+            $user = new User();
+            $user->setDb($this->di->get("dbqb"));
+            $user->username = $username;
+            $user->email = $email;
+            $user->setPassword($password);
+            $user->save();
+            return true;
+        } catch (\Anax\Database\Exception\Exception $e) {
+            return false;
+        }
+    }
 
-        $this->form->addOutput("Användaren skapades.");
-        return true;
+
+
+    /**
+     * Callback what to do if the form was successfully submitted, this
+     * happen when the submit callback method returns true. This method
+     * can/should be implemented by the subclass for a different behaviour.
+     */
+    public function callbackSuccess()
+    {
+        $this->di->get("response")->redirect("user/login")->send();
+    }
+
+
+
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->form->addOutput("E-post eller användarnamn används redan. Prova igen.");
+        $this->di->get("response")->redirectSelf()->send();
     }
 }

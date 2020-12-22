@@ -84,6 +84,8 @@ class UserController implements ContainerInjectableInterface
             "content" => $form->getHTML(),
         ]);
 
+        $page->add("user/login");
+
         return $page->render([
             "title" => "Logga in",
         ]);
@@ -112,6 +114,39 @@ class UserController implements ContainerInjectableInterface
 
         return $page->render([
             "title" => "Ny användare",
+        ]);
+    }
+
+
+
+    /**
+     * Profile page
+     *
+     * @return object as a response object
+     */
+    public function profileAction() : object
+    {
+        $page = $this->di->get("page");
+        $session = $this->di->get("session");
+
+        $user = new User();
+        $username = $session->get("username") ?? null;
+
+        if (!$username) {
+            return $this->di->get("response")->redirect("user/login")->send();
+        }
+
+        $user->setDb($this->di->get("dbqb"));
+        $user = $user->find("username", $username);
+        $gravatar = $user->getGravatar($user->email);
+
+        $page->add("user/profile", [
+            "user" => $user,
+            "gravatar" => $gravatar
+        ]);
+
+        return $page->render([
+            "title" => "Profil",
         ]);
     }
 }

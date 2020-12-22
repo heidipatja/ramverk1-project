@@ -89,7 +89,7 @@ class UserLoginForm extends FormModel
         $session = $this->di->get("session");
         $session->set("username", $this->form->value("username"));
 
-        $this->di->get("response")->redirect("user")->send();
+        $this->di->get("response")->redirect("user/profile")->send();
     }
 
 
