@@ -32,6 +32,26 @@ $menu = [
             "url" => "",
             "title" => "Första sidan, börja här.",
         ],
+        [
+            "text" => "Frågor",
+            "url" => "question",
+            "title" => "Frågor",
+        ],
+        [
+            "text" => "Taggar",
+            "url" => "tag",
+            "title" => "Taggar",
+        ],
+        [
+            "text" => "Användare",
+            "url" => "user",
+            "title" => "Användare",
+        ],
+        [
+            "text" => "Om",
+            "url" => "about",
+            "title" => "Om webbplatsen",
+        ],
     ],
 ];
 
