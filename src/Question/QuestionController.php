@@ -9,38 +9,12 @@ use Hepa19\Question\HTMLForm\EditQuestion;
 use Hepa19\Question\HTMLForm\DeleteQuestion;
 use Hepa19\Question\HTMLForm\UpdateQuestion;
 
-// use Anax\Route\Exception\ForbiddenException;
-// use Anax\Route\Exception\NotFoundException;
-// use Anax\Route\Exception\InternalErrorException;
-
 /**
  * A sample controller to show how a controller class can be implemented.
  */
 class QuestionController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
-
-
-
-    /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
 
     /**
      * See if user id in session, otherwise redirect to login
@@ -68,11 +42,18 @@ class QuestionController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions2users = $question->findAll();
+        $questions = $question->findAll();
         $questions2users = $question->joinTable("User", "Question", "Question.user_id = User.id");
 
+
+        $newquestion = new Question();
+        $newquestion->setDb($this->di->get("dbqb"));
+
+        $questions2tags = $newquestion->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+
         $page->add("question/crud/view-all", [
-            "questions" => $questions2users
+            "questions" => $questions2users,
+            "tags" => $questions2tags
         ]);
 
         return $page->render([
@@ -171,39 +152,21 @@ class QuestionController implements ContainerInjectableInterface
         $activeUserId = $this->di->get("session")->get("userId");
         $isAuthor = $question->isAuthor($activeUserId);
 
-        $question = $question->joinTable("User", "Question", "Question.user_id = User.id")[0];
+        $question = $question->joinTable("User", "Question", "Question.id =" . $id)[0];
+
+        $newquestion = new Question();
+        $newquestion->setDb($this->di->get("dbqb"));
+
+        $questions2tags = $newquestion->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
 
         $page->add("question/crud/view", [
             "question" => $question,
-            "isAuthor" => $isAuthor
+            "isAuthor" => $isAuthor,
+            "tags" => $questions2tags
         ]);
 
         return $page->render([
             "title" => "Se fråga",
         ]);
     }
-
-
-
-    // /**
-    // * Get information about if active user is author of question
-    // *
-    // * @param int $id question id
-    // *
-    // * @return bool True if logged in user is author, else false
-    // */
-    // public function isAuthor(int $id) : bool
-    // {
-    //     $activeUserId = $this->di->get("session")->get("userId");
-    //
-    //     $question = new Question();
-    //     $question->setDb($this->di->get("dbqb"));
-    //     $res = $question->findById($id);
-    //
-    //     if ($res->user_id == $activeUserId) {
-    //         return true;
-    //     }
-    //
-    //     return false;
-    // }
 }

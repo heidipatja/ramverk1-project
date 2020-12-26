@@ -5,6 +5,8 @@ namespace Hepa19\Question\HTMLForm;
 use Anax\HTMLForm\FormModel;
 use Psr\Container\ContainerInterface;
 use Hepa19\Question\Question;
+use Hepa19\Tag\Tag;
+use Hepa19\Tag\TagToQuestion;
 
 /**
  * Form to update an item.
@@ -21,6 +23,7 @@ class UpdateQuestion extends FormModel
     {
         parent::__construct($di);
         $question = $this->getQuestion($id);
+        $question->tags = $this->getTags($id);
         $this->form->create(
             [
                 "id" => __CLASS__,
@@ -49,6 +52,12 @@ class UpdateQuestion extends FormModel
                     "label" => "Innehåll"
                 ],
 
+                "tags" => [
+                    "type" => "text",
+                    "value" => $question->tags,
+                    "label" => "Taggar"
+                ],
+
                 "submit" => [
                     "type" => "submit",
                     "value" => "Spara",
@@ -66,7 +75,7 @@ class UpdateQuestion extends FormModel
 
 
     /**
-     * Get details on question
+     * Get question info
      *
      * @param integer $id get details on question with id.
      *
@@ -83,6 +92,35 @@ class UpdateQuestion extends FormModel
 
 
     /**
+     * Get details on question
+     *
+     * @param integer $id get details on question with id.
+     *
+     * @return $tagString String with tags
+     */
+    public function getTags($id) : string
+    {
+        $tags = new TagToQuestion();
+        $tags->setDb($this->di->get("dbqb"));
+        $tags = $tags->find("question_id", $id);
+        $tags = $tags->getTagNames();
+
+        $tagString = "";
+
+        if ($tags) {
+            foreach ($tags as $tag) {
+                if ($tag->question_id == $id) {
+                    $tagString = $tagString . $tag->tag . " ";
+                }
+            }
+            $tagString = substr($tagString, 0, -1);
+        }
+        return $tagString;
+    }
+
+
+
+    /**
      * Callback for submit-button which should return true if it could
      * carry out its work and false if something failed.
      *
@@ -93,6 +131,7 @@ class UpdateQuestion extends FormModel
         $title = $this->form->value("title");
         $content = $this->form->value("content");
         $id = $this->form->value("id");
+        $tags = $this->form->value("tags");
 
         if (!$title) {
            $this->form->rememberValues();
@@ -106,11 +145,63 @@ class UpdateQuestion extends FormModel
            return false;
         }
 
+        if ($tags) {
+            $this->removeTags($tags, $id);
+            $this->saveTags($tags, $id);
+        }
+
         $question = $this->getQuestion($id);
         $question->title = $title;
         $question->content = $content;
         $question->save();
         return true;
+    }
+
+
+
+    /**
+     * Save Tags
+     *
+     * @param string $tags String with tags separated by " "
+     * @param integer $id question id
+     */
+    public function saveTags($tags, $id)
+    {
+        $tags = explode(" ", $tags);
+        foreach (array_unique($tags) as $uniqueTag) {
+            $tag = new Tag();
+            $tag->setDb($this->di->get("dbqb"));
+            if ($tag->isTag($uniqueTag)) {
+                $tag->tag = $uniqueTag;
+                $tag->save();
+            }
+            $t2q = new TagToQuestion();
+            $t2q->setDb($this->di->get("dbqb"));
+            $t2q->tag_id = $tag->id;
+            $t2q->question_id = $id;
+            $t2q->save();
+
+        }
+    }
+
+
+
+
+    /**
+     * Remove tags
+     *
+     * @param string $tags String with tags separated by " "
+     * @param integer $id question id
+     */
+    public function removeTags($tags, $id)
+    {
+        $tags = explode(" ", $tags);
+        foreach (array_unique($tags) as $uniqueTag) {
+            $t2q = new TagToQuestion();
+            $t2q->setDb($this->di->get("dbqb"));
+            $t2q->find("question_id", $id);
+            $t2q->delete();
+        }
     }
 
 

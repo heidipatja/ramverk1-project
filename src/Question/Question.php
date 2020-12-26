@@ -45,9 +45,7 @@ class Question extends ActiveRecordModel
     /**
     * Join with another db table
     *
-    * @param string $joinedTable
-    *
-    * @return bool True if logged in user is author, else false
+    * @return array Results
     */
     public function joinTable($fromTable, $withTable, $condition) : array
     {
@@ -56,6 +54,25 @@ class Question extends ActiveRecordModel
                         ->select()
                         ->from($fromTable)
                         ->join($withTable, $condition)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with two tables
+    *
+    * @return array Results
+    */
+    public function joinTwoTables($fromTable, $withTable, $condition, $withTable2, $condition2) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->join($withTable2, $condition2)
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }

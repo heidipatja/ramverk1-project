@@ -6,6 +6,8 @@ use Anax\HTMLForm\FormModel;
 use Psr\Container\ContainerInterface;
 use Hepa19\Question\Question;
 use Hepa19\User\User;
+use Hepa19\Tag\Tag;
+use Hepa19\Tag\TagToQuestion;
 
 /**
  * Form to create an item.
@@ -35,6 +37,12 @@ class CreateQuestion extends FormModel
                 "content" => [
                     "type" => "textarea",
                     "label" => "Innehåll"
+                ],
+
+                "tags" => [
+                    "type" => "text",
+                    "label" => "Taggar",
+                    "placeholder" => "Separera taggar med mellanslag"
                 ],
 
                 "submit" => [
@@ -68,6 +76,7 @@ class CreateQuestion extends FormModel
 
         $title  = $this->form->value("title");
         $content = $this->form->value("content");
+        $tags = $this->form->value("tags");
 
         if (!$title || !$content) {
             $this->form->rememberValues();
@@ -81,7 +90,34 @@ class CreateQuestion extends FormModel
         $question->content = $content;
         $question->user_id = $userId;
         $question->save();
+
+        $this->saveTags($tags, $question);
+
         return true;
+    }
+
+
+
+    /**
+     * Save Tags
+     */
+    public function saveTags($tags, $question)
+    {
+        $tags = explode(" ", $tags);
+        foreach (array_unique($tags) as $uniqueTag) {
+            $tag = new Tag();
+            $tag->setDb($this->di->get("dbqb"));
+            if ($tag->isTag($uniqueTag)) {
+                $tag->tag = $uniqueTag;
+                $tag->save();
+            }
+            $t2q = new TagToQuestion();
+            $t2q->setDb($this->di->get("dbqb"));
+            $tag = $tag->findById($tag->id);
+            $t2q->tag_id = $tag->id;
+            $t2q->question_id = $question->id;
+            $t2q->save();
+        }
     }
 
 

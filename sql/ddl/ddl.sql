@@ -84,11 +84,11 @@ CREATE TABLE Tag (
 DROP TABLE IF EXISTS TagToQuestion;
 CREATE TABLE TagToQuestion (
     "id" INTEGER NOT NULL,
-    "tag" TEXT UNIQUE NOT NULL,
+    "tag_id" INTEGER NOT NULL,
     "question_id" INTEGER NOT NULL,
 
     PRIMARY KEY("id"),
-    FOREIGN KEY("tag") REFERENCES Tag("tag"),
+    FOREIGN KEY("tag_id") REFERENCES Tag("id"),
     FOREIGN KEY("question_id") REFERENCES Question("id")
 );
 

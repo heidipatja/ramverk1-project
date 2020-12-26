@@ -22,6 +22,25 @@ class Tag extends ActiveRecordModel
      * @var integer $id primary key auto incremented.
      */
     public $id;
-    public $column1;
-    public $column2;
+    public $tag;
+
+
+
+    /**
+    * Get information on whether logged in user is author of question
+    *
+    * @param string $activeUserId The id of logged in user
+    *
+    * @return bool True if logged in user is author, else false
+    */
+    public function isTag($tag) : bool
+    {
+        $res = $this->find("tag", $tag);
+
+        if ($res) {
+            return true;
+        }
+
+        return false;
+    }
 }

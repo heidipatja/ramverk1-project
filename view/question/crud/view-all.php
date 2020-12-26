@@ -42,5 +42,13 @@ endif;
     <div class="question-content">
         <?= $question->content ?>
     </div>
+
+    <div class="question-tags">
+        <?php foreach ($tags as $tag)
+            if ($tag->question_id == $question->id) { ?>
+                <div class="tag"><?= $tag->tag ?></div>
+                <?php
+            } ?>
+    </div>
 </div>
 <?php endforeach; ?>

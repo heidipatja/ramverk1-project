@@ -59,7 +59,7 @@ class TagController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "A collection of items",
+            "title" => "Taggar",
         ]);
     }
 
