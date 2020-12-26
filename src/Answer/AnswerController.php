@@ -4,14 +4,9 @@ namespace Hepa19\Answer;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Hepa19\Answer\HTMLForm\CreateForm;
-use Hepa19\Answer\HTMLForm\EditForm;
-use Hepa19\Answer\HTMLForm\DeleteForm;
-use Hepa19\Answer\HTMLForm\UpdateForm;
-
-// use Anax\Route\Exception\ForbiddenException;
-// use Anax\Route\Exception\NotFoundException;
-// use Anax\Route\Exception\InternalErrorException;
+use Hepa19\Answer\HTMLForm\CreateAnswer;
+use Hepa19\Answer\HTMLForm\DeleteAnswer;
+use Hepa19\Answer\HTMLForm\UpdateAnswer;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -19,29 +14,6 @@ use Hepa19\Answer\HTMLForm\UpdateForm;
 class AnswerController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
-
-
-
-    /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
-
 
     /**
      * Show all items.

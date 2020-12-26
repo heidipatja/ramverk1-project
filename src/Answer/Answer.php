@@ -22,6 +22,26 @@ class Answer extends ActiveRecordModel
      * @var integer $id primary key auto incremented.
      */
     public $id;
-    public $column1;
-    public $column2;
+    public $content;
+    public $user_id;
+    public $question_id;
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinUser($id) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from("User")
+                        ->join("Answer", "Answer.user_id = User.id")
+                        ->where("Answer.question_id = " . $id)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 }

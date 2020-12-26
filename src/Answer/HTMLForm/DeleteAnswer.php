@@ -9,7 +9,7 @@ use Hepa19\Answer\Answer;
 /**
  * Form to delete an item.
  */
-class DeleteForm extends FormModel
+class DeleteAnswer extends FormModel
 {
     /**
      * Constructor injects with DI container.

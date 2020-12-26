@@ -9,7 +9,7 @@ use Hepa19\Answer\Answer;
 /**
  * Form to update an item.
  */
-class UpdateForm extends FormModel
+class UpdateAnswer extends FormModel
 {
     /**
      * Constructor injects with DI container and the id to update.
@@ -65,7 +65,7 @@ class UpdateForm extends FormModel
      * Get details on item to load form with.
      *
      * @param integer $id get details on item with id.
-     * 
+     *
      * @return Answer
      */
     public function getItemDetails($id) : object

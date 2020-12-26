@@ -9,35 +9,42 @@ use Hepa19\Answer\Answer;
 /**
  * Form to create an item.
  */
-class CreateForm extends FormModel
+class CreateAnswer extends FormModel
 {
     /**
      * Constructor injects with DI container.
      *
      * @param Psr\Container\ContainerInterface $di a service container
      */
-    public function __construct(ContainerInterface $di)
+    public function __construct(ContainerInterface $di, $questionId, $userId)
     {
         parent::__construct($di);
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Details of the item",
+                "legend" => "Nytt svar",
+                "escape-values" => false,
             ],
             [
-                "column1" => [
-                    "type" => "text",
+                "content" => [
+                    "type" => "textarea",
                     "validation" => ["not_empty"],
+                    "label" => "Svar",
                 ],
-                        
-                "column2" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
+
+                "question-id" => [
+                    "type" => "hidden",
+                    "value" => $questionId,
+                ],
+
+                "user-id" => [
+                    "type" => "hidden",
+                    "value" => $userId,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Create item",
+                    "value" => "Spara",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -56,8 +63,9 @@ class CreateForm extends FormModel
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-        $answer->column1  = $this->form->value("column1");
-        $answer->column2 = $this->form->value("column2");
+        $answer->content  = $this->form->value("content");
+        $answer->question_id = $this->form->value("question-id");
+        $answer->user_id = $this->form->value("user-id");
         $answer->save();
         return true;
     }
@@ -71,19 +79,19 @@ class CreateForm extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirect("answer")->send();
+        $this->di->get("response")->redirectSelf()->send();
     }
 
 
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 }

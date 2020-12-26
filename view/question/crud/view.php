@@ -3,17 +3,12 @@
 namespace Anax\View;
 
 /**
- * View to display all books.
+ * View to display all questions
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
 $question = isset($question) ? $question : null;
 $urlToView = url("question");
-
-// var_dump($question);
 
 ?>
 
@@ -44,7 +39,3 @@ endif;
     </div>
     <?php endif; ?>
 </div>
-
-<p>
-    <a href="<?= $urlToView ?>">Alla frågor</a>
-</p>

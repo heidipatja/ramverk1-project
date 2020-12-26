@@ -15,12 +15,6 @@ $items = isset($items) ? $items : null;
 // Create urls for navigation
 $urlToViewItems = url("answer");
 
-
-
-?><h1>Create a item</h1>
+?>
 
 <?= $form ?>
-
-<p>
-    <a href="<?= $urlToViewItems ?>">View all</a>
-</p>

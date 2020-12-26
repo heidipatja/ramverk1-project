@@ -3,48 +3,30 @@
 namespace Anax\View;
 
 /**
- * View to display all books.
+ * View to display all answers to question
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
-$items = isset($items) ? $items : null;
+$answers = isset($answers) ? $answers : null;
 
-// Create urls for navigation
-$urlToCreate = url("answer/create");
-$urlToDelete = url("answer/delete");
+?>
 
-
-
-?><h1>View all items</h1>
-
-<p>
-    <a href="<?= $urlToCreate ?>">Create</a> | 
-    <a href="<?= $urlToDelete ?>">Delete</a>
-</p>
-
-<?php if (!$items) : ?>
-    <p>There are no items to show.</p>
+<?php if (!$answers) : ?>
 <?php
     return;
 endif;
 ?>
 
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Column1</th>
-        <th>Column2</th>
-    </tr>
-    <?php foreach ($items as $item) : ?>
-    <tr>
-        <td>
-            <a href="<?= url("answer/update/{$item->id}"); ?>"><?= $item->id ?></a>
-        </td>
-        <td><?= $item->column1 ?></td>
-        <td><?= $item->column2 ?></td>
-    </tr>
+
+<div class="answers">
+    <?php foreach ($answers as $answer) : ?>
+        <div class="answer">
+            <div class="answer-created">
+                Postad <?= $answer->created ?> av <?= $answer->username ?>
+            </div>
+            <div class="answer-content">
+            <?= $answer->content ?>
+            </div>
+        </div>
     <?php endforeach; ?>
-</table>
+</div>
