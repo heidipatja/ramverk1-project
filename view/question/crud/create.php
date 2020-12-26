@@ -3,7 +3,7 @@
 namespace Anax\View;
 
 /**
- * View to create a new book.
+ * View to create a new question
  */
 // Show all incoming variables/functions
 //var_dump(get_defined_functions());
@@ -17,10 +17,10 @@ $urlToViewItems = url("question");
 
 
 
-?><h1>Create a item</h1>
+?><h1>Ny fråga</h1>
 
 <?= $form ?>
 
 <p>
-    <a href="<?= $urlToViewItems ?>">View all</a>
+    <a href="<?= $urlToViewItems ?>">Visa alla</a>
 </p>

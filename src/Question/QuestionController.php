@@ -4,10 +4,10 @@ namespace Hepa19\Question;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Hepa19\Question\HTMLForm\CreateForm;
-use Hepa19\Question\HTMLForm\EditForm;
-use Hepa19\Question\HTMLForm\DeleteForm;
-use Hepa19\Question\HTMLForm\UpdateForm;
+use Hepa19\Question\HTMLForm\CreateQuestion;
+use Hepa19\Question\HTMLForm\EditQuestion;
+use Hepa19\Question\HTMLForm\DeleteQuestion;
+use Hepa19\Question\HTMLForm\UpdateQuestion;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -42,9 +42,23 @@ class QuestionController implements ContainerInjectableInterface
     // }
 
 
+    /**
+     * See if user id in session, otherwise redirect to login
+     *
+     */
+    public function checkIfLoggedIn()
+    {
+        $session = $this->di->get("session");
+
+        if (!$session->get("userId")) {
+            return $this->di->response->redirect("user/login");
+        }
+    }
+
+
 
     /**
-     * Show all items.
+     * Show all questions
      *
      * @return object as a response object
      */
@@ -54,12 +68,15 @@ class QuestionController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
+        $questions2users = $question->findAll();
+        $questions2users = $question->joinTable("User", "Question", "Question.user_id = User.id");
+
         $page->add("question/crud/view-all", [
-            "items" => $question->findAll(),
+            "questions" => $questions2users
         ]);
 
         return $page->render([
-            "title" => "A collection of items",
+            "title" => "Frågor",
         ]);
     }
 
@@ -72,8 +89,10 @@ class QuestionController implements ContainerInjectableInterface
      */
     public function createAction() : object
     {
+        $this->checkIfLoggedIn();
+
         $page = $this->di->get("page");
-        $form = new CreateForm($this->di);
+        $form = new CreateQuestion($this->di);
         $form->check();
 
         $page->add("question/crud/create", [
@@ -81,7 +100,7 @@ class QuestionController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "Create a item",
+            "title" => "Ny fråga",
         ]);
     }
 
@@ -94,8 +113,10 @@ class QuestionController implements ContainerInjectableInterface
      */
     public function deleteAction() : object
     {
+        $this->checkIfLoggedIn();
+
         $page = $this->di->get("page");
-        $form = new DeleteForm($this->di);
+        $form = new DeleteQuestion($this->di);
         $form->check();
 
         $page->add("question/crud/delete", [
@@ -103,7 +124,7 @@ class QuestionController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "Delete an item",
+            "title" => "Radera fråga",
         ]);
     }
 
@@ -119,7 +140,7 @@ class QuestionController implements ContainerInjectableInterface
     public function updateAction(int $id) : object
     {
         $page = $this->di->get("page");
-        $form = new UpdateForm($this->di, $id);
+        $form = new UpdateQuestion($this->di, $id);
         $form->check();
 
         $page->add("question/crud/update", [
@@ -127,7 +148,62 @@ class QuestionController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "Update an item",
+            "title" => "Redigera fråga",
         ]);
     }
+
+
+
+    /**
+     * View one question
+     *
+     * @param int $id the id to view
+     *
+     * @return object as a response object
+     */
+    public function viewAction(int $id) : object
+    {
+        $page = $this->di->get("page");
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+        $question = $question->findById($id);
+
+        $activeUserId = $this->di->get("session")->get("userId");
+        $isAuthor = $question->isAuthor($activeUserId);
+
+        $question = $question->joinTable("User", "Question", "Question.user_id = User.id")[0];
+
+        $page->add("question/crud/view", [
+            "question" => $question,
+            "isAuthor" => $isAuthor
+        ]);
+
+        return $page->render([
+            "title" => "Se fråga",
+        ]);
+    }
+
+
+
+    // /**
+    // * Get information about if active user is author of question
+    // *
+    // * @param int $id question id
+    // *
+    // * @return bool True if logged in user is author, else false
+    // */
+    // public function isAuthor(int $id) : bool
+    // {
+    //     $activeUserId = $this->di->get("session")->get("userId");
+    //
+    //     $question = new Question();
+    //     $question->setDb($this->di->get("dbqb"));
+    //     $res = $question->findById($id);
+    //
+    //     if ($res->user_id == $activeUserId) {
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 }

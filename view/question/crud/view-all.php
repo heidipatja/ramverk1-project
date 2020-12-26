@@ -10,7 +10,7 @@ namespace Anax\View;
 //echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
-$items = isset($items) ? $items : null;
+$questions = isset($questions) ? $questions : null;
 
 // Create urls for navigation
 $urlToCreate = url("question/create");
@@ -18,33 +18,29 @@ $urlToDelete = url("question/delete");
 
 
 
-?><h1>View all items</h1>
+?><h1>Frågor</h1>
 
-<p>
-    <a href="<?= $urlToCreate ?>">Create</a> | 
-    <a href="<?= $urlToDelete ?>">Delete</a>
-</p>
 
-<?php if (!$items) : ?>
-    <p>There are no items to show.</p>
+<a href="<?= $urlToCreate ?>">Ny fråga</a>
+
+
+<?php if (!$questions) : ?>
+    <p>Det finns inga frågor än!</p>
 <?php
     return;
 endif;
 ?>
 
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Column1</th>
-        <th>Column2</th>
-    </tr>
-    <?php foreach ($items as $item) : ?>
-    <tr>
-        <td>
-            <a href="<?= url("question/update/{$item->id}"); ?>"><?= $item->id ?></a>
-        </td>
-        <td><?= $item->column1 ?></td>
-        <td><?= $item->column2 ?></td>
-    </tr>
-    <?php endforeach; ?>
-</table>
+
+<?php foreach ($questions as $question) : ?>
+<div class="question">
+    <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
+    <div class="question-by">
+        <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
+    </div>
+
+    <div class="question-content">
+        <?= $question->content ?>
+    </div>
+</div>
+<?php endforeach; ?>

@@ -28,7 +28,7 @@ class UpdateUserForm extends FormModel
             ],
             [
                 "id" => [
-                    "type" => "hidden",
+                    "type" => "hidden",f
                     "validation" => ["not_empty"],
                     "readonly" => true,
                     "value" => $user->id,

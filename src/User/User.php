@@ -51,6 +51,7 @@ class User extends ActiveRecordModel
     public function verifyPassword($username, $password)
     {
         $this->find("username", $username);
+
         return password_verify($password, $this->password);
     }
 

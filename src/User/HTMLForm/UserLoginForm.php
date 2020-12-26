@@ -78,6 +78,18 @@ class UserLoginForm extends FormModel
 
 
 
+    /**
+     * Get user id by username
+     */
+    public function getUserIdByUsername($username)
+    {
+        $user = new User();
+        $user->setDb($this->di->get("dbqb"));
+        $user->find("username", $username);
+        return $user->id;
+    }
+
+
 
     /**
      * Callback what to do if the form was successfully submitted, this
@@ -86,8 +98,10 @@ class UserLoginForm extends FormModel
      */
     public function callbackSuccess()
     {
+        $username = $this->form->value("username");
         $session = $this->di->get("session");
-        $session->set("username", $this->form->value("username"));
+        $session->set("username", $username);
+        $session->set("userId", $this->getUserIdByUsername($username));
 
         $this->di->get("response")->redirect("user/profile")->send();
     }

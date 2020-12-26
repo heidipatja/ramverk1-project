@@ -7,9 +7,9 @@ use Psr\Container\ContainerInterface;
 use Hepa19\Question\Question;
 
 /**
- * Form to create an item.
+ * Form to delete an item.
  */
-class CreateForm extends FormModel
+class DeleteQuestion extends FormModel
 {
     /**
      * Constructor injects with DI container.
@@ -22,26 +22,49 @@ class CreateForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Details of the item",
+                "legend" => "Radera fråga",
             ],
             [
-                "column1" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
-                ],
-                        
-                "column2" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
+                "select" => [
+                    "type"        => "select",
+                    "label"       => "Välj fråga att radera:",
+                    "options"     => $this->getAllItems(),
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Create item",
+                    "value" => "Radera",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
         );
+    }
+
+
+
+    /**
+     * Get all items as array suitable for display in select option dropdown.
+     *
+     * @return array with key value of all items.
+     */
+    protected function getAllItems() : array
+    {
+        $userId = $this->di->get("session")->get("userId");
+        if (!$userId) {
+            $this->di->get("response")->redirect("user/login")->send();
+        }
+
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+
+        $questions = ["-1" => "Välj fråga..."];
+        foreach ($question->findAll() as $obj) {
+            if ($obj->user_id == $userId) {
+                $questions[$obj->id] = "{$obj->created}: {$obj->title} ({$obj->id})";
+            }
+        }
+
+        return $questions;
     }
 
 
@@ -56,9 +79,8 @@ class CreateForm extends FormModel
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
-        $question->column1  = $this->form->value("column1");
-        $question->column2 = $this->form->value("column2");
-        $question->save();
+        $question->find("id", $this->form->value("select"));
+        $question->delete();
         return true;
     }
 
