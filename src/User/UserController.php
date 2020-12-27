@@ -19,48 +19,23 @@ class UserController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
-
-
     /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
-
-
-    /**
-     * Description.
-     *
-     * @param datatype $variable Description
-     *
-     * @throws Exception
+     * Index page showing all users
      *
      * @return object as a response object
      */
     public function indexActionGet() : object
     {
         $page = $this->di->get("page");
+        $user = new User();
+        $user->setDb($this->di->get("dbqb"));
 
-        $page->add("anax/v2/article/default", [
-            "content" => "An index page",
+        $page->add("user/crud/view-all", [
+            "users" => $user->findAll(),
         ]);
 
         return $page->render([
-            "title" => "A index page",
+            "title" => "Användare",
         ]);
     }
 
@@ -68,10 +43,6 @@ class UserController implements ContainerInjectableInterface
 
     /**
      * Login page
-     *
-     * @param datatype $variable Description
-     *
-     * @throws Exception
      *
      * @return object as a response object
      */
@@ -113,10 +84,6 @@ class UserController implements ContainerInjectableInterface
 
     /**
      * Create new user account
-     *
-     * @param datatype $variable Description
-     *
-     * @throws Exception
      *
      * @return object as a response object
      */
