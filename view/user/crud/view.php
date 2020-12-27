@@ -9,10 +9,6 @@ namespace Anax\View;
  // Gather incoming variables and use default values if not set
  $questions = isset($questions) ? $questions : null;
 
- // Create urls for navigation
- $urlToAllUsers= url("users");
-
-//
 // var_dump($questions);
 
  ?>
@@ -42,7 +38,7 @@ namespace Anax\View;
 <h2>Frågor</h2>
 
  <?php if (!$questions) : ?>
-     <p>Det finns inga frågor än!</p>
+     <p><?= $user->username ?> har inte ställt några frågor än.</p>
  <?php
      return;
  endif;
@@ -69,4 +65,25 @@ namespace Anax\View;
  </div>
  <?php endforeach; ?>
 
- <a href="<?= $urlToAllUsers ?>">Visa alla användare</a>
+
+<h2>Svar</h2>
+
+<?php if (!$answers) : ?>
+    <p><?= $user->username ?> har inte svarat på några frågor än.</p>
+<?php
+    return;
+endif;
+?>
+
+<div class="answers">
+    <?php foreach ($answers as $answer) : ?>
+        <div class="answer">
+            <div class="answer-created">
+                Postad <?= $answer->created ?> av <?= $answer->username ?>
+            </div>
+            <div class="answer-content">
+            <?= $answer->content ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>

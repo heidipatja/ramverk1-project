@@ -45,9 +45,9 @@ class UserController implements ContainerInjectableInterface
 
 
     /**
-     * View one question
+     * View one user
      *
-     * @param int $id the id to view
+     * @param string $username the username of the user to view
      *
      * @return object as a response object
      */
@@ -65,12 +65,15 @@ class UserController implements ContainerInjectableInterface
 
         $questions = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id);
 
+        $answers = $question->joinTableWhere("User", "Answer", "Answer.user_id = User.id", "User.id = " . $user->id);
+
         $questions2tags = $this->getTags();
 
         $page->add("user/crud/view", [
             "user" => $user,
             "questions" => $questions,
-            "tags" => $questions2tags
+            "tags" => $questions2tags,
+            "answers" => $answers
         ]);
 
         $page->add("user/crud/sidebar", [
