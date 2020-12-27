@@ -27,7 +27,7 @@ endif;
     </div>
     <div class="user-info">
         <div class="user-username">
-            <a href="<?= url("user/view/{$user->id}"); ?>"> <h2 class="username"><?= $user->username ?></h2></a>
+            <a href="<?= url("user/view/{$user->username}"); ?>"> <h2 class="username"><?= $user->username ?></h2></a>
         </div>
         <div class="user-score">
             <p>Poäng: <?= $user->score ?></p>

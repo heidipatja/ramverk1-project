@@ -7,6 +7,9 @@ use Anax\Commons\ContainerInjectableTrait;
 use Hepa19\User\HTMLForm\UserLoginForm;
 use Hepa19\User\HTMLForm\CreateUserForm;
 use Hepa19\User\HTMLForm\UpdateUserForm;
+use Hepa19\Question\Question;
+use Hepa19\Answer\Answer;
+use Hepa19\Answer\HTMLForm\CreateAnswer;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -37,6 +40,77 @@ class UserController implements ContainerInjectableInterface
         return $page->render([
             "title" => "Användare",
         ]);
+    }
+
+
+
+    /**
+     * View one question
+     *
+     * @param int $id the id to view
+     *
+     * @return object as a response object
+     */
+    public function viewAction(string $username) : object
+    {
+        $page = $this->di->get("page");
+        $user = new User();
+        $user->setDb($this->di->get("dbqb"));
+        $user = $user->find("username", $username);
+
+        $activeUserId = $this->di->get("session")->get("userId");
+
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+
+        $questions = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id);
+
+        $questions2tags = $this->getTags();
+
+        $page->add("user/crud/view", [
+            "user" => $user,
+            "questions" => $questions,
+            "tags" => $questions2tags
+        ]);
+
+        return $page->render([
+            "title" => "Se fråga",
+        ]);
+    }
+
+
+
+    /**
+     * Get tags for question
+     *
+     * @return object as a response object
+     */
+    public function getTags()
+    {
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+
+        $questions2tags = $question->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+
+        return $questions2tags;
+    }
+
+
+
+    /**
+     * Get all answers to question based on question id
+     *
+     * @param int $id the id of question
+     *
+     * @return array $answers
+     */
+    public function getAnswers(int $id) : array
+    {
+        $answer = new Answer();
+        $answer->setDb($this->di->get("dbqb"));
+        // $answers = $answer->findAllWhere("question_id = ?", $id);
+        $answers = $answer->joinUser($id);
+        return $answers;
     }
 
 

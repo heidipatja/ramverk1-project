@@ -61,6 +61,25 @@ class Question extends ActiveRecordModel
 
 
     /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinTableWhere($fromTable, $withTable, $condition, $where) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->where($where)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
     * Join with two tables
     *
     * @return array Results
