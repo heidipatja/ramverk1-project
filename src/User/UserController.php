@@ -58,7 +58,7 @@ class UserController implements ContainerInjectableInterface
         $user->setDb($this->di->get("dbqb"));
         $user = $user->find("username", $username);
 
-        $activeUserId = $this->di->get("session")->get("userId");
+        $activeUser = $this->di->get("session")->get("userId");
 
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
@@ -72,6 +72,20 @@ class UserController implements ContainerInjectableInterface
             "questions" => $questions,
             "tags" => $questions2tags
         ]);
+
+        $page->add("user/crud/sidebar", [
+            "activeUser" => $activeUser
+        ], "sidebar-right");
+
+        $form = new UserLoginForm($this->di);
+        $form->check();
+
+        if (!$activeUser) {
+            $page->add("anax/v2/article/default", [
+                "activeUser" => $activeUser,
+                "content" => $form->getHTML(),
+            ], "sidebar-right");
+        }
 
         return $page->render([
             "title" => "Se fråga",
