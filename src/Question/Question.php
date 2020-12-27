@@ -80,6 +80,46 @@ class Question extends ActiveRecordModel
 
 
     /**
+    * Join with two tables
+    *
+    * @return array Results
+    */
+    public function joinTwoTablesWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+    /**
+    * Join with three tables
+    *
+    * @return array Results
+    */
+    public function joinThreeTables($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->join($withTable3, $condition3)
+                        ->where($where)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+    /**
      * Get either a Gravatar URL or complete image tag for a specified email address.
      *
      * @param string $email The email address

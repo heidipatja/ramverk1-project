@@ -10,41 +10,20 @@ namespace Anax\View;
 //echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
-$items = isset($items) ? $items : null;
+$tags = isset($tags) ? $tags : null;
 
-// Create urls for navigation
-$urlToCreate = url("tag/create");
-$urlToDelete = url("tag/delete");
+?><h1>Taggar</h1>
 
-
-
-?><h1>View all items</h1>
-
-<p>
-    <a href="<?= $urlToCreate ?>">Create</a> | 
-    <a href="<?= $urlToDelete ?>">Delete</a>
-</p>
-
-<?php if (!$items) : ?>
-    <p>There are no items to show.</p>
+<?php if (!$tags) : ?>
+    <p>Det finns inga taggar än!</p>
 <?php
     return;
 endif;
 ?>
 
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Column1</th>
-        <th>Column2</th>
-    </tr>
-    <?php foreach ($items as $item) : ?>
-    <tr>
-        <td>
-            <a href="<?= url("tag/update/{$item->id}"); ?>"><?= $item->id ?></a>
-        </td>
-        <td><?= $item->column1 ?></td>
-        <td><?= $item->column2 ?></td>
-    </tr>
+<div class="tags">
+    <?php foreach ($tags as $tag) : ?>
+    <div class="tag">
+        <a href="<?= url("tag/view/{$tag->tag}"); ?>"><?= $tag->tag ?></a>
     <?php endforeach; ?>
-</table>
+</div>

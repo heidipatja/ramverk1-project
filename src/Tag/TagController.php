@@ -8,10 +8,7 @@ use Hepa19\Tag\HTMLForm\CreateForm;
 use Hepa19\Tag\HTMLForm\EditForm;
 use Hepa19\Tag\HTMLForm\DeleteForm;
 use Hepa19\Tag\HTMLForm\UpdateForm;
-
-// use Anax\Route\Exception\ForbiddenException;
-// use Anax\Route\Exception\NotFoundException;
-// use Anax\Route\Exception\InternalErrorException;
+use Hepa19\Question\Question;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -20,31 +17,8 @@ class TagController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
-
-
     /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
-
-
-    /**
-     * Show all items.
+     * View all tags
      *
      * @return object as a response object
      */
@@ -55,7 +29,7 @@ class TagController implements ContainerInjectableInterface
         $tag->setDb($this->di->get("dbqb"));
 
         $page->add("tag/crud/view-all", [
-            "items" => $tag->findAll(),
+            "tags" => $tag->findAll(),
         ]);
 
         return $page->render([
@@ -66,68 +40,50 @@ class TagController implements ContainerInjectableInterface
 
 
     /**
-     * Handler with form to create a new item.
+     * View one tag
+     *
+     * @param string $tag id of the tag to view
      *
      * @return object as a response object
      */
-    public function createAction() : object
+    public function viewActionGet(string $tagString) : object
     {
         $page = $this->di->get("page");
-        $form = new CreateForm($this->di);
-        $form->check();
+        $tag = new Tag();
+        $tag->setDb($this->di->get("dbqb"));
+        $tag = $tag->find("tag", $tagString);
 
-        $page->add("tag/crud/create", [
-            "form" => $form->getHTML(),
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+        $questions = $question->joinThreeTables("Question", "TagToQuestion", "TagToQuestion.question_id = Question.id", "Tag", "Tag.id = TagToQuestion.tag_id", "User", "User.id = Question.user_id", "Tag.tag = '". $tagString . "'");
+
+        $tags = $this->getTags();
+
+        $page->add("tag/crud/view", [
+            "tag" => $tagString,
+            "questions" => $questions,
+            "tags" => $tags
         ]);
 
         return $page->render([
-            "title" => "Create a item",
+            "title" => "Frågor om " . $tag->tag,
         ]);
     }
 
 
 
     /**
-     * Handler with form to delete an item.
+     * Get tags for question
      *
      * @return object as a response object
      */
-    public function deleteAction() : object
+    public function getTags()
     {
-        $page = $this->di->get("page");
-        $form = new DeleteForm($this->di);
-        $form->check();
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
 
-        $page->add("tag/crud/delete", [
-            "form" => $form->getHTML(),
-        ]);
+        $questions2tags = $question->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
 
-        return $page->render([
-            "title" => "Delete an item",
-        ]);
-    }
-
-
-
-    /**
-     * Handler with form to update an item.
-     *
-     * @param int $id the id to update.
-     *
-     * @return object as a response object
-     */
-    public function updateAction(int $id) : object
-    {
-        $page = $this->di->get("page");
-        $form = new UpdateForm($this->di, $id);
-        $form->check();
-
-        $page->add("tag/crud/update", [
-            "form" => $form->getHTML(),
-        ]);
-
-        return $page->render([
-            "title" => "Update an item",
-        ]);
+        return $questions2tags;
     }
 }
