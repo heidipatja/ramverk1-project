@@ -44,4 +44,23 @@ class Answer extends ActiveRecordModel
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function getAnswers($questionId) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from("User")
+                        ->join("Answer", "User.id = Answer.user_id")
+                        ->where("Answer.question_id = " . $questionId)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 }

@@ -9,35 +9,47 @@ use Hepa19\Comment\Comment;
 /**
  * Form to create an item.
  */
-class CreateForm extends FormModel
+class CreateComment extends FormModel
 {
     /**
      * Constructor injects with DI container.
      *
      * @param Psr\Container\ContainerInterface $di a service container
      */
-    public function __construct(ContainerInterface $di)
+    public function __construct(ContainerInterface $di, $userId, $postId, $questionId, $type)
     {
         parent::__construct($di);
+        $this->questionId = $questionId;
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Details of the item",
+                "legend" => "Ny kommentar",
+                "escape-values" => false
             ],
             [
-                "column1" => [
-                    "type" => "text",
+                "content" => [
+                    "type" => "textarea",
                     "validation" => ["not_empty"],
                 ],
-                        
-                "column2" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
+
+                "user-id" => [
+                    "type" => "hidden",
+                    "value" => $userId,
+                ],
+
+                "post-id" => [
+                    "type" => "hidden",
+                    "value" => $postId,
+                ],
+
+                "type" => [
+                    "type" => "hidden",
+                    "value" => $type,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Create item",
+                    "value" => "Spara",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -56,8 +68,10 @@ class CreateForm extends FormModel
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
-        $comment->column1  = $this->form->value("column1");
-        $comment->column2 = $this->form->value("column2");
+        $comment->content = $this->form->value("content");
+        $comment->user_id = $this->form->value("user-id");
+        $comment->post_id = $this->form->value("post-id");
+        $comment->type = $this->form->value("type");
         $comment->save();
         return true;
     }
@@ -71,7 +85,7 @@ class CreateForm extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirect("comment")->send();
+        $this->di->get("response")->redirect("question/view/{$this->questionId}")->send();
     }
 
 

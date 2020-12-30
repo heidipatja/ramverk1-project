@@ -4,14 +4,10 @@ namespace Hepa19\Comment;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Hepa19\Comment\HTMLForm\CreateForm;
-use Hepa19\Comment\HTMLForm\EditForm;
-use Hepa19\Comment\HTMLForm\DeleteForm;
-use Hepa19\Comment\HTMLForm\UpdateForm;
-
-// use Anax\Route\Exception\ForbiddenException;
-// use Anax\Route\Exception\NotFoundException;
-// use Anax\Route\Exception\InternalErrorException;
+use Hepa19\Comment\HTMLForm\CreateComment;
+use Hepa19\Comment\HTMLForm\DeleteComment;
+use Hepa19\Comment\HTMLForm\UpdateComment;
+use Hepa19\Answer\Answer;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -19,29 +15,6 @@ use Hepa19\Comment\HTMLForm\UpdateForm;
 class CommentController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
-
-
-
-    /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
-
 
     /**
      * Show all items.
@@ -73,15 +46,25 @@ class CommentController implements ContainerInjectableInterface
     public function createAction() : object
     {
         $page = $this->di->get("page");
-        $form = new CreateForm($this->di);
-        $form->check();
+        $userId = $this->di->get("session")->get("userId") ?? null;
+        $postId = $this->di->get("request")->getGet("postId") ?? null;
+        $questionId = $this->di->get("request")->getGet("questionId") ?? null;
+        $type = $this->di->get("request")->getGet("type") ?? null;
+
+        if ($userId && $postId && $questionId && $type) {
+            $form = new CreateComment($this->di, $userId, $postId, $questionId, $type);
+            $form->check();
+        } else {
+            return $this->di->get("response")->redirect("user/login");
+        }
 
         $page->add("comment/crud/create", [
             "form" => $form->getHTML(),
+            "questionId" => $questionId
         ]);
 
         return $page->render([
-            "title" => "Create a item",
+            "title" => "Ny kommentar",
         ]);
     }
 
@@ -95,11 +78,11 @@ class CommentController implements ContainerInjectableInterface
     public function deleteAction() : object
     {
         $page = $this->di->get("page");
-        $form = new DeleteForm($this->di);
+        $form = new DeleteComment($this->di);
         $form->check();
 
         $page->add("comment/crud/delete", [
-            "form" => $form->getHTML(),
+            "form" => $form->getHTML()
         ]);
 
         return $page->render([
@@ -119,15 +102,30 @@ class CommentController implements ContainerInjectableInterface
     public function updateAction(int $id) : object
     {
         $page = $this->di->get("page");
-        $form = new UpdateForm($this->di, $id);
+        $form = new UpdateComment($this->di, $id);
         $form->check();
+
+        $comment = new Comment();
+        $comment->setDb($this->di->get("dbqb"));
+        $comment->findById($id);
+        $questionId = 0;
+
+        if ($comment->type == "answer") {
+            $answer = new Answer();
+            $answer->setDb($this->di->get("dbqb"));
+            $answer->findById($comment->post_id);
+            $questionId = $answer->question_id;
+        } else {
+            $questionId = $comment->post_id;
+        }
 
         $page->add("comment/crud/update", [
             "form" => $form->getHTML(),
+            "questionId" => $questionId
         ]);
 
         return $page->render([
-            "title" => "Update an item",
+            "title" => "Uppdatera kommentar",
         ]);
     }
 }

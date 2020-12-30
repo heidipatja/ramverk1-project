@@ -46,7 +46,7 @@ namespace Anax\View;
 
  <?php foreach ($questions as $question) : ?>
  <div class="question">
-     <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
+     <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h3><?= $question->title ?></h3></a></div>
      <div class="question-by">
          <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
      </div>

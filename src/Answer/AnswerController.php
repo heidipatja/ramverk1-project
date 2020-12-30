@@ -67,7 +67,7 @@ class AnswerController implements ContainerInjectableInterface
     public function deleteAction() : object
     {
         $page = $this->di->get("page");
-        $form = new DeleteForm($this->di);
+        $form = new DeleteAnswer($this->di);
         $form->check();
 
         $page->add("answer/crud/delete", [
@@ -75,7 +75,7 @@ class AnswerController implements ContainerInjectableInterface
         ]);
 
         return $page->render([
-            "title" => "Delete an item",
+            "title" => "Radera fråga",
         ]);
     }
 
@@ -91,15 +91,20 @@ class AnswerController implements ContainerInjectableInterface
     public function updateAction(int $id) : object
     {
         $page = $this->di->get("page");
-        $form = new UpdateForm($this->di, $id);
+        $form = new UpdateAnswer($this->di, $id);
         $form->check();
+
+        $answer = new Answer();
+        $answer->setDb($this->di->get("dbqb"));
+        $answer->findById($id);
 
         $page->add("answer/crud/update", [
             "form" => $form->getHTML(),
+            "questionId" => $answer->question_id
         ]);
 
         return $page->render([
-            "title" => "Update an item",
+            "title" => "Uppdatera fråga",
         ]);
     }
 }

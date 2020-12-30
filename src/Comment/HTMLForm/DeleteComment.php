@@ -23,6 +23,7 @@ class DeleteForm extends FormModel
             [
                 "id" => __CLASS__,
                 "legend" => "Delete an item",
+                "escape-values" => false
             ],
             [
                 "select" => [

@@ -60,3 +60,5 @@ endif;
     </div>
 </div>
 <?php endforeach; ?>
+
+<a href="<?= $urlToViewTags ?>">Se alla taggar</a>

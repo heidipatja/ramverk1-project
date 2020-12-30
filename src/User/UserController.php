@@ -200,7 +200,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @param integer $id get details on user with id.
      *
-     * @return object as a response object
+     * @return object as a response objectf
      */
     public function updateAction($id) : object
     {

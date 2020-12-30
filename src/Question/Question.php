@@ -80,6 +80,26 @@ class Question extends ActiveRecordModel
 
 
     /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinJoinWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->where($where)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
     * Join with two tables
     *
     * @return array Results
@@ -116,6 +136,7 @@ class Question extends ActiveRecordModel
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
+
 
 
     /**

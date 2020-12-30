@@ -9,7 +9,7 @@ use Hepa19\Comment\Comment;
 /**
  * Form to update an item.
  */
-class UpdateForm extends FormModel
+class UpdateComment extends FormModel
 {
     /**
      * Constructor injects with DI container and the id to update.
@@ -20,40 +20,53 @@ class UpdateForm extends FormModel
     public function __construct(ContainerInterface $di, $id)
     {
         parent::__construct($di);
-        $comment = $this->getItemDetails($id);
+        $comment = $this->getComment($id);
+        $this->id = $id;
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Update details of the item",
+                "legend" => "Uppdatera kommentar",
+                "escape-values" => false
             ],
             [
                 "id" => [
-                    "type" => "text",
+                    "type" => "hidden",
                     "validation" => ["not_empty"],
                     "readonly" => true,
                     "value" => $comment->id,
                 ],
 
-                "column1" => [
-                    "type" => "text",
+                "content" => [
+                    "type" => "textarea",
                     "validation" => ["not_empty"],
-                    "value" => $comment->column1,
+                    "value" => $comment->content,
+                    "label" => "Kommentar"
                 ],
 
-                "column2" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
-                    "value" => $comment->column2,
+                "user-id" => [
+                    "type" => "hidden",
+                    "value" => $comment->user_id,
+                ],
+
+                "post-id" => [
+                    "type" => "hidden",
+                    "value" => $comment->post_id,
+                ],
+
+                "type" => [
+                    "type" => "hidden",
+                    "value" => $comment->type,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Save",
+                    "value" => "Spara",
                     "callback" => [$this, "callbackSubmit"]
                 ],
 
                 "reset" => [
                     "type"      => "reset",
+                    "value" => "Återställ"
                 ],
             ]
         );
@@ -65,10 +78,10 @@ class UpdateForm extends FormModel
      * Get details on item to load form with.
      *
      * @param integer $id get details on item with id.
-     * 
+     *
      * @return Comment
      */
-    public function getItemDetails($id) : object
+    public function getComment($id) : object
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
@@ -88,9 +101,8 @@ class UpdateForm extends FormModel
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
-        $comment->find("id", $this->form->value("id"));
-        $comment->column1 = $this->form->value("column1");
-        $comment->column2 = $this->form->value("column2");
+        $comment = $comment->find("id", $this->form->value("id"));
+        $comment->content = $this->form->value("content");
         $comment->save();
         return true;
     }

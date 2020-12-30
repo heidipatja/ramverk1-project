@@ -20,40 +20,48 @@ class UpdateAnswer extends FormModel
     public function __construct(ContainerInterface $di, $id)
     {
         parent::__construct($di);
-        $answer = $this->getItemDetails($id);
+        $answer = $this->getAnswer($id);
+        $this->question_id = $answer->question_id;
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Update details of the item",
+                "legend" => "Uppdatera fråga",
+                "escape-values" => false
             ],
             [
                 "id" => [
-                    "type" => "text",
+                    "type" => "hidden",
                     "validation" => ["not_empty"],
                     "readonly" => true,
                     "value" => $answer->id,
                 ],
 
-                "column1" => [
-                    "type" => "text",
+                "content" => [
+                    "type" => "textarea",
                     "validation" => ["not_empty"],
-                    "value" => $answer->column1,
+                    "label" => "Svar",
+                    "value" => $answer->content
                 ],
 
-                "column2" => [
-                    "type" => "text",
-                    "validation" => ["not_empty"],
-                    "value" => $answer->column2,
+                "question-id" => [
+                    "type" => "hidden",
+                    "value" => $answer->question_id,
+                ],
+
+                "user-id" => [
+                    "type" => "hidden",
+                    "value" => $answer->user_id,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Save",
+                    "value" => "Spara",
                     "callback" => [$this, "callbackSubmit"]
                 ],
 
                 "reset" => [
                     "type"      => "reset",
+                    "value" => "Återställ"
                 ],
             ]
         );
@@ -68,7 +76,7 @@ class UpdateAnswer extends FormModel
      *
      * @return Answer
      */
-    public function getItemDetails($id) : object
+    public function getAnswer($id) : object
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
@@ -89,35 +97,33 @@ class UpdateAnswer extends FormModel
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
         $answer->find("id", $this->form->value("id"));
-        $answer->column1 = $this->form->value("column1");
-        $answer->column2 = $this->form->value("column2");
+        $answer->content = $this->form->value("content");
         $answer->save();
         return true;
     }
 
 
 
-    // /**
-    //  * Callback what to do if the form was successfully submitted, this
-    //  * happen when the submit callback method returns true. This method
-    //  * can/should be implemented by the subclass for a different behaviour.
-    //  */
-    // public function callbackSuccess()
-    // {
-    //     $this->di->get("response")->redirect("answer")->send();
-    //     //$this->di->get("response")->redirect("answer/update/{$answer->id}");
-    // }
+    /**
+     * Callback what to do if the form was successfully submitted, this
+     * happen when the submit callback method returns true. This method
+     * can/should be implemented by the subclass for a different behaviour.
+     */
+    public function callbackSuccess()
+    {
+        $this->di->get("response")->redirect("question/view/{$this->question_id}");
+    }
 
 
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 }

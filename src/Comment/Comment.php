@@ -22,6 +22,48 @@ class Comment extends ActiveRecordModel
      * @var integer $id primary key auto incremented.
      */
     public $id;
-    public $column1;
-    public $column2;
+    public $content;
+    public $user_id;
+    public $post_id;
+    public $type;
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function getCommentsToAnswers($postId) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from("User")
+                        ->join("Comment", "Comment.user_id = User.id")
+                        ->where("Comment.post_id = " . $postId)
+                        ->andWhere("Comment.type = 'answer'")
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function getCommentsToQuestion($postId) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from("User")
+                        ->join("Comment", "Comment.user_id = User.id")
+                        ->where("Comment.post_id = " . $postId)
+                        ->andWhere("Comment.type = 'question'")
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 }

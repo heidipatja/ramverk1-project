@@ -10,6 +10,8 @@ use Hepa19\Question\HTMLForm\DeleteQuestion;
 use Hepa19\Question\HTMLForm\UpdateQuestion;
 use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
+use Hepa19\Comment\Comment;
+use Hepa19\Comment\HTMLForm\CreateComment;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -154,22 +156,25 @@ class QuestionController implements ContainerInjectableInterface
         $activeUserId = $this->di->get("session")->get("userId");
         $isAuthor = $question->isAuthor($activeUserId);
 
-        $question = $question->joinTable("User", "Question", "Question.id =" . $id)[0];
+        $question = $question->joinTableWhere("Question", "User", "Question.user_id = User.id", "Question.id = " . $id)[0];
 
-        $questions2tags = $this->getTags();
+        $tags = $this->getTags();
+
+        $comments = $this->getComments($id);
 
         $answers = $this->getAnswers($id);
+
+        $answers = $this->getCommentsToAnswers($answers);
+
         $answerForm = new CreateAnswer($this->di, $id, $activeUserId);
         $answerForm->check();
 
         $page->add("question/crud/view", [
             "question" => $question,
-            "isAuthor" => $isAuthor,
-            "tags" => $questions2tags
-        ]);
-
-        $page->add("answer/crud/view-all", [
-            "answers" => $answers
+            "tags" => $tags,
+            "comments" => $comments,
+            "answers" => $answers,
+            "activeUserId" => $activeUserId
         ]);
 
         $page->add("answer/crud/create", [
@@ -179,6 +184,42 @@ class QuestionController implements ContainerInjectableInterface
         return $page->render([
             "title" => "Se fråga",
         ]);
+    }
+
+
+
+    /**
+     * Get comments for question
+     *
+     * @return object as a response object
+     */
+    public function getComments($id)
+    {
+        $comment = new Comment();
+        $comment->setDb($this->di->get("dbqb"));
+
+        $comments = $comment->getCommentsToQuestion($id);
+
+        return $comments;
+    }
+
+
+
+    /**
+     * Get comments for answers
+     *
+     * @return object as a response object
+     */
+    public function getCommentsToAnswers($answers)
+    {
+        $comment = new Comment();
+        $comment->setDb($this->di->get("dbqb"));
+
+        foreach ($answers as $answer) {
+            $answer->answerComments = $comment->getCommentsToAnswers($answer->id);
+        }
+
+        return $answers;
     }
 
 
@@ -201,18 +242,17 @@ class QuestionController implements ContainerInjectableInterface
 
 
     /**
-     * Get all answers to question based on question id
+     * Get answers for question
      *
-     * @param int $id the id of question
-     *
-     * @return array $answers
+     * @return object as a response object
      */
-    public function getAnswers(int $id) : array
+    public function getAnswers($id)
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-        // $answers = $answer->findAllWhere("question_id = ?", $id);
-        $answers = $answer->joinUser($id);
+
+        $answers = $answer->getAnswers($id);
+
         return $answers;
     }
 }

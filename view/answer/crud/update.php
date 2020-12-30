@@ -3,24 +3,21 @@
 namespace Anax\View;
 
 /**
- * View to create a new book.
+ * View to update an answer
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
-$item = isset($item) ? $item : null;
+$questionId = isset($questionId) ? $questionId : null;
 
 // Create urls for navigation
 $urlToView = url("answer");
 
 
 
-?><h1>Update an item</h1>
+?><h1>Uppdatera fråga</h1>
 
 <?= $form ?>
 
 <p>
-    <a href="<?= $urlToView ?>">View all</a>
+    <a href="<?= url("question/view/{$questionId}") ?>">Tillbaka till frågan</a>
 </p>
