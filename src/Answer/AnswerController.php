@@ -7,6 +7,7 @@ use Anax\Commons\ContainerInjectableTrait;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
 use Hepa19\Answer\HTMLForm\DeleteAnswer;
 use Hepa19\Answer\HTMLForm\UpdateAnswer;
+use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -14,6 +15,17 @@ use Hepa19\Answer\HTMLForm\UpdateAnswer;
 class AnswerController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
+
+    /**
+     * Initialize controller
+     *
+     */
+    public function initialize()
+    {
+        $this->filter = new MyTextFilter();
+    }
+
+
 
     /**
      * Show all items.
@@ -97,6 +109,7 @@ class AnswerController implements ContainerInjectableInterface
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
         $answer->findById($id);
+        $answer->content = $this->filter->markdown($answer->content);
 
         $page->add("answer/crud/update", [
             "form" => $form->getHTML(),

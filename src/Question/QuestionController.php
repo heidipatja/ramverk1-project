@@ -12,6 +12,7 @@ use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
 use Hepa19\Comment\Comment;
 use Hepa19\Comment\HTMLForm\CreateComment;
+use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -19,6 +20,16 @@ use Hepa19\Comment\HTMLForm\CreateComment;
 class QuestionController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
+
+
+    /**
+     * Initialize controller
+     *
+     */
+    public function initialize()
+    {
+        $this->filter = new MyTextFilter();
+    }
 
     /**
      * See if user id in session, otherwise redirect to login
@@ -49,6 +60,10 @@ class QuestionController implements ContainerInjectableInterface
         $questions = $question->findAll();
         $questions2users = $question->joinTable("User", "Question", "Question.user_id = User.id");
 
+        foreach ($questions2users as $question) {
+            $question->content = $this->filter->markdown($question->content);
+            $question->content = $this->filter->substring($question->content, 100);
+        }
 
         $newquestion = new Question();
         $newquestion->setDb($this->di->get("dbqb"));
@@ -158,6 +173,8 @@ class QuestionController implements ContainerInjectableInterface
 
         $question = $question->joinTableWhere("Question", "User", "Question.user_id = User.id", "Question.id = " . $id)[0];
 
+        $question->content = $this->filter->markdown($question->content);
+
         $tags = $this->getTags();
 
         $comments = $this->getComments($id);
@@ -199,6 +216,10 @@ class QuestionController implements ContainerInjectableInterface
         $comment->setDb($this->di->get("dbqb"));
 
         $comments = $comment->getCommentsToQuestion($id);
+
+        foreach ($comments as $comment) {
+            $comment->content = $this->filter->markdown($comment->content);
+        }
 
         return $comments;
     }
@@ -252,6 +273,10 @@ class QuestionController implements ContainerInjectableInterface
         $answer->setDb($this->di->get("dbqb"));
 
         $answers = $answer->getAnswers($id);
+
+        foreach ($answers as $answer) {
+            $answer->content = $this->filter->markdown($answer->content);
+        }
 
         return $answers;
     }

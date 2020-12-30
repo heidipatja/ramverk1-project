@@ -9,7 +9,7 @@ use Hepa19\User\User;
 /**
  * Edit user form
  */
-class UpdateUserForm extends FormModel
+class UpdateUser extends FormModel
 {
     /**
      * Constructor injects with DI container.
@@ -28,7 +28,7 @@ class UpdateUserForm extends FormModel
             ],
             [
                 "id" => [
-                    "type" => "hidden",f
+                    "type" => "hidden",
                     "validation" => ["not_empty"],
                     "readonly" => true,
                     "value" => $user->id,

@@ -9,7 +9,7 @@ use Hepa19\User\User;
 /**
  * Example of FormModel implementation.
  */
-class CreateUserForm extends FormModel
+class LoginUser extends FormModel
 {
     /**
      * Constructor injects with DI container.
@@ -19,39 +19,30 @@ class CreateUserForm extends FormModel
     public function __construct(ContainerInterface $di)
     {
         parent::__construct($di);
+
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Ny användare",
-                "escape-values" => false
+                "legend" => "Logga in"
             ],
             [
                 "username" => [
                     "type"        => "text",
                     "label"        => "Användarnamn",
-                ],
-
-                "email" => [
-                    "type"        => "email",
-                    "label"        => "E-post",
+                    //"description" => "Here you can place a description.",
+                    //"placeholder" => "Here is a placeholder",
                 ],
 
                 "password" => [
                     "type"        => "password",
                     "label"        => "Lösenord",
-                ],
-
-                "password-again" => [
-                    "type"        => "password",
-                    "validation" => [
-                        "match" => "password"
-                    ],
-                    "label"        => "Bekräfta lösenord",
+                    //"description" => "Here you can place a description.",
+                    //"placeholder" => "Here is a placeholder",
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Spara",
+                    "value" => "Logga in",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -70,28 +61,32 @@ class CreateUserForm extends FormModel
     {
         // Get values from the submitted form
         $username       = $this->form->value("username");
-        $email      = $this->form->value("email");
         $password      = $this->form->value("password");
-        $passwordAgain = $this->form->value("password-again");
 
-        // Check password matches
-        if ($password !== $passwordAgain ) {
-            $this->form->rememberValues();
-            $this->form->addOutput("Lösenordet matchade inte.");
-            return false;
+        $user = new User();
+        $user->setDb($this->di->get("dbqb"));
+        $res = $user->verifyPassword($username, $password);
+
+        if (!$res) {
+           $this->form->rememberValues();
+           $this->form->addOutput("Användarnamn eller lösenord matchade inte.");
+           return false;
         }
 
-        try {
-            $user = new User();
-            $user->setDb($this->di->get("dbqb"));
-            $user->username = $username;
-            $user->email = $email;
-            $user->setPassword($password);
-            $user->save();
-            return true;
-        } catch (\Anax\Database\Exception\Exception $e) {
-            return false;
-        }
+        return true;
+    }
+
+
+
+    /**
+     * Get user id by username
+     */
+    public function getUserIdByUsername($username)
+    {
+        $user = new User();
+        $user->setDb($this->di->get("dbqb"));
+        $user->find("username", $username);
+        return $user->id;
     }
 
 
@@ -103,7 +98,12 @@ class CreateUserForm extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirect("user/login")->send();
+        $username = $this->form->value("username");
+        $session = $this->di->get("session");
+        $session->set("username", $username);
+        $session->set("userId", $this->getUserIdByUsername($username));
+
+        $this->di->get("response")->redirect("user/profile")->send();
     }
 
 
@@ -116,7 +116,6 @@ class CreateUserForm extends FormModel
      */
     public function callbackFail()
     {
-        $this->form->addOutput("E-post eller användarnamn används redan. Prova igen.");
         $this->di->get("response")->redirectSelf()->send();
     }
 }

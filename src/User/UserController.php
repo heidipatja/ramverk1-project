@@ -4,12 +4,13 @@ namespace Hepa19\User;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Hepa19\User\HTMLForm\UserLoginForm;
-use Hepa19\User\HTMLForm\CreateUserForm;
-use Hepa19\User\HTMLForm\UpdateUserForm;
+use Hepa19\User\HTMLForm\LoginUser;
+use Hepa19\User\HTMLForm\CreateUser;
+use Hepa19\User\HTMLForm\UpdateUser;
 use Hepa19\Question\Question;
 use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
+use Hepa19\MyTextFilter\MyTextFilter;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -21,6 +22,17 @@ use Hepa19\Answer\HTMLForm\CreateAnswer;
 class UserController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
+
+    /**
+     * Initialize controller
+     *
+     */
+    public function initialize()
+    {
+        $this->filter = new MyTextFilter();
+    }
+
+
 
     /**
      * Index page showing all users
@@ -80,7 +92,7 @@ class UserController implements ContainerInjectableInterface
             "activeUser" => $activeUser
         ], "sidebar-right");
 
-        $form = new UserLoginForm($this->di);
+        $form = new UserLogin($this->di);
         $form->check();
 
         if (!$activeUser) {
@@ -140,7 +152,7 @@ class UserController implements ContainerInjectableInterface
     public function loginAction() : object
     {
         $page = $this->di->get("page");
-        $form = new UserLoginForm($this->di);
+        $form = new UserLogin($this->di);
         $form->check();
 
         $page->add("anax/v2/article/default", [
@@ -181,7 +193,7 @@ class UserController implements ContainerInjectableInterface
     public function createAction() : object
     {
         $page = $this->di->get("page");
-        $form = new CreateUserForm($this->di);
+        $form = new CreateUser($this->di);
         $form->check();
 
         $page->add("anax/v2/article/default", [
@@ -205,7 +217,7 @@ class UserController implements ContainerInjectableInterface
     public function updateAction($id) : object
     {
         $page = $this->di->get("page");
-        $form = new UpdateUserForm($this->di, $id);
+        $form = new UpdateUser($this->di, $id);
         $form->check();
 
         $page->add("anax/v2/article/default", [
@@ -238,6 +250,7 @@ class UserController implements ContainerInjectableInterface
 
         $user->setDb($this->di->get("dbqb"));
         $user = $user->find("username", $username);
+        $user->presentation = $this->filter->markdown($user->presentation);
         $gravatar = $user->getGravatar($user->email);
 
         $page->add("user/profile", [
