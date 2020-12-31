@@ -37,11 +37,11 @@ endif;
                 <?php
             } ?>
     </div>
-    <div class="comment-link">
-        <a href="<?= url("comment/create?postId={$question->id}&questionId={$question->id}&type=question"); ?>">Kommentera</a>
-    </div>
-    <?php if ($activeUserId == $question->user_id) : ?>
     <div class="links">
+        <div class="comment-link">
+            <a href="<?= url("comment/create?postId={$question->id}&questionId={$question->id}&type=question"); ?>">Kommentera</a>
+        </div>
+        <?php if ($activeUserId == $question->user_id) : ?>
         <div class="question-edit">
             <a href="<?= url("question/update/{$question->id}"); ?>">Redigera fråga</a>
         </div>
@@ -82,9 +82,9 @@ endif;
             <img src="<?= $question->getGravatar($answer->email, 25) ?>" alt="<?= $answer->username ?>>"> Av <?= $answer->username ?> <?= $answer->created ?>
         </div>
         <div class="answer-content"><?= $answer->content ?></div>
-        <div class="add-comment"><a href="<?= url("comment/create?&postId={$answer->id}&questionId={$question->id}&type=answer"); ?>">Kommentera svar</a></div>
-        <?php if ($activeUserId == $answer->user_id) : ?>
         <div class="links">
+            <div class="add-comment"><a href="<?= url("comment/create?&postId={$answer->id}&questionId={$question->id}&type=answer"); ?>">Kommentera svar</a></div>
+            <?php if ($activeUserId == $answer->user_id) : ?>
             <div class="answer-edit">
                 <a href="<?= url("answer/update/{$answer->id}"); ?>">Redigera svar</a>
             </div>

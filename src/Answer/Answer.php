@@ -60,6 +60,7 @@ class Answer extends ActiveRecordModel
                         ->from("User")
                         ->join("Answer", "User.id = Answer.user_id")
                         ->where("Answer.question_id = " . $questionId)
+                        ->andWhere("Answer.deleted IS NULL")
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }

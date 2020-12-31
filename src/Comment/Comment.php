@@ -43,6 +43,7 @@ class Comment extends ActiveRecordModel
                         ->join("Comment", "Comment.user_id = User.id")
                         ->where("Comment.post_id = " . $postId)
                         ->andWhere("Comment.type = 'answer'")
+                        ->andWhere("Comment.deleted IS NULL")
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
@@ -63,6 +64,7 @@ class Comment extends ActiveRecordModel
                         ->join("Comment", "Comment.user_id = User.id")
                         ->where("Comment.post_id = " . $postId)
                         ->andWhere("Comment.type = 'question'")
+                        ->andWhere("Comment.deleted IS NULL")
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }

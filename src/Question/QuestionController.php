@@ -58,7 +58,7 @@ class QuestionController implements ContainerInjectableInterface
         $question->setDb($this->di->get("dbqb"));
 
         $questions = $question->findAll();
-        $questions2users = $question->joinTable("User", "Question", "Question.user_id = User.id");
+        $questions2users = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "Question.deleted IS NULL");
 
         foreach ($questions2users as $question) {
             $question->content = $this->filter->markdown($question->content);
@@ -68,7 +68,9 @@ class QuestionController implements ContainerInjectableInterface
         $newquestion = new Question();
         $newquestion->setDb($this->di->get("dbqb"));
 
-        $questions2tags = $newquestion->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+        // $questions2tags = $newquestion->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+
+        $questions2tags = $newquestion->joinJoinWhere("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL");
 
         $page->add("question/crud/view-all", [
             "questions" => $questions2users,
@@ -169,6 +171,10 @@ class QuestionController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
         $question = $question->findById($id);
+
+        if ($question->deleted) {
+            return $this->di->response->redirect("question");            
+        }
 
         $activeUserId = $this->di->get("session")->get("userId");
         $isAuthor = $question->isAuthor($activeUserId);
