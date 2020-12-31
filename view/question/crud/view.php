@@ -41,8 +41,13 @@ endif;
         <a href="<?= url("comment/create?postId={$question->id}&questionId={$question->id}&type=question"); ?>">Kommentera</a>
     </div>
     <?php if ($activeUserId == $question->user_id) : ?>
-    <div class="question-edit">
-        <a href="<?= url("question/update/{$question->id}"); ?>">Redigera fråga</a>
+    <div class="links">
+        <div class="question-edit">
+            <a href="<?= url("question/update/{$question->id}"); ?>">Redigera fråga</a>
+        </div>
+        <div class="question-delete">
+            <a href="<?= url("question/delete/{$question->id}"); ?>">Radera fråga</a>
+        </div>
     </div>
     <?php endif; ?>
 </div>
@@ -57,8 +62,13 @@ endif;
             <div class="comment-content"><?= $comment->content ?></div>
         </div>
         <?php if ($activeUserId == $comment->user_id) : ?>
-        <div class="question-edit">
-            <a href="<?= url("comment/update/{$comment->id}"); ?>">Redigera kommentar</a>
+        <div class="links">
+            <div class="comment-edit">
+                <a href="<?= url("comment/update/{$comment->id}"); ?>">Redigera kommentar</a>
+            </div>
+            <div class="comment-edit">
+                <a href="<?= url("comment/delete/{$comment->id}"); ?>">Radera kommentar</a>
+            </div>
         </div>
         <?php endif; ?>
     <?php endforeach; ?>
@@ -74,8 +84,13 @@ endif;
         <div class="answer-content"><?= $answer->content ?></div>
         <div class="add-comment"><a href="<?= url("comment/create?&postId={$answer->id}&questionId={$question->id}&type=answer"); ?>">Kommentera svar</a></div>
         <?php if ($activeUserId == $answer->user_id) : ?>
-        <div class="answer-edit">
-            <a href="<?= url("answer/update/{$answer->id}"); ?>">Redigera svar</a>
+        <div class="links">
+            <div class="answer-edit">
+                <a href="<?= url("answer/update/{$answer->id}"); ?>">Redigera svar</a>
+            </div>
+            <div class="answer-delete">
+                <a href="<?= url("answer/delete/{$answer->id}"); ?>">Radera svar</a>
+            </div>
         </div>
         <?php endif; ?>
         <div class="answer-comments">
@@ -85,8 +100,13 @@ endif;
             </div>
             <div class="comment"><?= $acomm->content ?></div>
             <?php if ($activeUserId == $acomm->user_id) : ?>
-            <div class="question-edit">
-                <a href="<?= url("comment/update/{$acomm->id}"); ?>">Redigera kommentar</a>
+            <div class="links">
+                <div class="comment-edit">
+                    <a href="<?= url("comment/update/{$acomm->id}"); ?>">Redigera kommentar</a>
+                </div>
+                <div class="comment-edit">
+                    <a href="<?= url("comment/delete/{$acomm->id}"); ?>">Radera kommentar</a>
+                </div>
             </div>
             <?php endif; ?>
             <?php endforeach; ?>
