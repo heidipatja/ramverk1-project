@@ -10,7 +10,6 @@ namespace Anax\View;
 $question = isset($question) ? $question : null;
 $answers = isset($answers) ? $answers : null;
 $comments = isset($comments) ? $comments : null;
-$urlToView = url("question");
 
 // var_dump($question);
 

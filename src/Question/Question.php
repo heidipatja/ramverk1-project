@@ -84,6 +84,49 @@ class Question extends ActiveRecordModel
     *
     * @return array Results
     */
+    public function joinTableWhere2($fromTable, $withTable, $condition, $where, $where2) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinTableWhere3($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $where3) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->andWhere($where3)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
     public function joinJoinWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where) : array
     {
         $this->checkDb();

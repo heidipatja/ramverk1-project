@@ -75,9 +75,9 @@ class UserController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id);
+        $questions = $question->joinTableWhere2("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id, "Question.deleted IS NULL");
 
-        $answers = $question->joinTableWhere("User", "Answer", "Answer.user_id = User.id", "User.id = " . $user->id);
+        $answers = $question->joinTableWhere3("User", "Answer", "Answer.user_id = User.id", "Question", "Question.id = Answer.question_id", "User.id = " . $user->id, "Answer.deleted IS NULL", "Question.deleted IS NULL");
 
         $questions2tags = $this->getTags();
 
@@ -92,7 +92,7 @@ class UserController implements ContainerInjectableInterface
             "activeUser" => $activeUser
         ], "sidebar-right");
 
-        $form = new UserLogin($this->di);
+        $form = new LoginUser($this->di);
         $form->check();
 
         if (!$activeUser) {
@@ -137,7 +137,6 @@ class UserController implements ContainerInjectableInterface
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-        // $answers = $answer->findAllWhere("question_id = ?", $id);
         $answers = $answer->joinUser($id);
         return $answers;
     }
@@ -152,7 +151,7 @@ class UserController implements ContainerInjectableInterface
     public function loginAction() : object
     {
         $page = $this->di->get("page");
-        $form = new UserLogin($this->di);
+        $form = new LoginUser($this->di);
         $form->check();
 
         $page->add("anax/v2/article/default", [

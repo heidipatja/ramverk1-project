@@ -173,13 +173,13 @@ class QuestionController implements ContainerInjectableInterface
         $question = $question->findById($id);
 
         if ($question->deleted) {
-            return $this->di->response->redirect("question");            
+            return $this->di->response->redirect("question");
         }
 
         $activeUserId = $this->di->get("session")->get("userId");
         $isAuthor = $question->isAuthor($activeUserId);
 
-        $question = $question->joinTableWhere("Question", "User", "Question.user_id = User.id", "Question.id = " . $id)[0];
+        $question = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "Question.id = " . $id)[0];
 
         $question->content = $this->filter->markdown($question->content);
 

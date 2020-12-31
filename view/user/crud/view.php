@@ -84,6 +84,9 @@ endif;
             <div class="answer-content">
             <?= $answer->content ?>
             </div>
+            <div class="link">
+                <a href="<?= url("question/view/{$answer->question_id}"); ?>">Till frågan</a>
+            </div>
         </div>
     <?php endforeach; ?>
 </div>
