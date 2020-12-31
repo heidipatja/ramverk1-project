@@ -73,20 +73,24 @@ class CommentController implements ContainerInjectableInterface
     /**
      * Handler with form to delete an item.
      *
+     * @param int $id the id to delete
+     *
      * @return object as a response object
      */
-    public function deleteAction() : object
+    public function deleteAction($id) : object
     {
         $page = $this->di->get("page");
-        $form = new DeleteComment($this->di);
+        $questionId = $this->getQuestionId($id);
+        $form = new DeleteComment($this->di, $id, $questionId);
         $form->check();
 
         $page->add("comment/crud/delete", [
-            "form" => $form->getHTML()
+            "form" => $form->getHTML(),
+            "questionId" => $questionId
         ]);
 
         return $page->render([
-            "title" => "Delete an item",
+            "title" => "Radera kommentar",
         ]);
     }
 
@@ -108,16 +112,7 @@ class CommentController implements ContainerInjectableInterface
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
         $comment->findById($id);
-        $questionId = 0;
-
-        if ($comment->type == "answer") {
-            $answer = new Answer();
-            $answer->setDb($this->di->get("dbqb"));
-            $answer->findById($comment->post_id);
-            $questionId = $answer->question_id;
-        } else {
-            $questionId = $comment->post_id;
-        }
+        $questionId = $this->getQuestionId($id);
 
         $page->add("comment/crud/update", [
             "form" => $form->getHTML(),
@@ -127,5 +122,30 @@ class CommentController implements ContainerInjectableInterface
         return $page->render([
             "title" => "Uppdatera kommentar",
         ]);
+    }
+
+
+
+    /**
+     * Handler with form to delete an item.
+     *
+     * @param int $id the id of the comment
+     *
+     * @return string question id
+     */
+    public function getQuestionId($id)
+    {
+        $comment = new Comment();
+        $comment->setDb($this->di->get("dbqb"));
+        $comment->findById($id);
+
+        if ($comment->type == "question") {
+            return $comment->post_id;
+        } else {
+            $answer = new Answer();
+            $answer->setDb($this->di->get("dbqb"));
+            $answer->findById($comment->post_id);
+            return $answer->question_id;
+        }
     }
 }

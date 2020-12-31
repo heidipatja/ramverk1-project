@@ -5,36 +5,50 @@ namespace Hepa19\Comment\HTMLForm;
 use Anax\HTMLForm\FormModel;
 use Psr\Container\ContainerInterface;
 use Hepa19\Comment\Comment;
+use Hepa19\Answer\Answer;
 
 /**
  * Form to delete an item.
  */
-class DeleteForm extends FormModel
+class DeleteComment extends FormModel
 {
     /**
      * Constructor injects with DI container.
      *
      * @param Psr\Container\ContainerInterface $di a service container
+     * @param integer             $id to delete
      */
-    public function __construct(ContainerInterface $di)
+    public function __construct(ContainerInterface $di, $id, $questionId)
     {
         parent::__construct($di);
+        $comment = $this->getComment($id);
+        $this->questionId = $questionId;
+        $this->id = $id;
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Delete an item",
+                "legend" => "Radera kommentar",
                 "escape-values" => false
             ],
             [
-                "select" => [
-                    "type"        => "select",
-                    "label"       => "Select item to delete:",
-                    "options"     => $this->getAllItems(),
+                "id" => [
+                    "type" => "hidden",
+                    "validation" => ["not_empty"],
+                    "readonly" => true,
+                    "value" => $comment->id,
+                ],
+
+                "content" => [
+                    "type" => "textarea",
+                    "validation" => ["not_empty"],
+                    "value" => $comment->content,
+                    "label" => "Kommentar",
+                    "readonly" => true,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Delete item",
+                    "value" => "Radera",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -44,21 +58,18 @@ class DeleteForm extends FormModel
 
 
     /**
-     * Get all items as array suitable for display in select option dropdown.
+     * Get details on item to load form with.
      *
-     * @return array with key value of all items.
+     * @param integer $id get details on item with id.
+     *
+     * @return Comment
      */
-    protected function getAllItems() : array
+    public function getComment($id) : object
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
-
-        $comments = ["-1" => "Select an item..."];
-        foreach ($comment->findAll() as $obj) {
-            $comments[$obj->id] = "{$obj->column1} ({$obj->id})";
-        }
-
-        return $comments;
+        $comment->find("id", $id);
+        return $comment;
     }
 
 
@@ -73,8 +84,9 @@ class DeleteForm extends FormModel
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
-        $comment->find("id", $this->form->value("select"));
-        $comment->delete();
+        $comment->find("id", $this->form->value("id"));
+        $comment->deleted = date("Y-m-d H:i:s");
+        $comment->save();
         return true;
     }
 
@@ -87,19 +99,19 @@ class DeleteForm extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirect("comment")->send();
+        $this->di->get("response")->redirect("question/view/{$this->questionId}")->send();
     }
 
 
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 }

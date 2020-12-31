@@ -109,14 +109,16 @@ class QuestionController implements ContainerInjectableInterface
     /**
      * Handler with form to delete an item.
      *
+     * @param int $id the id to delete
+     *
      * @return object as a response object
      */
-    public function deleteAction() : object
+    public function deleteAction($id) : object
     {
         $this->checkIfLoggedIn();
 
         $page = $this->di->get("page");
-        $form = new DeleteQuestion($this->di);
+        $form = new DeleteQuestion($this->di, $id);
         $form->check();
 
         $page->add("question/crud/delete", [

@@ -16,19 +16,38 @@ class DeleteQuestion extends FormModel
      *
      * @param Psr\Container\ContainerInterface $di a service container
      */
-    public function __construct(ContainerInterface $di)
+    public function __construct(ContainerInterface $di, $id)
     {
         parent::__construct($di);
+        $question = $this->getQuestion($id);
         $this->form->create(
             [
                 "id" => __CLASS__,
                 "legend" => "Radera fråga",
+                "escape-values" => false
             ],
             [
-                "select" => [
-                    "type"        => "select",
-                    "label"       => "Välj fråga att radera:",
-                    "options"     => $this->getAllItems(),
+                "id" => [
+                    "type" => "hidden",
+                    "validation" => ["not_empty"],
+                    "readonly" => true,
+                    "value" => $question->id,
+                ],
+
+                "title" => [
+                    "type" => "text",
+                    "validation" => ["not_empty"],
+                    "value" => $question->title,
+                    "label" => "Ämne",
+                    "readonly" => true,
+                ],
+
+                "content" => [
+                    "type" => "textarea",
+                    "validation" => ["not_empty"],
+                    "value" => $question->content,
+                    "label" => "Innehåll",
+                    "readonly" => true,
                 ],
 
                 "submit" => [
@@ -43,29 +62,46 @@ class DeleteQuestion extends FormModel
 
 
     /**
-     * Get all items as array suitable for display in select option dropdown.
+     * Get question info
      *
-     * @return array with key value of all items.
+     * @param integer $id get details on question with id.
+     *
+     * @return Question
      */
-    protected function getAllItems() : array
+    public function getQuestion($id) : object
     {
-        $userId = $this->di->get("session")->get("userId");
-        if (!$userId) {
-            $this->di->get("response")->redirect("user/login")->send();
-        }
-
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
-
-        $questions = ["-1" => "Välj fråga..."];
-        foreach ($question->findAll() as $obj) {
-            if ($obj->user_id == $userId) {
-                $questions[$obj->id] = "{$obj->created}: {$obj->title} ({$obj->id})";
-            }
-        }
-
-        return $questions;
+        $question->find("id", $id);
+        return $question;
     }
+
+
+
+    // /**
+    //  * Get all items as array suitable for display in select option dropdown.
+    //  *
+    //  * @return array with key value of all items.
+    //  */
+    // protected function getAllItems() : array
+    // {
+    //     $userId = $this->di->get("session")->get("userId");
+    //     if (!$userId) {
+    //         $this->di->get("response")->redirect("user/login")->send();
+    //     }
+    //
+    //     $question = new Question();
+    //     $question->setDb($this->di->get("dbqb"));
+    //
+    //     $questions = ["-1" => "Välj fråga..."];
+    //     foreach ($question->findAll() as $obj) {
+    //         if ($obj->user_id == $userId) {
+    //             $questions[$obj->id] = "{$obj->created}: {$obj->title} ({$obj->id})";
+    //         }
+    //     }
+    //
+    //     return $questions;
+    // }
 
 
 
@@ -79,8 +115,9 @@ class DeleteQuestion extends FormModel
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
-        $question->find("id", $this->form->value("select"));
-        $question->delete();
+        $question->find("id", $this->form->value("id"));
+        $question->deleted = date("Y-m-d H:i:s");
+        $question->save();
         return true;
     }
 
@@ -98,14 +135,14 @@ class DeleteQuestion extends FormModel
 
 
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 }

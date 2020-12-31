@@ -16,25 +16,36 @@ class DeleteAnswer extends FormModel
      *
      * @param Psr\Container\ContainerInterface $di a service container
      */
-    public function __construct(ContainerInterface $di)
+    public function __construct(ContainerInterface $di, $id)
     {
         parent::__construct($di);
+        $answer = $this->getAnswer($id);
+        $this->question_id = $answer->question_id;
         $this->form->create(
             [
                 "id" => __CLASS__,
-                "legend" => "Delete an item",
+                "legend" => "Radera svar",
                 "escape-values" => false
             ],
             [
-                "select" => [
-                    "type"        => "select",
-                    "label"       => "Select item to delete:",
-                    "options"     => $this->getAllItems(),
+                "id" => [
+                    "type" => "hidden",
+                    "validation" => ["not_empty"],
+                    "readonly" => true,
+                    "value" => $answer->id,
+                ],
+
+                "content" => [
+                    "type" => "textarea",
+                    "validation" => ["not_empty"],
+                    "label" => "Svar",
+                    "value" => $answer->content,
+                    "readonly" => true,
                 ],
 
                 "submit" => [
                     "type" => "submit",
-                    "value" => "Delete item",
+                    "value" => "Radera",
                     "callback" => [$this, "callbackSubmit"]
                 ],
             ]
@@ -44,21 +55,18 @@ class DeleteAnswer extends FormModel
 
 
     /**
-     * Get all items as array suitable for display in select option dropdown.
+     * Get details on item to load form with.
      *
-     * @return array with key value of all items.
+     * @param integer $id get details on item with id.
+     *
+     * @return Answer
      */
-    protected function getAllItems() : array
+    public function getAnswer($id) : object
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-
-        $answers = ["-1" => "Select an item..."];
-        foreach ($answer->findAll() as $obj) {
-            $answers[$obj->id] = "{$obj->column1} ({$obj->id})";
-        }
-
-        return $answers;
+        $answer->find("id", $id);
+        return $answer;
     }
 
 
@@ -73,8 +81,9 @@ class DeleteAnswer extends FormModel
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-        $answer->find("id", $this->form->value("select"));
-        $answer->delete();
+        $answer->find("id", $this->form->value("id"));
+        $answer->deleted = date("Y-m-d H:i:s");
+        $answer->save();
         return true;
     }
 
@@ -87,19 +96,19 @@ class DeleteAnswer extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirect("answer")->send();
+        $this->di->get("response")->redirect("question/view/{$this->question_id}");
     }
 
 
 
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
+    /**
+     * Callback what to do if the form was unsuccessfully submitted, this
+     * happen when the submit callback method returns false or if validation
+     * fails. This method can/should be implemented by the subclass for a
+     * different behaviour.
+     */
+    public function callbackFail()
+    {
+        $this->di->get("response")->redirectSelf()->send();
+    }
 }
