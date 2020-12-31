@@ -130,6 +130,7 @@ class UpdateUser extends FormModel
         }
 
         $user->presentation = $presentation;
+        $user->updated = date("Y-m-d H:i:s");    
         $user->save();
 
         return true;

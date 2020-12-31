@@ -103,6 +103,7 @@ class UpdateComment extends FormModel
         $comment->setDb($this->di->get("dbqb"));
         $comment = $comment->find("id", $this->form->value("id"));
         $comment->content = $this->form->value("content");
+        $comment->updated = date("Y-m-d H:i:s");
         $comment->save();
         return true;
     }

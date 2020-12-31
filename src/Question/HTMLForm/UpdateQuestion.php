@@ -153,6 +153,7 @@ class UpdateQuestion extends FormModel
         $question = $this->getQuestion($id);
         $question->title = $title;
         $question->content = $content;
+        $question->updated = date("Y-m-d H:i:s");
         $question->save();
         return true;
     }

@@ -98,6 +98,7 @@ class UpdateAnswer extends FormModel
         $answer->setDb($this->di->get("dbqb"));
         $answer->find("id", $this->form->value("id"));
         $answer->content = $this->form->value("content");
+        $answer->updated = date("Y-m-d H:i:s");
         $answer->save();
         return true;
     }
