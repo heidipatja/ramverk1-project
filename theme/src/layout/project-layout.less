@@ -1,0 +1,371 @@
+/**
+ * Layout style for general structure of header, navbar, main, footer
+ * and other regions of the page including route specific styles.
+ */
+
+/**
+ * Variables
+ */
+ /**
+ * Layout using vgrid
+ */
+
+ /**
+ * Variables
+ */
+
+
+ // Enable style from the module and optinally add customized layout
+ figure.figure {
+     #desinax-figure.figure();
+ }
+
+ figure.asciinema {
+     &:extend(figure.figure);
+     #desinax-figure.asciinema();
+ }
+
+ figure.codepen,
+ figure.figure-codepen {
+     &:extend(figure.figure);
+     #desinax-figure.codepen();
+ }
+
+
+/* Layout rules */
+
+/* Wraps */
+
+.wrap-all {
+    overflow-x: hidden;
+    background-color: @almostBlack;
+}
+
+.inner-wrap {
+    background-color: transparent;
+
+    &-after-main,
+    &-columns-below {
+        background-color: @white;
+    }
+
+    &-main {
+        min-height: 500px;
+    }
+
+    &-header {
+       background-color: @bgColorMenu;
+    }
+
+    &-footer {
+       background-color: transparent;
+    }
+}
+
+/* Fonts */
+
+.font-size(@fontSize: 1em) {
+    font-size: @fontSize;
+}
+
+.bgcolor(@bgColorMain: #fff) {
+    background-color: @bgColorMain;
+}
+
+/* regions */
+
+.region-main,
+.region-sidebar-left,
+.region-sidebar-right,
+.author-byline,
+.next-previous,
+.region-after-main {
+    margin-bottom: 2.5rem;
+}
+
+
+/* Header */
+
+.outer-wrap-header {
+    background-color: @bgColorMenu;
+    height: 61px;
+}
+
+.region-header {
+    &-col-1 {
+        margin-bottom: 10px;
+    }
+
+    &-col-1,
+    &-col-2 {
+       display: inline;
+    }
+
+    &-col-2 {
+       float: right;
+    }
+
+    &-col-3 {
+       display: none;
+    }
+}
+
+/* Main */
+
+.region-main {
+
+    &.row::after {
+       display: none;
+    }
+}
+
+.outer-wrap-header,
+.inner-wrap-header {
+    .bgColorBody(@almostBlack);
+}
+
+.outer-wrap-main,
+.outer-wrap-breadcrumb,
+.inner-wrap-main,
+.outer-wrap-flash-message,
+.outer-wrap-columns-below,
+.outer-wrap-columns-above,
+.inner-wrap-columns-above,
+.inner-wrap-columns-below,
+.inner-wrap-breadcrumb,
+.inner-wrap-flash-message {
+    background-color: @white;
+}
+
+.toc a {
+    font-family: @fontFamilyBody;
+    color: @linkColorToc;
+    text-decoration: none;
+    line-height: 3em;
+    padding-left: @magicNumber;
+
+    &:hover {
+       text-decoration: underline;
+    }
+}
+
+.breadcrumb-list a,
+.next a,
+.previous a{
+    color: @linkColor;
+}
+
+.toc h4,
+.wrap-sidebar h4 {
+    padding-left: @magicNumber;
+    line-height: 2em;
+}
+
+/* Flash */
+
+.region-flash {
+
+    & img {
+       width: 100%;
+       float: left;
+    }
+}
+
+/* Menu */
+
+.rm-desktop ul {
+    display: inline;
+}
+
+.rm-default ul li {
+    box-shadow: none;
+}
+
+.rm-default li {
+    display: inline-block;
+}
+
+.rm-navbar ul,
+.breadcrumb-list ul,
+.toc {
+    list-style: none;
+}
+
+.rm-navbar a {
+    text-transform: uppercase;
+    display: inline-block;
+    text-decoration: none;
+    font-family: @fontFamilyHeader;
+    color: @linkColorMenu;
+    .font-size(1.1em);
+
+    &:hover {
+       text-decoration: underline;
+    }
+}
+
+#rm-menu li {
+    display: block;
+}
+
+.rm-default a,
+.rm-default li li:last-child a {
+    padding: 1em 0.5em;
+}
+
+.rm-default li:last-child a {
+    padding: 1em 0 1em 0.5em;
+}
+
+.rm-desktop li li a {
+    background-color: @bgColorMenu;
+    min-width: 9em;
+    text-align: center;
+
+    &:hover {
+        background-color: @bgColorMenu;
+        color: #fff;
+        text-decoration: underline;
+    }
+}
+
+.rm-desktop li a {
+    color: @linkColorMenu;
+    &:hover {
+        color: @linkColorMenu;
+    }
+}
+
+.rm-desktop ul {
+    margin-top: 60px;
+}
+
+.site-logo img {
+    height: 42px;
+    padding: 14px 7px 0;
+}
+
+.site-logo-text-icon {
+    display: none;
+}
+
+.site-logo-text {
+    font-size: 1.5em;
+    position: absolute;
+    vertical-align: middle;
+    line-height: 58px;
+}
+
+ol, ul {
+    padding-left: 0;
+}
+
+/* Footer */
+
+.outer-wrap-footer {
+    clear: both;
+}
+
+.region-footer {
+    color: @textColorFooter;
+    font-family: @fontFamilyBody;
+
+    & a,
+    & p {
+        color: @textColorFooter;
+        font-weight: 300;
+    }
+
+    & a {
+        text-decoration: underline;
+    }
+
+    & h4 {
+        font-family: @fontFamilyHeadings;
+    }
+}
+
+.site-footer {
+    clear: both;
+    text-align: right;
+}
+
+.outer-wrap-footer {
+    background-color: @bgColorFooter;
+}
+
+/* breadcrumbs & next previous */
+
+.breadcrumb-list li {
+    display: inline;
+    font-family: @fontFamilyBody;
+
+    &::after {
+        content: " /";
+    }
+}
+
+.next-previous {
+    display: block;
+    font-family: @fontFamilyBody;
+    margin-top: @magicNumber;
+
+    &:first-child {
+        display: none;
+    }
+}
+
+.next {
+    float: right;
+    text-align: right;
+    width: 50%;
+}
+
+.previous {
+    float: left;
+    width: 50%;
+}
+
+/* Figures */
+
+.blog-post h1,
+.blog-post h2,
+.blog-post h3 {
+    clear: both;
+}
+
+figcaption {
+    font-style: italic;
+    padding-bottom: @magicNumber;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+}
+
+/* Byline */
+
+.author-byline {
+    border: 1px solid #5f5f5f;
+    clear: both;
+    display: flex;
+
+    & p {
+        font-style: italic;
+        margin: 1.5rem 1.5rem 1.5rem 0;
+    }
+}
+
+.byline-image {
+    float: left;
+    margin: 24px;
+}
+
+
+/* Article */
+
+article ul,
+article ol {
+    padding-left: @magicNumber;
+}

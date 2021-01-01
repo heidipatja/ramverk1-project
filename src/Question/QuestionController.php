@@ -206,6 +206,10 @@ class QuestionController implements ContainerInjectableInterface
             "form" => $answerForm->getHTML()
         ]);
 
+        $page->add("user/crud/sidebar", [
+            "activeUser" => $activeUserId
+        ], "sidebar-right");
+
         return $page->render([
             "title" => "Se fråga",
         ]);

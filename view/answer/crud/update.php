@@ -9,9 +9,6 @@ namespace Anax\View;
 // Gather incoming variables and use default values if not set
 $questionId = isset($questionId) ? $questionId : null;
 
-// Create urls for navigation
-$urlToView = url("answer");
-
 
 
 ?><h1>Uppdatera fråga</h1>

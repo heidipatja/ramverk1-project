@@ -25,30 +25,35 @@ $urlToDelete = url("question/delete");
 
 
 <?php if (!$questions) : ?>
-    <p>Det finns inga frågor än!</p>
+    <div class="questions">
+        <p>Det finns inga frågor än!</p>
+    </div>
 <?php
     return;
 endif;
 ?>
 
+<div class="questions">
+    <?php foreach ($questions as $question) : ?>
+    <div class="question">
+        <div class="title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
+        <div class="by">
+            <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <a href="<?= url("user/view/{$question->username}"); ?>"><?= $question->username ?></a> <?= $question->created ?>
+        </div>
 
-<?php foreach ($questions as $question) : ?>
-<div class="question">
-    <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
-    <div class="question-by">
-        <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
-    </div>
+        <div class="content">
+            <?= $question->content ?>
+        </div>
 
-    <div class="question-content">
-        <?= $question->content ?>
+        <div class="tags">
+            <?php foreach ($tags as $tag)
+                if ($tag->question_id == $question->id) { ?>
+                    <a href="<?= url("tag/view/{$tag->tag}"); ?>">
+                        <div class="tag"><?= $tag->tag ?></div>
+                    </a>
+                    <?php
+                } ?>
+        </div>
     </div>
-
-    <div class="question-tags">
-        <?php foreach ($tags as $tag)
-            if ($tag->question_id == $question->id) { ?>
-                <div class="tag"><?= $tag->tag ?></div>
-                <?php
-            } ?>
-    </div>
-</div>
 <?php endforeach; ?>
+</div>

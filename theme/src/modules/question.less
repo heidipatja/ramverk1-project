@@ -1,0 +1,99 @@
+/** --------------------------------------------------------------
+ * Question
+ */
+
+.questions .question {
+    // background: @lighestGray;
+    // padding: @magicNumber/2 @magicNumber @magicNumber;
+    margin-bottom: @magicNumber;
+    padding-bottom: @magicNumber;
+    border-bottom: 1px solid @lightGray;
+
+    & h2 {
+        margin: 0;
+        color: @gold;
+    }
+
+    & .title a {
+        text-decoration: none;
+    }
+}
+
+.question {
+    & .links > * {
+        display: inline-block;
+    }
+
+    & .links {
+        margin: @magicNumber 0;
+        float: right;
+    }
+}
+
+.tags {
+    & a {
+        text-decoration: none;
+        color: @textBlack;
+    }
+}
+
+.links > * {
+    display: inline-block;
+}
+
+.links {
+    margin: @magicNumber 0;
+    float: right;
+}
+
+.comments {
+    clear: both;
+    float: right;
+    max-width: 85%;
+
+    & .comment {
+
+    }
+
+    & .links > * {
+        display: inline-block;
+    }
+
+    & .links {
+        margin: @magicNumber 0;
+        float: right;
+    }
+}
+
+.answers {
+    clear: both;
+
+    & .answer {
+        margin-bottom: @magicNumber;
+        clear: right;
+    }
+}
+
+.question-title {
+    & a {
+        text-decoration: none;
+    }
+}
+
+.tags {
+
+    & .tag {
+        display: inline-block;
+        padding: @magicNumber/4 @magicNumber/2;
+        font-size: 0.8rem;
+        background: @lightGold;
+    }
+}
+
+.question-by {
+    font-size: 0.9rem;
+
+    & img {
+        padding-right: 5px;
+    }
+}

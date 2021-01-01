@@ -21,10 +21,10 @@ $comments = isset($comments) ? $comments : null;
 endif;
 ?>
 
+<h1><?= $question->title ?></h1>
 <div class="question">
-    <h1><?= $question->title ?></h1>
     <div class="created">
-        <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
+        <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <a href="<?= url("user/view/{$question->username}"); ?>"><?= $question->username ?></a> <?= $question->created ?>
     </div>
     <div class="content">
         <?= $question->content ?>
@@ -32,27 +32,35 @@ endif;
     <div class="tags">
         <?php foreach ($tags as $tag)
             if ($tag->question_id == $question->id) { ?>
-                <div class="tag"><?= $tag->tag ?></div>
+                <a href="<?= url("tag/view/{$tag->tag}"); ?>">
+                    <div class="tag"><?= $tag->tag ?></div>
+                </a>
                 <?php
             } ?>
     </div>
     <div class="links">
-        <div class="comment-link">
+        <?php if ($activeUserId == $question->user_id) : ?>
+        <div class="delete">
+            <a href="<?= url("question/delete/{$question->id}"); ?>">Radera</a>
+        </div>
+        <div class="edit">
+            <a href="<?= url("question/update/{$question->id}"); ?>">Redigera</a>
+        </div>
+    <?php endif; ?>
+        <div class="comment">
             <a href="<?= url("comment/create?postId={$question->id}&questionId={$question->id}&type=question"); ?>">Kommentera</a>
         </div>
-        <?php if ($activeUserId == $question->user_id) : ?>
-        <div class="question-edit">
-            <a href="<?= url("question/update/{$question->id}"); ?>">Redigera fråga</a>
-        </div>
-        <div class="question-delete">
-            <a href="<?= url("question/delete/{$question->id}"); ?>">Radera fråga</a>
-        </div>
     </div>
-    <?php endif; ?>
 </div>
 
 <div class="comments">
-    <div class="question-comments-length">Antal kommentarer: <?= count($comments) ?></div>
+    <div class="question-comments-length">
+        <?php if (count($comments) == 1) : ?>
+        <?= count($comments) ?> kommentar
+        <?php else :?>
+        <?= count($comments) ?> kommentarer
+        <?php endif; ?>
+    </div>
     <?php foreach ($comments as $comment) : ?>
         <div class="comment">
             <div class="comment-by">
@@ -63,10 +71,10 @@ endif;
         <?php if ($activeUserId == $comment->user_id) : ?>
         <div class="links">
             <div class="comment-edit">
-                <a href="<?= url("comment/update/{$comment->id}"); ?>">Redigera kommentar</a>
+                <a href="<?= url("comment/delete/{$comment->id}"); ?>">Radera</a>
             </div>
             <div class="comment-edit">
-                <a href="<?= url("comment/delete/{$comment->id}"); ?>">Radera kommentar</a>
+                <a href="<?= url("comment/update/{$comment->id}"); ?>">Redigera</a>
             </div>
         </div>
         <?php endif; ?>
@@ -74,25 +82,27 @@ endif;
 </div>
 
 <div class="answers">
-    <div class="question-answers-length">Antal svar: <?= count($answers) ?></div>
+    <div class="question-answers-length">
+        <h3><?= count($answers) ?> svar</h3>
+    </div>
     <?php foreach ($answers as $answer) : ?>
     <div class="answer">
-        <div class="answer-by">
+        <div class="by">
             <img src="<?= $question->getGravatar($answer->email, 25) ?>" alt="<?= $answer->username ?>>"> Av <?= $answer->username ?> <?= $answer->created ?>
         </div>
-        <div class="answer-content"><?= $answer->content ?></div>
+        <div class="content"><?= $answer->content ?></div>
         <div class="links">
-            <div class="add-comment"><a href="<?= url("comment/create?&postId={$answer->id}&questionId={$question->id}&type=answer"); ?>">Kommentera svar</a></div>
             <?php if ($activeUserId == $answer->user_id) : ?>
-            <div class="answer-edit">
-                <a href="<?= url("answer/update/{$answer->id}"); ?>">Redigera svar</a>
-            </div>
             <div class="answer-delete">
-                <a href="<?= url("answer/delete/{$answer->id}"); ?>">Radera svar</a>
+                <a href="<?= url("answer/delete/{$answer->id}"); ?>">Radera</a>
             </div>
+            <div class="answer-edit">
+                <a href="<?= url("answer/update/{$answer->id}"); ?>">Redigera</a>
+            </div>
+            <?php endif; ?>
+            <div class="add-comment"><a href="<?= url("comment/create?&postId={$answer->id}&questionId={$question->id}&type=answer"); ?>">Kommentera</a></div>
         </div>
-        <?php endif; ?>
-        <div class="answer-comments">
+        <div class="comments">
             <?php foreach ($answer->answerComments as $acomm) : ?>
             <div class="comment-by">
                 <img src="<?= $question->getGravatar($acomm->email, 25) ?>" alt="<?= $acomm->username ?>>"> Av <?= $acomm->username ?> <?= $acomm->created ?>
@@ -101,10 +111,10 @@ endif;
             <?php if ($activeUserId == $acomm->user_id) : ?>
             <div class="links">
                 <div class="comment-edit">
-                    <a href="<?= url("comment/update/{$acomm->id}"); ?>">Redigera kommentar</a>
+                    <a href="<?= url("comment/delete/{$acomm->id}"); ?>">Radera</a>
                 </div>
                 <div class="comment-edit">
-                    <a href="<?= url("comment/delete/{$acomm->id}"); ?>">Radera kommentar</a>
+                    <a href="<?= url("comment/update/{$acomm->id}"); ?>">Redigera</a>
                 </div>
             </div>
             <?php endif; ?>

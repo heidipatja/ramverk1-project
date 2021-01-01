@@ -1,0 +1,190 @@
+/*!
+ * Stylesheet for ramverk1
+ *
+ * This stylesheet is for the ramverk1 course.
+ */
+
+/**
+* Normalize and reset the style.
+*/
+@import "normalize.css/normalize.less";
+
+
+/**
+ * Font Awesome.
+ */
+@import "@fortawesome/fontawesome-free/less/fontawesome.less";
+@import "@fortawesome/fontawesome-free/less/solid.less";
+@import "@fortawesome/fontawesome-free/less/brands.less";
+
+/**
+ * A responsive menu.
+ */
+@import "@desinax/responsive-menu/less/responsive-menu.less";
+@import "@desinax/responsive-menu/less/media-queries.less";
+
+/**
+ * My own settings, not currently in their own module.
+ */
+
+/**
+* Import the typographic grid.
+*/
+@import "@desinax/typographic-grid/less/typography-font-families.less";
+@import "@desinax/typographic-grid/less/typography-defaults.less";
+
+/**
+ * Figure and figcaption for images and other media using figure/figcaption
+ */
+@import "@desinax/figure/less/asciinema.less";
+@import "@desinax/figure/less/codepen.less";
+@import "@desinax/figure/less/figure.less";
+
+/**
+* Base style to affect HTML elements on a general scale.
+*/
+@import "base/project-base.less";
+
+/**
+* Import the vertical grid.
+*/
+@import "@desinax/vertical-grid/less/grid.less";
+@import "layout/project-grids.less";
+
+ /**
+  * Layout style for general structure of header, navbar, main, footer
+  * and other regions of the page including route specific styles.
+  */
+@import "layout/project-layout.less";
+@import "layout/project-responsive.less";
+
+/**
+* Modules
+*/
+
+@import "modules/question.less";
+
+
+// Colors
+
+
+// Color scheme
+@white: #fff;
+@lighestGray: #fafafa;
+@darkGray: #333;
+
+// Color scheme
+@almostWhite: #bdbdbd;
+@lightGray: #acacac;
+@midGray: #535353;
+@darkGray: #242424;
+@darkerGray: #1a1a1a;
+@almostBlack: #121212;
+@orange: #e3a13e;
+@textBlack: #333;
+@gold: #aa8d4b;
+@lightGold: #e6d4ac;
+
+
+// Colors
+@bgColorHtml: @darkerGray;
+@bgColorBody: @lightGray;
+@bgColorFooter: @darkerGray;
+@bgColorMain: @almostBlack;
+@bgColorWrapAll: @almostBlack;
+@bgColorMenu: @almostBlack;
+@bgColorSidebar: @orange;
+
+@colorBody: @lightGray;
+@textColorHeadings: @textBlack;
+@linkColorText: @lightGray;
+@linkColor: @lightGray;
+@linkColorToc: @lightGray;
+@linkHoverToc: @almostBlack;
+
+@textColor: @textBlack;
+@textColorFooter: @lightGray;
+@linkColorMenu: @almostWhite;
+@textColorLogo: @orange;
+
+
+// Font-families
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Raleway&display=swap');
+@fontFamilyRaleway:           Raleway, Arial, "Helvetica Neue", Helvetica, sans-serif;
+@fontFamilyOpenSans:         "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+@fontFamilyHeadings: @fontFamilyRaleway;
+@fontFamilyBody:     @fontFamilyOpenSans;
+@fontFamilyHeader: @fontFamilyRaleway;
+@fontFamilyCode:     "monospace";
+@fontFamilyLogo: @fontFamilyRaleway;
+
+// Font-sizes
+@magicNumber:  24px;
+@fontSizeBody: 16px;
+
+// Wrap size
+@innerWrapWidth: 1100px;
+
+.site-logo, .site-logo-text-icon {
+    display: none;
+}
+
+.site-logo-text {
+    font-size: 2em;
+    font-family: @fontFamilyRaleway;
+    font-style: italic;
+    position: relative;
+    font-style: normal;
+
+    & a {
+        text-decoration: none;
+        color: @orange;
+    }
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    border-bottom: none;
+}
+
+article a {
+    text-decoration: underline;
+}
+
+.rm-max.rm-navbar {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+}
+
+.rm-default .selected a,
+.rm-default .selected-parent a {
+    color: @orange;
+}
+
+.toc .selected {
+    border-left: 6px solid @orange;
+
+    & a {
+        padding-left: 18px;
+    }
+}
+
+.toc h4, .wrap-sidebar h4 {
+    background: @lightGold;
+}
+
+figure {
+
+    &.figure.left {
+        margin-right: @magicNumber;
+    }
+
+    &.figure.right {
+        margin-left: @magicNumber;
+    }
+}
