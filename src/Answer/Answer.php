@@ -25,6 +25,7 @@ class Answer extends ActiveRecordModel
     public $content;
     public $user_id;
     public $question_id;
+    public $accepted;
 
 
 

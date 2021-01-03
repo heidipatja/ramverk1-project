@@ -6567,7 +6567,18 @@ article ol {
   display: inline-block;
 }
 .question .links {
+  clear: left;
   margin: 24px 0;
+  float: right;
+}
+.question .col1 {
+  display: inline-block;
+  max-width: 90%;
+  float: left;
+}
+.question .col2 {
+  display: inline-block;
+  max-width: 10%;
   float: right;
 }
 .tags a {
@@ -6579,6 +6590,7 @@ article ol {
 }
 .links {
   margin: 24px 0;
+  clear: both;
   float: right;
 }
 .comments {
@@ -6614,6 +6626,28 @@ article ol {
 }
 .question-by img {
   padding-right: 5px;
+}
+.votes form,
+.accepted form,
+.votes input,
+.accepted input,
+.votes p,
+.accepted p,
+.votes span,
+.accepted span,
+.votes fieldset,
+.accepted fieldset {
+  margin: 0;
+  padding: 0;
+}
+.votes #form-element-submit,
+.accepted #form-element-submit {
+  border: none;
+  background: none;
+  font-size: 2rem;
+}
+.accepted.fa {
+  color: green;
 }
 @font-face {
   font-family: 'Open Sans';

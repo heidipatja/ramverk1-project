@@ -126,6 +126,7 @@ CREATE TABLE Vote (
     "user_id" INTEGER NOT NULL,
     "post_id" INTEGER,
     "type" TEXT,
+    "vote" INT,
 
     PRIMARY KEY("id"),
     FOREIGN KEY("user_id") REFERENCES User("id")

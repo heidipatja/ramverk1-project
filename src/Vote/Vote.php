@@ -22,6 +22,46 @@ class Vote extends ActiveRecordModel
      * @var integer $id primary key auto incremented.
      */
     public $id;
-    public $column1;
-    public $column2;
+    public $user_id;
+    public $post_id;
+    public $type;
+    public $vote;
+
+
+
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
+    public function getVotesForPost($postId, $type) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select()
+                        ->from($this->tableName)
+                        ->where("Vote.post_id = " . $postId)
+                        ->andWhere("Vote.type = '{$type}'")
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
+    public function getVoteSum($postId, $type) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select('SUM("Vote") AS "Sum"')
+                        ->from($this->tableName)
+                        ->where("Vote.post_id = " . $postId)
+                        ->andWhere("Vote.type = '{$type}'")
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 }

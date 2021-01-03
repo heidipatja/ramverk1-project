@@ -12,6 +12,9 @@ use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
 use Hepa19\Comment\Comment;
 use Hepa19\Comment\HTMLForm\CreateComment;
+use Hepa19\Vote\HTMLForm\VoteForm;
+use Hepa19\Vote\Vote;
+use Hepa19\Vote\HTMLForm\AcceptForm;
 use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
@@ -67,8 +70,6 @@ class QuestionController implements ContainerInjectableInterface
 
         $newquestion = new Question();
         $newquestion->setDb($this->di->get("dbqb"));
-
-        // $questions2tags = $newquestion->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
 
         $questions2tags = $newquestion->joinJoinWhere("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL");
 
@@ -184,22 +185,32 @@ class QuestionController implements ContainerInjectableInterface
         $question->content = $this->filter->markdown($question->content);
 
         $tags = $this->getTags();
-
-        $comments = $this->getComments($id);
-
-        $answers = $this->getAnswers($id);
-
-        $answers = $this->getCommentsToAnswers($answers);
+        $comments = $this->getComments($id, $activeUserId);
+        $answers = $this->getAnswers($id, $activeUserId);
+        $answers = $this->getCommentsToAnswers($answers, $activeUserId);
 
         $answerForm = new CreateAnswer($this->di, $id, $activeUserId);
         $answerForm->check();
+
+        $votes = $this->getVotes($id, "question");
+        $voteSum = $this->getVoteSum($id, "question") ?? 0;
+
+        $upvoteQ = new VoteForm($this->di, $id, $activeUserId, "question", "up");
+        $upvoteQ->check();
+
+        $downvoteQ = new VoteForm($this->di, $id, $activeUserId, "question", "down");
+        $downvoteQ->check();
 
         $page->add("question/crud/view", [
             "question" => $question,
             "tags" => $tags,
             "comments" => $comments,
             "answers" => $answers,
-            "activeUserId" => $activeUserId
+            "activeUserId" => $activeUserId,
+            "votes" => $votes,
+            "upvoteQ" => $upvoteQ->getHTML(),
+            "downvoteQ" => $downvoteQ->getHTML(),
+            "voteSum" => $voteSum,
         ]);
 
         $page->add("answer/crud/create", [
@@ -218,11 +229,63 @@ class QuestionController implements ContainerInjectableInterface
 
 
     /**
+     * Get accepted status for question
+     *
+     * @return bool true if accepted, false if not
+     */
+    public function getAcceptedStatus($answerId) : bool
+    {
+        $answer = new Answer();
+        $answer->setDb($this->di->get("dbqb"));
+        $answer->findById($answerId);
+
+        if ($answer->accepted == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    /**
      * Get comments for question
      *
      * @return object as a response object
      */
-    public function getComments($id)
+    public function getVotes($postId, $type)
+    {
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+        $votes = $vote->getVotesForPost($postId, $type);
+
+        return $votes;
+    }
+
+
+
+    /**
+     * Get comments for question
+     *
+     * @return object as a response object
+     */
+    public function getVoteSum($postId, $type)
+    {
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+        $voteSum = $vote->getVoteSum($postId, $type);
+
+        return $voteSum[0]->Sum;
+    }
+
+
+
+    /**
+     * Get comments for question
+     *
+     * @return object as a response object
+     */
+    public function getComments($id, $userId)
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
@@ -231,6 +294,18 @@ class QuestionController implements ContainerInjectableInterface
 
         foreach ($comments as $comment) {
             $comment->content = $this->filter->markdown($comment->content);
+
+            $upvote = new VoteForm($this->di, $comment->id, $userId, "comment", "up");
+            $upvote->check();
+
+            $downvote = new VoteForm($this->di, $comment->id, $userId, "comment", "down");
+            $downvote->check();
+
+            $voteSum = $this->getVoteSum($comment->id, "comment") ?? 0;
+
+            $comment->upvote = $upvote->getHTML();
+            $comment->downvote = $downvote->getHTML();
+            $comment->voteSum = $voteSum;
         }
 
         return $comments;
@@ -243,13 +318,27 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getCommentsToAnswers($answers)
+    public function getCommentsToAnswers($answers, $userId)
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
 
         foreach ($answers as $answer) {
             $answer->answerComments = $comment->getCommentsToAnswers($answer->id);
+
+            foreach ($answer->answerComments as $ansC) {
+                $upvote = new VoteForm($this->di, $ansC->id, $userId, "comment", "up");
+                $upvote->check();
+
+                $downvote = new VoteForm($this->di, $ansC->id, $userId, "comment", "down");
+                $downvote->check();
+
+                $voteSum = $this->getVoteSum($ansC->id, "comment") ?? 0;
+
+                $ansC->upvote = $upvote->getHTML();
+                $ansC->downvote = $downvote->getHTML();
+                $ansC->voteSum = $voteSum;
+            }
         }
 
         return $answers;
@@ -279,7 +368,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getAnswers($id)
+    public function getAnswers($id, $userId)
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
@@ -288,6 +377,22 @@ class QuestionController implements ContainerInjectableInterface
 
         foreach ($answers as $answer) {
             $answer->content = $this->filter->markdown($answer->content);
+
+            $upvote = new VoteForm($this->di, $answer->id, $userId, "answer", "up");
+            $upvote->check();
+
+            $downvote = new VoteForm($this->di, $answer->id, $userId, "answer", "down");
+            $downvote->check();
+
+            $voteSum = $this->getVoteSum($answer->id, "answer");
+
+            $acceptForm = new AcceptForm($this->di, $answer->id, $userId, $answer->accepted);
+            $acceptForm->check();
+
+            $answer->upvote = $upvote->getHTML();
+            $answer->downvote = $downvote->getHTML();
+            $answer->voteSum = $voteSum ?? 0;
+            $answer->acceptForm = $acceptForm->getHTML();
         }
 
         return $answers;

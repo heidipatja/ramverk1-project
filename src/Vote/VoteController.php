@@ -4,10 +4,7 @@ namespace Hepa19\Vote;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
-use Hepa19\Vote\HTMLForm\CreateForm;
-use Hepa19\Vote\HTMLForm\EditForm;
-use Hepa19\Vote\HTMLForm\DeleteForm;
-use Hepa19\Vote\HTMLForm\UpdateForm;
+use Hepa19\Vote\HTMLForm\VoteForm;
 
 // use Anax\Route\Exception\ForbiddenException;
 // use Anax\Route\Exception\NotFoundException;
@@ -19,29 +16,6 @@ use Hepa19\Vote\HTMLForm\UpdateForm;
 class VoteController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
-
-
-
-    /**
-     * @var $data description
-     */
-    //private $data;
-
-
-
-    // /**
-    //  * The initialize method is optional and will always be called before the
-    //  * target method/action. This is a convienient method where you could
-    //  * setup internal properties that are commonly used by several methods.
-    //  *
-    //  * @return void
-    //  */
-    // public function initialize() : void
-    // {
-    //     ;
-    // }
-
-
 
     /**
      * Show all items.
@@ -73,7 +47,7 @@ class VoteController implements ContainerInjectableInterface
     public function createAction() : object
     {
         $page = $this->di->get("page");
-        $form = new CreateForm($this->di);
+        $form = new VoteForm($this->di);
         $form->check();
 
         $page->add("vote/crud/create", [

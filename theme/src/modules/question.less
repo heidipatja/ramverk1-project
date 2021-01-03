@@ -3,8 +3,6 @@
  */
 
 .questions .question {
-    // background: @lighestGray;
-    // padding: @magicNumber/2 @magicNumber @magicNumber;
     margin-bottom: @magicNumber;
     padding-bottom: @magicNumber;
     border-bottom: 1px solid @lightGray;
@@ -25,7 +23,20 @@
     }
 
     & .links {
+        clear: left;
         margin: @magicNumber 0;
+        float: right;
+    }
+
+    & .col1 {
+        display: inline-block;
+        max-width: 90%;
+        float: left;
+    }
+
+    & .col2 {
+        display: inline-block;
+        max-width: 10%;
         float: right;
     }
 }
@@ -43,6 +54,7 @@
 
 .links {
     margin: @magicNumber 0;
+    clear: both;
     float: right;
 }
 
@@ -96,4 +108,26 @@
     & img {
         padding-right: 5px;
     }
+}
+
+.votes,
+.accepted {
+    & form,
+    & input,
+    & p,
+    & span,
+    & fieldset {
+        margin: 0;
+        padding: 0;
+    }
+
+    & #form-element-submit {
+        border: none;
+        background: none;
+        font-size: 2rem;
+    }
+}
+
+.accepted.fa{
+    color: green;   
 }
