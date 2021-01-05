@@ -2,12 +2,12 @@
 
 namespace Hepa19\Comment;
 
-use Anax\DatabaseActiveRecord\ActiveRecordModel;
+use Hepa19\MyActiveRecord\MyActiveRecord;
 
 /**
  * A database driven model using the Active Record design pattern.
  */
-class Comment extends ActiveRecordModel
+class Comment extends MyActiveRecord
 {
     /**
      * @var string $tableName name of the database table.
@@ -26,46 +26,4 @@ class Comment extends ActiveRecordModel
     public $user_id;
     public $post_id;
     public $type;
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function getCommentsToAnswers($postId) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from("User")
-                        ->join("Comment", "Comment.user_id = User.id")
-                        ->where("Comment.post_id = " . $postId)
-                        ->andWhere("Comment.type = 'answer'")
-                        ->andWhere("Comment.deleted IS NULL")
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function getCommentsToQuestion($postId) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from("User")
-                        ->join("Comment", "Comment.user_id = User.id")
-                        ->where("Comment.post_id = " . $postId)
-                        ->andWhere("Comment.type = 'question'")
-                        ->andWhere("Comment.deleted IS NULL")
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
 }

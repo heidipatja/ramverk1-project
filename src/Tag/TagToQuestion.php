@@ -24,23 +24,4 @@ class TagToQuestion extends ActiveRecordModel
     public $id;
     public $tag_id;
     public $question_id;
-
-
-
-    /**
-    * Join with Question and Tag tables to get tag names
-    *
-    * @return array Results
-    */
-    public function getTagNames() : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($this->tableName)
-                        ->join("Question", "TagToQuestion.question_id = Question.id")
-                        ->join("Tag", "TagToQuestion.tag_id = Tag.id")
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
 }

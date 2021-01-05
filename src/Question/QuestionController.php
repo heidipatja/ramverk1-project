@@ -60,30 +60,41 @@ class QuestionController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions = $question->findAll();
-        $questions2users = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "Question.deleted IS NULL");
+        $questions = $question->joinWhere("Question.*, User.username, User.email", "Question", "User", "Question.user_id = User.id", "Question.deleted IS NULL", "created DESC");
 
-        foreach ($questions2users as $question) {
+        foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
             $question->content = $this->filter->substring($question->content, 100);
             $voteSum = $this->getVoteSum($question->id, "question");
             $question->voteSum = $voteSum ?? 0;
             $question->answerCount = $this->getAnswerCount($question->id)[0]->answerCount;
+            $question->tags = $this->getTags($question->id);
         }
 
-        $newquestion = new Question();
-        $newquestion->setDb($this->di->get("dbqb"));
-
-        $questions2tags = $newquestion->joinJoinWhere("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL");
-
         $page->add("question/crud/view-all", [
-            "questions" => $questions2users,
-            "tags" => $questions2tags
+            "questions" => $questions
         ]);
 
         return $page->render([
             "title" => "Frågor",
         ]);
+    }
+
+
+
+    /**
+     * Handler with form to create a new item.
+     *
+     * @return object as a response object
+     */
+    public function getTags($questionId) : array
+    {
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+
+        $tags = $question->join2Where2("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL", "Question.id = " . $questionId);
+
+        return $tags;
     }
 
 
@@ -183,11 +194,11 @@ class QuestionController implements ContainerInjectableInterface
         $activeUserId = $this->di->get("session")->get("userId");
         $isAuthor = $question->isAuthor($activeUserId);
 
-        $question = $question->joinTableWhere("User", "Question", "Question.user_id = User.id", "Question.id = " . $id)[0];
+        $question = $question->joinWhere("*", "User", "Question", "Question.user_id = User.id", "Question.id = " . $id)[0];
 
         $question->content = $this->filter->markdown($question->content);
 
-        $tags = $this->getTags();
+        $tags = $this->getTags($id);
         $comments = $this->getComments($id, $activeUserId);
         $answers = $this->getAnswers($id, $activeUserId);
         $answers = $this->getCommentsToAnswers($answers, $activeUserId);
@@ -293,7 +304,7 @@ class QuestionController implements ContainerInjectableInterface
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
 
-        $comments = $comment->getCommentsToQuestion($id);
+        $comments = $comment->joinWhere3("User", "Comment", "Comment.user_id = User.id", "Comment.post_id = " . $id, "Comment.type = 'question'", "Comment.deleted IS NULL");
 
         foreach ($comments as $comment) {
             $comment->content = $this->filter->markdown($comment->content);
@@ -327,7 +338,7 @@ class QuestionController implements ContainerInjectableInterface
         $comment->setDb($this->di->get("dbqb"));
 
         foreach ($answers as $answer) {
-            $answer->answerComments = $comment->getCommentsToAnswers($answer->id);
+            $answer->answerComments = $comment->joinWhere3("User", "Comment", "Comment.user_id = User.id", "Comment.post_id = " . $answer->id, "Comment.type = 'answer'", "Comment.deleted IS NULL");
 
             foreach ($answer->answerComments as $ansC) {
                 $ansC->content = $this->filter->markdown($ansC->content);
@@ -352,23 +363,6 @@ class QuestionController implements ContainerInjectableInterface
 
 
     /**
-     * Get tags for question
-     *
-     * @return object as a response object
-     */
-    public function getTags()
-    {
-        $question = new Question();
-        $question->setDb($this->di->get("dbqb"));
-
-        $questions2tags = $question->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
-
-        return $questions2tags;
-    }
-
-
-
-    /**
      * Get answers for question
      *
      * @return object as a response object
@@ -378,7 +372,7 @@ class QuestionController implements ContainerInjectableInterface
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
 
-        $answers = $answer->getAnswers($id);
+        $answers = $answer->join2Where("User", "Answer", "User.id = Answer.user_id", "Answer.question_id = " . $id, "Answer.deleted IS NULL");
 
         foreach ($answers as $answer) {
             $answer->content = $this->filter->markdown($answer->content);
@@ -415,7 +409,7 @@ class QuestionController implements ContainerInjectableInterface
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
 
-        $answerCount = $answer->getAnswerCount($id) ?? 0;
+        $answerCount = $answer->where("Answer.question_id = " . $id, 'COUNT("Answer") AS "answerCount"') ?? 0;
 
         return $answerCount;
     }

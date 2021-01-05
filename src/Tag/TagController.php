@@ -9,6 +9,7 @@ use Hepa19\Tag\HTMLForm\EditForm;
 use Hepa19\Tag\HTMLForm\DeleteForm;
 use Hepa19\Tag\HTMLForm\UpdateForm;
 use Hepa19\Question\Question;
+use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
  * A sample controller to show how a controller class can be implemented.
@@ -16,6 +17,16 @@ use Hepa19\Question\Question;
 class TagController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
+    /**
+     * Initialize controller
+     *
+     */
+    public function initialize()
+    {
+        $this->filter = new MyTextFilter();
+    }
+
+
 
     /**
      * View all tags
@@ -55,14 +66,17 @@ class TagController implements ContainerInjectableInterface
 
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
-        $questions = $question->joinThreeTables("Question", "TagToQuestion", "TagToQuestion.question_id = Question.id", "Tag", "Tag.id = TagToQuestion.tag_id", "User", "User.id = Question.user_id", "Tag.tag = '". $tagString . "'");
+        $questions = $question->join3where("Question", "TagToQuestion", "TagToQuestion.question_id = Question.id", "Tag", "Tag.id = TagToQuestion.tag_id", "User", "User.id = Question.user_id", "Tag.tag = '". $tagString . "'", "Question.*, User.username, User.email");
 
-        $tags = $this->getTags();
+        foreach ($questions as $question) {
+            $question->content = $this->filter->markdown($question->content);
+            $question->content = $this->filter->substring($question->content, 100);
+            $question->tags = $this->getTags($question->id);
+        }
 
         $page->add("tag/crud/view", [
             "tag" => $tagString,
             "questions" => $questions,
-            "tags" => $tags
         ]);
 
         return $page->render([
@@ -73,17 +87,17 @@ class TagController implements ContainerInjectableInterface
 
 
     /**
-     * Get tags for question
+     * Get tags related to question
      *
      * @return object as a response object
      */
-    public function getTags()
+    public function getTags($questionId) : array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions2tags = $question->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+        $tags = $question->join2Where2("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL", "Question.id = " . $questionId);
 
-        return $questions2tags;
+        return $tags;
     }
 }

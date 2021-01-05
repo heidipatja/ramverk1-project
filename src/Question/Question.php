@@ -2,12 +2,13 @@
 
 namespace Hepa19\Question;
 
-use Anax\DatabaseActiveRecord\ActiveRecordModel;
+// use Anax\DatabaseActiveRecord\ActiveRecordModel;
+use Hepa19\MyActiveRecord\MyActiveRecord;
 
 /**
  * A database driven model using the Active Record design pattern.
  */
-class Question extends ActiveRecordModel
+class Question extends MyActiveRecord
 {
     /**
      * @var string $tableName name of the database table.
@@ -27,7 +28,6 @@ class Question extends ActiveRecordModel
 
 
 
-
     /**
     * Get information on whether logged in user is author of question
     *
@@ -40,166 +40,6 @@ class Question extends ActiveRecordModel
         return $this->user_id == $activeUserId;
     }
 
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function joinTable($fromTable, $withTable, $condition) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function joinTableWhere($fromTable, $withTable, $condition, $where) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->where($where)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function joinTableWhere2($fromTable, $withTable, $condition, $where, $where2) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->where($where)
-                        ->andWhere($where2)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function joinTableWhere3($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $where3) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->join($withTable2, $condition2)
-                        ->where($where)
-                        ->andWhere($where2)
-                        ->andWhere($where3)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-
-    /**
-    * Join with another db table
-    *
-    * @return array Results
-    */
-    public function joinJoinWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->join($withTable2, $condition2)
-                        ->where($where)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with two tables
-    *
-    * @return array Results
-    */
-    public function joinTwoTables($fromTable, $withTable, $condition, $withTable2, $condition2) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->join($withTable2, $condition2)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with two tables
-    *
-    * @return array Results
-    */
-    public function joinTwoTablesWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->join($withTable2, $condition2)
-                        ->where($where)
-                        ->andWhere($where2)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
-
-
-
-    /**
-    * Join with three tables
-    *
-    * @return array Results
-    */
-    public function joinThreeTables($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where) : array
-    {
-        $this->checkDb();
-        return $this->db->connect()
-                        ->select()
-                        ->from($fromTable)
-                        ->join($withTable, $condition)
-                        ->join($withTable2, $condition2)
-                        ->join($withTable3, $condition3)
-                        ->where($where)
-                        ->execute()
-                        ->fetchAllClass(get_class($this));
-    }
 
 
     /**

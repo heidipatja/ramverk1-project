@@ -75,16 +75,19 @@ class UserController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions = $question->joinTableWhere2("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id, "Question.deleted IS NULL");
+        $questions = $question->join2Where("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id, "Question.deleted IS NULL");
 
-        $answers = $question->joinTableWhere3("User", "Answer", "Answer.user_id = User.id", "Question", "Question.id = Answer.question_id", "User.id = " . $user->id, "Answer.deleted IS NULL", "Question.deleted IS NULL");
+        $answers = $question->join2where3("User", "Answer", "Answer.user_id = User.id", "Question", "Question.id = Answer.question_id", "User.id = " . $user->id, "Answer.deleted IS NULL", "Question.deleted IS NULL");
 
-        $questions2tags = $this->getTags();
+        foreach ($questions as $question) {
+            $question->content = $this->filter->markdown($question->content);
+            $question->content = $this->filter->substring($question->content, 100);
+            $question->tags = $this->getTags($question->id);
+        }
 
         $page->add("user/crud/view", [
             "user" => $user,
             "questions" => $questions,
-            "tags" => $questions2tags,
             "answers" => $answers
         ]);
 
@@ -110,18 +113,18 @@ class UserController implements ContainerInjectableInterface
 
 
     /**
-     * Get tags for question
+     * Get tags related to question
      *
      * @return object as a response object
      */
-    public function getTags()
+    public function getTags($questionId) : array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions2tags = $question->joinTwoTables("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id");
+        $tags = $question->join2Where2("Question", "TagToQuestion", "Question.id = TagToQuestion.question_id", "Tag", "TagToQuestion.tag_id = Tag.id", "Question.deleted IS NULL", "Question.id = " . $questionId);
 
-        return $questions2tags;
+        return $tags;
     }
 
 
@@ -137,7 +140,7 @@ class UserController implements ContainerInjectableInterface
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
-        $answers = $answer->joinUser($id);
+        $answers = $answer->joinWhere("User", "Answer", "Answer.user_id = User.id", "Answer.question_id = " . $id);
         return $answers;
     }
 

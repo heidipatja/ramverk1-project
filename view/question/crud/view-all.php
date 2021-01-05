@@ -46,18 +46,16 @@ endif;
             </div>
 
             <div class="tags">
-                <?php foreach ($tags as $tag)
-                    if ($tag->question_id == $question->id) { ?>
-                        <a href="<?= url("tag/view/{$tag->tag}"); ?>">
-                            <div class="tag"><?= $tag->tag ?></div>
-                        </a>
-                        <?php
-                    } ?>
+                <?php foreach ($question->tags as $tag) : ?>
+                    <a href="<?= url("tag/view/{$tag->tag}"); ?>">
+                        <div class="tag"><?= $tag->tag ?></div>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div>
         <div class="col2">
             <div class="votes">
-                <p><?= $question->voteSum ?> röster</p>
+                <p><?= $question->voteSum ?> i rank</p>
                 <p><?= $question->answerCount ?> svar</p>
             </div>
         </div>

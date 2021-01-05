@@ -52,11 +52,10 @@ endif;
     </div>
 
     <div class="question-tags">
-        <?php foreach ($tags as $tag)
-            if ($tag->question_id == $question->question_id) { ?>
-                <div class="tag"><?= $tag->tag ?></div>
-                <?php
-            } ?>
+        <?php foreach ($question->tags as $tag) : ?>
+            <div class="tag"><?= $tag->tag ?></div>
+        <?php endforeach; ?>
+
     </div>
 </div>
 <?php endforeach; ?>
