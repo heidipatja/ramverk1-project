@@ -271,7 +271,7 @@ class QuestionController implements ContainerInjectableInterface
     {
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));
-        $votes = $vote->getVotesForPost($postId, $type);
+        $votes = $vote->where2("Vote.post_id = " . $postId, "Vote.type = '{$type}'");
 
         return $votes;
     }
@@ -287,7 +287,7 @@ class QuestionController implements ContainerInjectableInterface
     {
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));
-        $voteSum = $vote->getVoteSum($postId, $type);
+        $voteSum = $vote->where2("Vote.post_id = " . $postId, "Vote.type = '{$type}'", 'SUM("Vote") AS "Sum"');
 
         return $voteSum[0]->Sum;
     }

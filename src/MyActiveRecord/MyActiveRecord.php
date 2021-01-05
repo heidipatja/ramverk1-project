@@ -45,18 +45,38 @@ class MyActiveRecord extends ActiveRecordModel
 
 
 
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
+    public function where2($where, $where2, $select = "*") : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
+                        ->from($this->tableName)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
 
     /**
     * Join with another db table
     *
     * @return array Results
     */
-    public function joinWhere($select, $fromTable, $withTable, $condition, $where) : array
+    public function joinWhere($select, $fromTable, $withTable, $condition, $where, $orderBy = "created DESC") : array
     {
         $this->checkDb();
         return $this->db->connect()
                         ->select($select)
                         ->from($fromTable)
+                        ->orderBy($orderBy)
                         ->join($withTable, $condition)
                         ->where($where)
                         ->execute()
