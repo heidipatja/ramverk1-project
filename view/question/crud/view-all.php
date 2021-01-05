@@ -17,7 +17,6 @@ $urlToCreate = url("question/create");
 $urlToDelete = url("question/delete");
 
 
-
 ?><h1>Frågor</h1>
 
 
@@ -36,23 +35,31 @@ endif;
 <div class="questions">
     <?php foreach ($questions as $question) : ?>
     <div class="question">
-        <div class="title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
-        <div class="by">
-            <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <a href="<?= url("user/view/{$question->username}"); ?>"><?= $question->username ?></a> <?= $question->created ?>
-        </div>
+        <div class="col1">
+            <div class="title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
+            <div class="by">
+                <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <a href="<?= url("user/view/{$question->username}"); ?>"><?= $question->username ?></a> <?= $question->created ?>
+            </div>
 
-        <div class="content">
-            <?= $question->content ?>
-        </div>
+            <div class="content">
+                <?= $question->content ?>
+            </div>
 
-        <div class="tags">
-            <?php foreach ($tags as $tag)
-                if ($tag->question_id == $question->id) { ?>
-                    <a href="<?= url("tag/view/{$tag->tag}"); ?>">
-                        <div class="tag"><?= $tag->tag ?></div>
-                    </a>
-                    <?php
-                } ?>
+            <div class="tags">
+                <?php foreach ($tags as $tag)
+                    if ($tag->question_id == $question->id) { ?>
+                        <a href="<?= url("tag/view/{$tag->tag}"); ?>">
+                            <div class="tag"><?= $tag->tag ?></div>
+                        </a>
+                        <?php
+                    } ?>
+            </div>
+        </div>
+        <div class="col2">
+            <div class="votes">
+                <p><?= $question->voteSum ?> röster</p>
+                <p><?= $question->answerCount ?> svar</p>
+            </div>
         </div>
     </div>
 <?php endforeach; ?>

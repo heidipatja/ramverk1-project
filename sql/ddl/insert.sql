@@ -14,7 +14,8 @@ INSERT INTO User ("email", "username", "password", "presentation", "score") VALU
 INSERT INTO Question ("title", "content", "user_id") VALUES
 ("Pingvin", "En fråga om pingviner.", 1),
 ("Penglings", "Är det samma som pingviner?", 2),
-("Panguins", "Lite text.", 1);
+("Panguins", "Lite text.", 1),
+("Pongwuings", "Var kan man hitta pongwuings?", 2);
 
 
 
@@ -26,7 +27,8 @@ INSERT INTO Tag ("id", "tag") VALUES
 (2, "penglings"),
 (3, "pangwings"),
 (4, "namn"),
-(5, "antarktis");
+(5, "antarktis"),
+(6, "pongwuings");
 
 
 
@@ -36,7 +38,9 @@ INSERT INTO Tag ("id", "tag") VALUES
 INSERT INTO TagToQuestion ("id", "tag_id", "question_id") VALUES
 (1, 1, 1),
 (2, 1, 2),
-(3, 2, 2);
+(3, 2, 2),
+(4, 6, 4),
+(5, 1, 4);
 
 
 
@@ -46,7 +50,8 @@ INSERT INTO TagToQuestion ("id", "tag_id", "question_id") VALUES
 INSERT INTO Answer ("id", "content", "user_id", "question_id") VALUES
 (1, "Det här är ett svar", 1, 1),
 (2, "Det här är också ett svar", 2, 1),
-(3, "Det här är ett svar", 1, 2);
+(3, "Det här är ett svar", 1, 2),
+(4, "Svarar på frågan", 1, 4);
 
 
 
@@ -57,4 +62,5 @@ INSERT INTO Comment ("id", "content", "user_id", "post_id", "type") VALUES
 (1, "Det här är en kommentar.", 1, 1, "question"),
 (2, "En kommentar.", 2, 1, "question"),
 (3, "Kommentera mera!", 1, 1, "answer"),
-(4, "Kommenterar på.", 1, 2, "answer");
+(4, "Kommenterar på.", 1, 2, "answer"),
+(5, "Förtydligande, menar pangwings", 2, 4, "question");

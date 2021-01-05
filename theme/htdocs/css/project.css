@@ -6551,17 +6551,8 @@ article ol {
 /** --------------------------------------------------------------
  * Question
  */
-.questions .question {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #acacac;
-}
-.questions .question h2 {
-  margin: 0;
-  color: #aa8d4b;
-}
-.questions .question .title a {
-  text-decoration: none;
+.question {
+  clear: both;
 }
 .question .links > * {
   display: inline-block;
@@ -6577,6 +6568,29 @@ article ol {
   float: left;
 }
 .question .col2 {
+  display: inline-block;
+  max-width: 10%;
+  float: right;
+}
+.questions .question {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #acacac;
+  clear: both;
+}
+.questions .question h2 {
+  margin: 0;
+  color: #aa8d4b;
+}
+.questions .question .title a {
+  text-decoration: none;
+}
+.questions .question .col1 {
+  display: inline-block;
+  max-width: 90%;
+  float: none;
+}
+.questions .question .col2 {
   display: inline-block;
   max-width: 10%;
   float: right;

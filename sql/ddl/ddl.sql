@@ -124,10 +124,9 @@ DROP TABLE IF EXISTS Vote;
 CREATE TABLE Vote (
     "id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "post_id" INTEGER,
-    "type" TEXT,
-    "vote" INT,
+    "post_id" INTEGER NOT NULL,
+    "type" TEXT NOT NULL,
+    "vote" INT NOT NULL,
 
-    PRIMARY KEY("id"),
-    FOREIGN KEY("user_id") REFERENCES User("id")
+    PRIMARY KEY("id")
 );

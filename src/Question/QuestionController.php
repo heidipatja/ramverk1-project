@@ -66,6 +66,9 @@ class QuestionController implements ContainerInjectableInterface
         foreach ($questions2users as $question) {
             $question->content = $this->filter->markdown($question->content);
             $question->content = $this->filter->substring($question->content, 100);
+            $voteSum = $this->getVoteSum($question->id, "question");
+            $question->voteSum = $voteSum ?? 0;
+            $question->answerCount = $this->getAnswerCount($question->id)[0]->answerCount;
         }
 
         $newquestion = new Question();
@@ -327,10 +330,12 @@ class QuestionController implements ContainerInjectableInterface
             $answer->answerComments = $comment->getCommentsToAnswers($answer->id);
 
             foreach ($answer->answerComments as $ansC) {
+                $ansC->content = $this->filter->markdown($ansC->content);
+
                 $upvote = new VoteForm($this->di, $ansC->id, $userId, "comment", "up");
                 $upvote->check();
 
-                $downvote = new VoteForm($this->di, $ansC->id, $userId, "comment", "down");
+                $downvote = new VoteForm($this->di, $userId, $ansC->user_id, "comment", "down");
                 $downvote->check();
 
                 $voteSum = $this->getVoteSum($ansC->id, "comment") ?? 0;
@@ -386,7 +391,7 @@ class QuestionController implements ContainerInjectableInterface
 
             $voteSum = $this->getVoteSum($answer->id, "answer");
 
-            $acceptForm = new AcceptForm($this->di, $answer->id, $userId, $answer->accepted);
+            $acceptForm = new AcceptForm($this->di, $answer->id, $answer->user_id, $answer->accepted);
             $acceptForm->check();
 
             $answer->upvote = $upvote->getHTML();
@@ -396,5 +401,22 @@ class QuestionController implements ContainerInjectableInterface
         }
 
         return $answers;
+    }
+
+
+
+    /**
+     * Get answers for question
+     *
+     * @return object as a response object
+     */
+    public function getAnswerCount($id)
+    {
+        $answer = new Answer();
+        $answer->setDb($this->di->get("dbqb"));
+
+        $answerCount = $answer->getAnswerCount($id) ?? 0;
+
+        return $answerCount;
     }
 }

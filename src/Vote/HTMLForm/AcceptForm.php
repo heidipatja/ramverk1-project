@@ -120,27 +120,29 @@ class AcceptForm extends FormModel
 
 
 
-    // /**
-    //  * Checks if logged in user is the same as answer creator
-    //  *
-    //  * @return bool
-    //  */
-    // public function isOwnPost($userId, $answerId, $type) : bool
-    // {
-    //     $activeUserId = $this->di->get("session")->get("userId");
-    //
-    //     if ($type == "answer") {
-    //         $answer = new Answer();
-    //         $answer->setDb($this->di->get("dbqb"));
-    //         $answer->findById($answerId);
-    //
-    //         if ($answer->user_id == $activeUserId) {
-    //             return true;
-    //         }
-    //     }
-    //
-    //     return false;
-    // }
+    /**
+     * Checks if user is owner of question
+     *
+     * @return bool
+     */
+    public function isOwnQuestion($answerId) : bool
+    {
+        $activeUserId = $this->di->get("session")->get("userId");
+
+        $answer = new Answer();
+        $answer->setDb($this->di->get("dbqb"));
+        $answer = $answer->findById($answerId);
+
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+        $question = $question->findById($answer->question_id);
+
+        if ($question->user_id == $activeUserId) {
+            return true;
+        }
+
+        return false;
+    }
 
 
 
@@ -154,22 +156,21 @@ class AcceptForm extends FormModel
     {
         $userId = $this->form->value("user-id");
         $answerId = $this->form->value("answer-id");
-        $type = $this->form->value("type");
 
         if (!$userId) {
             return false;
         }
 
-        // if ($this->isOwnPost($userId, $answerId, $type)) {
-        //     return true;
-        // }
+        if ($this->isOwnQuestion($answerId)) {
+            $answer = new Answer();
+            $answer->setDb($this->di->get("dbqb"));
+            $answer->findById($answerId);
+            $this->toggleAccepted($answer);
 
-        $answer = new Answer();
-        $answer->setDb($this->di->get("dbqb"));
-        $answer->findById($answerId);
-        $this->toggleAccepted($answer);
+            $answer->save();
+            return true;
+        }
 
-        $answer->save();
         return true;
     }
 

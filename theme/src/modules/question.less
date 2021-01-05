@@ -2,22 +2,9 @@
  * Question
  */
 
-.questions .question {
-    margin-bottom: @magicNumber;
-    padding-bottom: @magicNumber;
-    border-bottom: 1px solid @lightGray;
-
-    & h2 {
-        margin: 0;
-        color: @gold;
-    }
-
-    & .title a {
-        text-decoration: none;
-    }
-}
-
 .question {
+    clear: both;
+
     & .links > * {
         display: inline-block;
     }
@@ -39,6 +26,35 @@
         max-width: 10%;
         float: right;
     }
+}
+
+.questions .question {
+    margin-bottom: @magicNumber;
+    padding-bottom: @magicNumber;
+    border-bottom: 1px solid @lightGray;
+    clear: both;
+
+    & h2 {
+        margin: 0;
+        color: @gold;
+    }
+
+    & .title a {
+        text-decoration: none;
+    }
+
+    & .col1 {
+        display: inline-block;
+        max-width: 90%;
+        float: none;
+    }
+
+    & .col2 {
+        display: inline-block;
+        max-width: 10%;
+        float: right;
+    }
+
 }
 
 .tags {
@@ -129,5 +145,5 @@
 }
 
 .accepted.fa{
-    color: green;   
+    color: green;
 }

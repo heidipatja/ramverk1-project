@@ -65,4 +65,22 @@ class Answer extends ActiveRecordModel
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
+
+
+
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
+    public function getAnswerCount($questionId) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select('COUNT("Answer") AS "answerCount"')
+                        ->from($this->tableName)
+                        ->where("Answer.question_id = " . $questionId)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 }

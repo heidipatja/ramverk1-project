@@ -23,7 +23,8 @@ class VoteForm extends FormModel
     {
         parent::__construct($di);
         $icon = $this->getIcon($voteType);
-        $this->vote = $this->getVote($voteType);
+        $this->voteValue = $this->getVote($voteType);
+        $this->userId = $userId;
         $this->form->create(
             [
                 "id" => __CLASS__ . "\\" . $type . $postId . "\\user" . $userId . "\\" . $voteType,
@@ -47,6 +48,12 @@ class VoteForm extends FormModel
                     "type" => "hidden",
                     "validation" => ["not_empty"],
                     "value" => $type
+                ],
+
+                "vote-type" => [
+                    "type" => "hidden",
+                    "validation" => ["not_empty"],
+                    "value" => $voteType
                 ],
 
                 "submit" => [
@@ -94,20 +101,38 @@ class VoteForm extends FormModel
 
 
     /**
+     * Checks if user has already voted on the post
+     *
+     * @return bool true if already voted, else false
+     */
+    public function hasAlreadyVoted($userId, $postId, $type) : bool
+    {
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+        $voted = $vote->getVote($userId, $postId, $type);
+
+        if ($voted->id == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+    /**
      * Checks if logged in user is the same as post creator
      *
      * @return bool
      */
     public function isOwnPost($userId, $postId, $type) : bool
     {
-        $activeUserId = $this->di->get("session")->get("userId");
-
         if ($type == "question") {
             $question = new Question();
             $question->setDb($this->di->get("dbqb"));
-            $question->findById($postId);
+            $question = $question->findById($postId);
 
-            if ($question->user_id == $activeUserId) {
+            if ($question->user_id == $userId) {
                 return true;
             }
         }
@@ -115,9 +140,9 @@ class VoteForm extends FormModel
         if ($type == "comment") {
             $comment = new Comment();
             $comment->setDb($this->di->get("dbqb"));
-            $comment->findById($postId);
+            $comment = $comment->findById($postId);
 
-            if ($comment->user_id == $activeUserId) {
+            if ($comment->user_id == $userId) {
                 return true;
             }
         }
@@ -125,9 +150,9 @@ class VoteForm extends FormModel
         if ($type == "answer") {
             $answer = new Answer();
             $answer->setDb($this->di->get("dbqb"));
-            $answer->findById($postId);
+            $answer = $answer->findById($postId);
 
-            if ($answer->user_id == $activeUserId) {
+            if ($answer->user_id == $userId) {
                 return true;
             }
         }
@@ -148,6 +173,7 @@ class VoteForm extends FormModel
         $userId = $this->form->value("user-id");
         $postId = $this->form->value("post-id");
         $type = $this->form->value("type");
+        $voteType = $this->form->value("vote-type");
 
         if (!$userId) {
             return false;
@@ -157,13 +183,22 @@ class VoteForm extends FormModel
             return true;
         }
 
-        $vote = new Vote();
-        $vote->setDb($this->di->get("dbqb"));
-        $vote->user_id = $userId;
-        $vote->post_id = $postId;
-        $vote->type = $type;
-        $vote->vote = $this->vote;
-        $vote->save();
+        if ($this->hasAlreadyVoted($userId, $postId, $type)) {
+            $vote = new Vote();
+            $vote->setDb($this->di->get("dbqb"));
+            $voteToChange = $vote->getVote($userId, $postId, $type);
+            $voteToChange->vote = $this->voteValue;
+            $voteToChange->save();
+            return true;
+        }
+
+        $newVote = new Vote();
+        $newVote->setDb($this->di->get("dbqb"));
+        $newVote->user_id = $userId;
+        $newVote->post_id = $postId;
+        $newVote->type = $type;
+        $newVote->vote = $this->voteValue;
+        $newVote->save();
         return true;
     }
 

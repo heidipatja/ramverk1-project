@@ -53,6 +53,27 @@ class Vote extends ActiveRecordModel
     *
     * @return array Results
     */
+    public function getVote($userId, $postId, $type) : object
+    {
+        $this->checkDb();
+        $this->db->connect()
+                 ->select()
+                 ->from($this ->tableName)
+                 ->where("Vote.post_id = " . $postId)
+                 ->andWhere("Vote.type = '{$type}'")
+                 ->andWhere("Vote.user_id = " . $userId)
+                 ->execute()
+                 ->fetchInto($this);
+        return $this;
+    }
+
+
+
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
     public function getVoteSum($postId, $type) : array
     {
         $this->checkDb();

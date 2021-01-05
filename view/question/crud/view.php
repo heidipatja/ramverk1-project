@@ -150,9 +150,6 @@ endif;
                         <?= $acomm->voteSum ?>
                         <?= $acomm->downvote ?>
                     </div>
-                    <div class="accepted">
-                        <?= $answer->acceptForm ?>
-                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -162,6 +159,9 @@ endif;
                 <?= $answer->upvote ?>
                 <?= $answer->voteSum ?>
                 <?= $answer->downvote ?>
+            </div>
+            <div class="accepted">
+                <?= $answer->acceptForm ?>
             </div>
         </div>
     </div>
