@@ -26,4 +26,25 @@ class Vote extends MyActiveRecord
     public $post_id;
     public $type;
     public $vote;
+
+
+
+    /**
+    * Get a specific vote
+    *
+    * @return array Results
+    */
+    public function getVote($userId, $postId, $type) : object
+    {
+        $this->checkDb();
+        $this->db->connect()
+                 ->select()
+                 ->from($this ->tableName)
+                 ->where("Vote.post_id = " . $postId)
+                 ->andWhere("Vote.type = '{$type}'")
+                 ->andWhere("Vote.user_id = " . $userId)
+                 ->execute()
+                 ->fetchInto($this);
+        return $this;
+    }
 }

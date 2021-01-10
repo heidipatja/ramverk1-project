@@ -13,7 +13,7 @@ $question = isset($question) ? $question : null;
 $answers = isset($answers) ? $answers : null;
 $comments = isset($comments) ? $comments : null;
 
-// var_dump($question);
+// var_dump($answers);
 // var_dump($votes);
 // var_dump($voteSum);
 
@@ -105,6 +105,9 @@ endif;
 </div>
 
 <div class="answers">
+    <div class="orderby">
+        <?= $orderForm ?>
+    </div>
     <div class="question-answers-length">
         <h3><?= count($answers) ?> svar</h3>
     </div>
@@ -147,7 +150,7 @@ endif;
                 <div class="col2">
                     <div class="votes">
                         <?= $acomm->upvote ?>
-                        <?= $acomm->voteSum ?>
+                        <?= $acomm->votesum ?>
                         <?= $acomm->downvote ?>
                     </div>
                 </div>
@@ -157,7 +160,7 @@ endif;
         <div class="col2">
             <div class="votes">
                 <?= $answer->upvote ?>
-                <?= $answer->voteSum ?>
+                <?= $answer->votesum ?>
                 <?= $answer->downvote ?>
             </div>
             <div class="accepted">

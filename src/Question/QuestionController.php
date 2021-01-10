@@ -8,6 +8,7 @@ use Hepa19\Question\HTMLForm\CreateQuestion;
 use Hepa19\Question\HTMLForm\EditQuestion;
 use Hepa19\Question\HTMLForm\DeleteQuestion;
 use Hepa19\Question\HTMLForm\UpdateQuestion;
+use Hepa19\Question\HTMLForm\OrderQuestion;
 use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
 use Hepa19\Comment\Comment;
@@ -60,19 +61,24 @@ class QuestionController implements ContainerInjectableInterface
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
 
-        $questions = $question->joinWhere("Question.*, User.username, User.email", "Question", "User", "Question.user_id = User.id", "Question.deleted IS NULL", "created DESC");
+        $orderBy = $this->di->get("request")->getGet("orderby") ?? "created DESC";
+
+        $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", $orderBy, "Question.*, User.username, User.email, v.votesum");
+
+
+        $orderForm = new OrderQuestion($this->di);
 
         foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
             $question->content = $this->filter->substring($question->content, 100);
-            $voteSum = $this->getVoteSum($question->id, "question");
-            $question->voteSum = $voteSum ?? 0;
+            $question->votesum = $question->votesum ?? 0;
             $question->answerCount = $this->getAnswerCount($question->id)[0]->answerCount;
             $question->tags = $this->getTags($question->id);
         }
 
         $page->add("question/crud/view-all", [
-            "questions" => $questions
+            "questions" => $questions,
+            "orderForm" => $orderForm->getHTML()
         ]);
 
         return $page->render([
@@ -198,15 +204,17 @@ class QuestionController implements ContainerInjectableInterface
 
         $question->content = $this->filter->markdown($question->content);
 
+        $orderBy = $this->di->get("request")->getGet("orderby") ?? "created asc";
+        $orderForm = new OrderQuestion($this->di);
+
         $tags = $this->getTags($id);
         $comments = $this->getComments($id, $activeUserId);
-        $answers = $this->getAnswers($id, $activeUserId);
+        $answers = $this->getAnswers($id, $activeUserId, $orderBy);
         $answers = $this->getCommentsToAnswers($answers, $activeUserId);
 
         $answerForm = new CreateAnswer($this->di, $id, $activeUserId);
         $answerForm->check();
 
-        $votes = $this->getVotes($id, "question");
         $voteSum = $this->getVoteSum($id, "question") ?? 0;
 
         $upvoteQ = new VoteForm($this->di, $id, $activeUserId, "question", "up");
@@ -221,10 +229,10 @@ class QuestionController implements ContainerInjectableInterface
             "comments" => $comments,
             "answers" => $answers,
             "activeUserId" => $activeUserId,
-            "votes" => $votes,
             "upvoteQ" => $upvoteQ->getHTML(),
             "downvoteQ" => $downvoteQ->getHTML(),
             "voteSum" => $voteSum,
+            "orderForm" => $orderForm->getHTML()
         ]);
 
         $page->add("answer/crud/create", [
@@ -315,11 +323,11 @@ class QuestionController implements ContainerInjectableInterface
             $downvote = new VoteForm($this->di, $comment->id, $userId, "comment", "down");
             $downvote->check();
 
-            $voteSum = $this->getVoteSum($comment->id, "comment") ?? 0;
+            $votesum = $this->getVoteSum($comment->id, "comment") ?? 0;
 
             $comment->upvote = $upvote->getHTML();
             $comment->downvote = $downvote->getHTML();
-            $comment->voteSum = $voteSum;
+            $comment->voteSum = $votesum;
         }
 
         return $comments;
@@ -338,7 +346,7 @@ class QuestionController implements ContainerInjectableInterface
         $comment->setDb($this->di->get("dbqb"));
 
         foreach ($answers as $answer) {
-            $answer->answerComments = $comment->joinWhere3("User", "Comment", "Comment.user_id = User.id", "Comment.post_id = " . $answer->id, "Comment.type = 'answer'", "Comment.deleted IS NULL");
+            $answer->answerComments = $comment->joinWhere3("Comment", "User", "Comment.user_id = User.id", "Comment.post_id = " . $answer->id, "Comment.type = 'answer'", "Comment.deleted IS NULL");
 
             foreach ($answer->answerComments as $ansC) {
                 $ansC->content = $this->filter->markdown($ansC->content);
@@ -349,11 +357,11 @@ class QuestionController implements ContainerInjectableInterface
                 $downvote = new VoteForm($this->di, $userId, $ansC->user_id, "comment", "down");
                 $downvote->check();
 
-                $voteSum = $this->getVoteSum($ansC->id, "comment") ?? 0;
+                $votesum = $this->getVoteSum($ansC->id, "comment") ?? 0;
 
                 $ansC->upvote = $upvote->getHTML();
                 $ansC->downvote = $downvote->getHTML();
-                $ansC->voteSum = $voteSum;
+                $ansC->votesum = $votesum;
             }
         }
 
@@ -367,15 +375,17 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getAnswers($id, $userId)
+    public function getAnswers($id, $userId, $orderBy)
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
 
-        $answers = $answer->join2Where("User", "Answer", "User.id = Answer.user_id", "Answer.question_id = " . $id, "Answer.deleted IS NULL");
+        $answers = $answer->join2leftWhere2("Answer", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Answer.id", "User", "User.id = Answer.user_id", "Answer.question_id = " . $id, "Answer.deleted IS NULL", $orderBy, "Answer.*, User.username, User.email, v.votesum");
 
         foreach ($answers as $answer) {
             $answer->content = $this->filter->markdown($answer->content);
+
+            $answer->votesum = $answer->votesum ?? 0;
 
             $upvote = new VoteForm($this->di, $answer->id, $userId, "answer", "up");
             $upvote->check();
@@ -383,14 +393,11 @@ class QuestionController implements ContainerInjectableInterface
             $downvote = new VoteForm($this->di, $answer->id, $userId, "answer", "down");
             $downvote->check();
 
-            $voteSum = $this->getVoteSum($answer->id, "answer");
-
             $acceptForm = new AcceptForm($this->di, $answer->id, $answer->user_id, $answer->accepted);
             $acceptForm->check();
 
             $answer->upvote = $upvote->getHTML();
             $answer->downvote = $downvote->getHTML();
-            $answer->voteSum = $voteSum ?? 0;
             $answer->acceptForm = $acceptForm->getHTML();
         }
 

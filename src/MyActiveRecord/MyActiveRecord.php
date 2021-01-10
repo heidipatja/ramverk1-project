@@ -64,6 +64,25 @@ class MyActiveRecord extends ActiveRecordModel
 
 
 
+    /**
+    * Get all votes for a specific post
+    *
+    * @return array Results
+    */
+    public function where3($where, $where2, $where3, $select = "*") : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
+                        ->from($this->tableName)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->andWhere($where3)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
 
     /**
     * Join with another db table
@@ -109,12 +128,13 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2Where($fromTable, $withTable, $condition, $where, $where2) : array
+    public function join2Where($fromTable, $withTable, $condition, $where, $where2, $orderBy = "created desc", $selected = "*") : array
     {
         $this->checkDb();
         return $this->db->connect()
-                        ->select()
+                        ->select($selected)
                         ->from($fromTable)
+                        ->orderBy($orderBy)
                         ->join($withTable, $condition)
                         ->where($where)
                         ->andWhere($where2)
@@ -193,11 +213,54 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function joinWhere3($fromTable, $withTable, $condition, $where, $where2, $where3) : array
+    public function join2leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $orderBy, $select = "*") : array
     {
         $this->checkDb();
         return $this->db->connect()
-                        ->select()
+                        ->select($select)
+                        ->from($fromTable)
+                        ->leftJoin($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->orderBy($orderBy)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function join2leftWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $orderBy, $select = "*") : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
+                        ->from($fromTable)
+                        ->leftJoin($withTable, $condition)
+                        ->join($withTable2, $condition2)
+                        ->where($where)
+                        ->orderBy($orderBy)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinWhere3($fromTable, $withTable, $condition, $where, $where2, $where3, $select = "*") : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
                         ->from($fromTable)
                         ->join($withTable, $condition)
                         ->where($where)
@@ -215,11 +278,11 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function where2Joins($fromTable, $withTable, $condition, $withTable2, $condition2, $where) : array
+    public function where2Joins($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $select = "*") : array
     {
         $this->checkDb();
         return $this->db->connect()
-                        ->select()
+                        ->select($select)
                         ->from($fromTable)
                         ->join($withTable, $condition)
                         ->join($withTable2, $condition2)

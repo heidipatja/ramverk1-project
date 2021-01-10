@@ -23,8 +23,9 @@ class VoteForm extends FormModel
     {
         parent::__construct($di);
         $icon = $this->getIcon($voteType);
-        $this->voteValue = $this->getVote($voteType);
+        $this->voteValue = $this->getVoteValue($voteType);
         $this->userId = $userId;
+        $this->voted = $this->getClass($userId, $postId, $type, $voteType);
         $this->form->create(
             [
                 "id" => __CLASS__ . "\\" . $type . $postId . "\\user" . $userId . "\\" . $voteType,
@@ -60,7 +61,7 @@ class VoteForm extends FormModel
                     "type" => "submit",
                     "value" => $icon,
                     "callback" => [$this, "callbackSubmit"],
-                    "class" => "fa"
+                    "class" => "fa " . $this->voted
                 ],
             ]
         );
@@ -89,12 +90,32 @@ class VoteForm extends FormModel
      *
      * @return int
      */
-    public function getVote($voteType) : int
+    public function getVoteValue($voteType) : int
     {
         if ($voteType == "up") {
             return 1;
         } else {
             return -1;
+        }
+    }
+
+
+
+    /**
+     * Return class for arrow
+     *
+     * @return string
+     */
+    public function getClass($userId, $postId, $type, $voteType)
+    {
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+        $voted = $vote->getVote($userId, $postId, $type);
+
+        if ($voted->vote == 1 && $voteType == "up") {
+            return "voted up";
+        } elseif ($voted->vote == -1 && $voteType == "down") {
+            return "voted down";
         }
     }
 

@@ -32,6 +32,10 @@ $urlToDelete = url("question/delete");
 endif;
 ?>
 
+<div class="sorting">
+    <?= $orderForm ?>
+</div>
+
 <div class="questions">
     <?php foreach ($questions as $question) : ?>
     <div class="question">
@@ -55,7 +59,7 @@ endif;
         </div>
         <div class="col2">
             <div class="votes">
-                <p><?= $question->voteSum ?> i rank</p>
+                <p><?= $question->votesum ?> i ranking</p>
                 <p><?= $question->answerCount ?> svar</p>
             </div>
         </div>
