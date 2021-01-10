@@ -79,7 +79,7 @@ endif;
         <div class="comment">
             <div class="col1">
                 <div class="comment-by">
-                    <img src="<?= $question->getGravatar($comment->email, 25) ?>" alt="<?= $comment->username ?>>"> Av <?= $comment->username ?> <?= $comment->created ?>
+                    <img src="<?= $question->getGravatar($comment->email, 25) ?>" alt="<?= $comment->username ?>>"> Av <a href="<?= url("user/view/{$comment->username}"); ?>"><?= $comment->username ?></a> <?= $comment->created ?>
                 </div>
                 <div class="comment-content"><?= $comment->content ?></div>
             </div>
@@ -115,7 +115,7 @@ endif;
     <div class="answer">
         <div class="col1">
             <div class="by">
-                <img src="<?= $question->getGravatar($answer->email, 25) ?>" alt="<?= $answer->username ?>>"> Av <?= $answer->username ?> <?= $answer->created ?>
+                <img src="<?= $question->getGravatar($answer->email, 25) ?>" alt="<?= $answer->username ?>>"> Av <a href="<?= url("user/view/{$answer->username}"); ?>"><?= $answer->username ?></a><?= $answer->created ?>
             </div>
             <div class="content"><?= $answer->content ?></div>
             <div class="links">
@@ -133,7 +133,8 @@ endif;
                 <div class="col1">
                     <?php foreach ($answer->answerComments as $acomm) : ?>
                     <div class="comment-by">
-                        <img src="<?= $question->getGravatar($acomm->email, 25) ?>" alt="<?= $acomm->username ?>>"> Av <?= $acomm->username ?> <?= $acomm->created ?>
+                        <img src="<?= $question->getGravatar($acomm->email, 25) ?>" alt="<?= $acomm->username ?>>"> Av <a href="<?= url("user/view/{$acomm->username}"); ?>"><?= $acomm->username ?></a>
+                        <?= $acomm->created ?>
                     </div>
                     <div class="comment"><?= $acomm->content ?></div>
                     <?php if ($activeUserId == $acomm->user_id) : ?>
