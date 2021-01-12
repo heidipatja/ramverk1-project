@@ -14,13 +14,14 @@ class MyActiveRecord extends ActiveRecordModel
      *
      * @return array of object of this class
      */
-    public function findAllOrderBy($orderBy)
+    public function findAllOrderBy($orderBy, $limit = 100)
     {
         $this->checkDb();
         return $this->db->connect()
                         ->select()
                         ->from($this->tableName)
                         ->orderBy($orderBy)
+                        ->limit($limit)
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
@@ -255,7 +256,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2leftWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $orderBy, $select = "*") : array
+    public function join2leftWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $orderBy, $select = "*", $limit = 100) : array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -265,6 +266,7 @@ class MyActiveRecord extends ActiveRecordModel
                         ->join($withTable2, $condition2)
                         ->where($where)
                         ->orderBy($orderBy)
+                        ->limit($limit)
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }
@@ -307,6 +309,27 @@ class MyActiveRecord extends ActiveRecordModel
                         ->join($withTable, $condition)
                         ->join($withTable2, $condition2)
                         ->where($where)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
+
+
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function joinGroupOrder($fromTable, $withTable, $condition, $orderBy, $groupBy, $select = "*", $limit = 100) : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->orderBy($orderBy)
+                        ->groupBy($groupBy)
+                        ->limit($limit)
                         ->execute()
                         ->fetchAllClass(get_class($this));
     }

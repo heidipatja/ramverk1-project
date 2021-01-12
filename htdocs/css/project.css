@@ -6658,6 +6658,10 @@ article ol {
   font-size: 0.8rem;
   background: #373737;
   color: #acacac;
+  margin-bottom: 4px;
+}
+.user-sidebar .tags .tag {
+  background: #222;
 }
 .question-by {
   font-size: 0.9rem;
@@ -6927,7 +6931,7 @@ article a {
 }
 .toc h4,
 .wrap-sidebar h4 {
-  background: #222;
+  background: #373737;
 }
 figure.figure.left {
   margin-right: 24px;

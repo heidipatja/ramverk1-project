@@ -2,12 +2,12 @@
 
 namespace Hepa19\User;
 
-use Anax\DatabaseActiveRecord\ActiveRecordModel;
+use Hepa19\MyActiveRecord\MyActiveRecord;
 
 /**
  * A database driven model.
  */
-class User extends ActiveRecordModel
+class User extends MyActiveRecord
 {
     /**
      * @var string $tableName name of the database table.
