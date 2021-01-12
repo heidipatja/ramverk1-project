@@ -128,11 +128,11 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2Where($fromTable, $withTable, $condition, $where, $where2, $orderBy = "created desc", $selected = "*") : array
+    public function join2Where($fromTable, $withTable, $condition, $where, $where2, $orderBy = "created desc", $select = "*") : array
     {
         $this->checkDb();
         return $this->db->connect()
-                        ->select($selected)
+                        ->select($select)
                         ->from($fromTable)
                         ->orderBy($orderBy)
                         ->join($withTable, $condition)
@@ -228,6 +228,26 @@ class MyActiveRecord extends ActiveRecordModel
                         ->fetchAllClass(get_class($this));
     }
 
+
+    /**
+    * Join with another db table
+    *
+    * @return array Results
+    */
+    public function join3leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where, $where2, $select = "*") : array
+    {
+        $this->checkDb();
+        return $this->db->connect()
+                        ->select($select)
+                        ->from($fromTable)
+                        ->join($withTable, $condition)
+                        ->leftJoin($withTable2, $condition2)
+                        ->leftJoin($withTable3, $condition3)
+                        ->where($where)
+                        ->andWhere($where2)
+                        ->execute()
+                        ->fetchAllClass(get_class($this));
+    }
 
 
     /**

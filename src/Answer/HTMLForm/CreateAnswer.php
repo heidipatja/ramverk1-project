@@ -19,6 +19,7 @@ class CreateAnswer extends FormModel
     public function __construct(ContainerInterface $di, $questionId, $userId)
     {
         parent::__construct($di);
+        $this->questionId = $questionId;
         $this->form->create(
             [
                 "id" => __CLASS__,
@@ -66,6 +67,7 @@ class CreateAnswer extends FormModel
         $answer->content  = $this->form->value("content");
         $answer->question_id = $this->form->value("question-id");
         $answer->user_id = $this->form->value("user-id");
+        $answer->accepted = 0;
         $answer->save();
         return true;
     }
@@ -79,7 +81,7 @@ class CreateAnswer extends FormModel
      */
     public function callbackSuccess()
     {
-        $this->di->get("response")->redirectSelf()->send();
+        $this->di->get("response")->redirect("question/view/{$this->questionId}")->send();
     }
 
 

@@ -26,7 +26,6 @@ class AcceptForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__ . "\\" . $answerId,
-                "legend" => "Acceptera svar",
                 "escape-values" => false
             ],
             [

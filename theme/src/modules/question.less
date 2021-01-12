@@ -2,59 +2,52 @@
  * Question
  */
 
-.question {
+.question,
+.comment,
+.answer {
     clear: both;
-
-    & .links > * {
-        display: inline-block;
-    }
-
-    & .links {
-        clear: left;
-        margin: @magicNumber 0;
-        float: right;
-    }
+    background: @bgColorBox;
+    padding: 1rem;
 
     & .col1 {
         display: inline-block;
-        max-width: 90%;
+        width: 10%;
         float: left;
     }
 
     & .col2 {
+        padding-left: 1rem;
         display: inline-block;
-        max-width: 10%;
-        float: right;
+        width: 90%;
     }
+}
+
+.question {
+    margin-top: @magicNumber;
+}
+
+.button.comm {
+    background: @lightestGray;
+}
+
+.button.answ {
+    background: @green;
+    margin: 0 0 0 1rem;
 }
 
 .questions .question {
     margin-bottom: @magicNumber;
     padding-bottom: @magicNumber;
-    border-bottom: 1px solid @lightGray;
+    min-height: 12.5rem;
     clear: both;
 
     & h2 {
         margin: 0;
-        color: @gold;
     }
 
     & .title a {
         text-decoration: none;
     }
-
-    & .col1 {
-        display: inline-block;
-        max-width: 90%;
-        float: none;
-    }
-
-    & .col2 {
-        display: inline-block;
-        max-width: 10%;
-        float: right;
-    }
-
 }
 
 .tags {
@@ -64,23 +57,30 @@
     }
 }
 
-.links > * {
+& .links > * {
     display: inline-block;
 }
 
 .links {
     margin: @magicNumber 0;
-    clear: both;
-    float: right;
+    text-align: right;
+}
+
+.edit-link,
+.delete-link {
+    font-size: 1rem;
+    vertical-align: sub;
+    margin: 0 0.5rem;
 }
 
 .comments {
-    clear: both;
-    float: right;
-    max-width: 85%;
+    font-size: 0.9rem;
 
     & .comment {
-
+        min-height: 9rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 5px solid @midGray;
     }
 
     & .links > * {
@@ -88,8 +88,12 @@
     }
 
     & .links {
-        margin: @magicNumber 0;
-        float: right;
+        margin: @magicNumber 0 0;
+    }
+
+    & .length {
+        font-size: 1.1rem;
+        margin: 0 0 @magicNumber/2;
     }
 }
 
@@ -114,7 +118,8 @@
         display: inline-block;
         padding: @magicNumber/4 @magicNumber/2;
         font-size: 0.8rem;
-        background: @lightGold;
+        background: @midGray;
+        color: @lightGray;
     }
 }
 
@@ -126,8 +131,15 @@
     }
 }
 
+form p {
+    margin: 0 0 12px;
+    padding: 0;
+}
+
 .votes,
 .accepted {
+    text-align: center;
+
     & form,
     & input,
     & p,
@@ -135,6 +147,12 @@
     & fieldset {
         margin: 0;
         padding: 0;
+        height: auto;
+    }
+
+    & .vote-sum {
+        font-size: 1.2rem;
+        margin: 2rem 0 0.2rem;
     }
 
     & #form-element-submit {
@@ -144,6 +162,133 @@
     }
 }
 
-.accepted.fa{
-    color: green;
+.votes {
+    min-height: 7rem;
+}
+
+.answer-length {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    &.number {
+        font-size: 1.2rem;
+    }
+}
+
+.cols > * {
+    width: 50%;
+}
+
+.cols {
+    min-height: 3rem;
+    padding-top: 1rem;
+
+    .new-question {
+        float: left;
+
+        & .button {
+            background: #8aca8e;
+            padding: 0.5rem 2rem 0.4rem;
+            color: #333;
+            text-decoration: none;
+        }
+    }
+
+    .sorting,
+    .orderby {
+        float: right;
+
+        & #form-element-orderby {
+            float: right;
+        }
+    }
+
+    .orderby #form-element-orderby {
+        margin-top: 18px;
+    }
+
+    .sorting #form-element-orderby {
+        margin-top: -12px;
+    }
+
+
+    & .length {
+        float: left;
+    }
+}
+
+.answers .cols {
+    min-height: 6rem;
+}
+
+
+
+#orderbyform {
+    & p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+select,
+option {
+    background: @darkGray;
+    color: #d1d1d1;
+    border: none;
+    padding: 0 0.5rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+textarea, {
+    background: @lightestGray;
+}
+
+input[type="submit"] {
+    background: @green;
+}
+
+.voteform {
+    height: 3rem;
+
+    & fieldset {
+        height: 0;
+    }
+}
+
+.question-heading {
+    background: @darkGray;
+    margin: 0 0 @magicNumber/2;
+    border: none;
+}
+
+.created img,
+.by img,
+.profile-img {
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+
+input[type="submit"].fa {
+    color: @lightGray;
+}
+
+input[type="submit"].fa.voted.up,
+input[type="submit"].fa.voted.down {
+    color: @green;
+}
+
+input[type="submit"].accepted.fa{
+    color: @green;
+}
+
+.accepted #form-element-submit {
+    font-size: 1.2rem;
+}
+
+.tag-questions h2 {
+    margin-top: 0;
 }

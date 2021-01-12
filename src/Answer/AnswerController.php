@@ -54,18 +54,25 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function createAction() : object
+    public function createAction(int $id) : object
     {
         $page = $this->di->get("page");
-        $form = new CreateForm($this->di);
-        $form->check();
+        $userId = $this->di->get("session")->get("userId") ?? null;
+
+        if ($userId && $id) {
+            $form = new CreateAnswer($this->di, $id, $userId);
+            $form->check();
+        } else {
+            return $this->di->get("response")->redirect("user/login");
+        }
 
         $page->add("answer/crud/create", [
             "form" => $form->getHTML(),
+            "questionId" => $id
         ]);
 
         return $page->render([
-            "title" => "Create a item",
+            "title" => "Nytt svar",
         ]);
     }
 
@@ -78,7 +85,7 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function deleteAction($id) : object
+    public function deleteAction(int $id) : object
     {
         $page = $this->di->get("page");
         $form = new DeleteAnswer($this->di, $id);

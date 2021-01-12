@@ -10,6 +10,7 @@ use Hepa19\User\HTMLForm\UpdateUser;
 use Hepa19\Question\Question;
 use Hepa19\Answer\Answer;
 use Hepa19\Answer\HTMLForm\CreateAnswer;
+use Hepa19\Vote\Vote;
 use Hepa19\MyTextFilter\MyTextFilter;
 
 // use Anax\Route\Exception\ForbiddenException;
@@ -49,6 +50,8 @@ class UserController implements ContainerInjectableInterface
             "users" => $user->findAll(),
         ]);
 
+        $page->add("anax/v2/image/default", [], "flash");
+
         return $page->render([
             "title" => "Användare",
         ]);
@@ -69,6 +72,7 @@ class UserController implements ContainerInjectableInterface
         $user = new User();
         $user->setDb($this->di->get("dbqb"));
         $user = $user->find("username", $username);
+        $user->presentation = $this->filter->markdown($user->presentation);
 
         $activeUser = $this->di->get("session")->get("userId");
 
@@ -77,7 +81,18 @@ class UserController implements ContainerInjectableInterface
 
         $questions = $question->join2Where("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id, "Question.deleted IS NULL");
 
-        $answers = $question->join2where3("User", "Answer", "Answer.user_id = User.id", "Question", "Question.id = Answer.question_id", "User.id = " . $user->id, "Answer.deleted IS NULL", "Question.deleted IS NULL");
+        $answers = $question->join2Where("Answer", "User", "Answer.user_id = User.id", "Answer.deleted IS NULL", "User.id = " . $user->id, "created desc", "Answer.*, User.username, User.email");
+
+        $comments = $question->join3leftWhere2("Comment", "User", "Comment.user_id = User.id",
+        "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a", "a.question_id = Comment.post_id",
+        "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
+        "q.id = Comment.post_id",
+        "User.id = " . $user->id, "Comment.deleted IS NULL", "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'");
+
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+
+        $votes = $vote->where("Vote.user_id = " . $user->id);
 
         foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
@@ -88,12 +103,17 @@ class UserController implements ContainerInjectableInterface
         $page->add("user/crud/view", [
             "user" => $user,
             "questions" => $questions,
-            "answers" => $answers
+            "answers" => $answers,
+            "comments" => $comments,
+            "votes" => count($votes),
+            "activeUser" => $activeUser
         ]);
 
-        $page->add("user/crud/sidebar", [
+        $page->add("user/crud/sidebar2", [
             "activeUser" => $activeUser
         ], "sidebar-right");
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         $form = new LoginUser($this->di);
         $form->check();
@@ -106,7 +126,7 @@ class UserController implements ContainerInjectableInterface
         }
 
         return $page->render([
-            "title" => "Se fråga",
+            "title" => "Profil",
         ]);
     }
 
@@ -163,6 +183,8 @@ class UserController implements ContainerInjectableInterface
 
         $page->add("user/login");
 
+        $page->add("anax/v2/image/default", [], "flash");
+
         return $page->render([
             "title" => "Logga in",
         ]);
@@ -201,6 +223,8 @@ class UserController implements ContainerInjectableInterface
         $page->add("anax/v2/article/default", [
             "content" => $form->getHTML(),
         ]);
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         return $page->render([
             "title" => "Ny användare",
@@ -243,22 +267,55 @@ class UserController implements ContainerInjectableInterface
         $page = $this->di->get("page");
         $session = $this->di->get("session");
 
-        $user = new User();
-        $username = $session->get("username") ?? null;
+        $activeUser = $this->di->get("session")->get("userId") ?? null;
 
-        if (!$username) {
+        if (!$activeUser) {
             return $this->di->get("response")->redirect("user/login")->send();
         }
 
+        $user = new User();
         $user->setDb($this->di->get("dbqb"));
-        $user = $user->find("username", $username);
+        $user = $user->findById($activeUser);
         $user->presentation = $this->filter->markdown($user->presentation);
-        $gravatar = $user->getGravatar($user->email);
 
-        $page->add("user/profile", [
+        $question = new Question();
+        $question->setDb($this->di->get("dbqb"));
+
+        $questions = $question->join2Where("User", "Question", "Question.user_id = User.id", "User.id = " . $user->id, "Question.deleted IS NULL");
+
+        $answers = $question->join2Where("Answer", "User", "Answer.user_id = User.id", "Answer.deleted IS NULL", "User.id = " . $user->id, "created desc", "Answer.*, User.username, User.email");
+
+        $comments = $question->join3leftWhere2("Comment", "User", "Comment.user_id = User.id",
+        "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a", "a.question_id = Comment.post_id",
+        "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
+        "q.id = Comment.post_id",
+        "User.id = " . $user->id, "Comment.deleted IS NULL", "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'");
+
+        $vote = new Vote();
+        $vote->setDb($this->di->get("dbqb"));
+
+        $votes = $vote->where("Vote.user_id = " . $user->id);
+
+        foreach ($questions as $question) {
+            $question->content = $this->filter->markdown($question->content);
+            $question->content = $this->filter->substring($question->content, 100);
+            $question->tags = $this->getTags($question->id);
+        }
+
+        $page->add("user/crud/view", [
             "user" => $user,
-            "gravatar" => $gravatar
+            "questions" => $questions,
+            "answers" => $answers,
+            "comments" => $comments,
+            "votes" => count($votes),
+            "activeUser" => $activeUser
         ]);
+
+        $page->add("user/crud/sidebar3", [
+            "activeUser" => $activeUser
+        ], "sidebar-right");
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         return $page->render([
             "title" => "Profil",

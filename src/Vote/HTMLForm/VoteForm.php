@@ -29,8 +29,8 @@ class VoteForm extends FormModel
         $this->form->create(
             [
                 "id" => __CLASS__ . "\\" . $type . $postId . "\\user" . $userId . "\\" . $voteType,
-                "legend" => "Rösta",
-                "escape-values" => false
+                "escape-values" => false,
+                "class" => "voteform"
             ],
             [
                 "user-id" => [
@@ -108,6 +108,10 @@ class VoteForm extends FormModel
      */
     public function getClass($userId, $postId, $type, $voteType)
     {
+        if (!$userId || !$postId) {
+            return;
+        }
+
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));
         $voted = $vote->getVote($userId, $postId, $type);

@@ -43,6 +43,8 @@ class TagController implements ContainerInjectableInterface
             "tags" => $tag->findAll(),
         ]);
 
+        $page->add("anax/v2/image/default", [], "flash");
+
         return $page->render([
             "title" => "Taggar",
         ]);
@@ -78,6 +80,8 @@ class TagController implements ContainerInjectableInterface
             "tag" => $tagString,
             "questions" => $questions,
         ]);
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         return $page->render([
             "title" => "Frågor om " . $tag->tag,

@@ -14,7 +14,7 @@ namespace Anax\View;
 <?php if (!$activeUser) : ?>
     <div class="user-sidebar">
         <h4>Logga in</h4>
-        <p>Logga in för att svara, kommentera eller rösta.</p>
+        <p>Logga inför att svara, kommentera eller rösta eller för att redigera din profil.</p>
         <?= $form ?>
     </div>
 <?php
@@ -24,6 +24,6 @@ endif;
 
 
 <div class="user-sidebar">
-    <h4>Mina sidor</h4>
-    <a href="<?= url("user/profile"); ?>">Mina sidor</a>
+    <h4>Användare</h4>
+    <a href="<?= url("user"); ?>">Alla användare</a>
 </div>

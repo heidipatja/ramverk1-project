@@ -22,15 +22,19 @@ endif;
 
 <?php foreach ($users as $user) : ?>
 <div class="user">
-    <div class="user-gravatar">
-        <img src="<?= $user->getGravatar($user->email, 25) ?>" alt="<?= $user->username ?>>">
-    </div>
-    <div class="user-info">
-        <div class="user-username">
-            <a href="<?= url("user/view/{$user->username}"); ?>"> <h2 class="username"><?= $user->username ?></h2></a>
+    <div class="col1">
+        <div class="user-gravatar">
+            <a href="<?= url("user/view/{$user->username}"); ?>"><img class="profile-img" src="<?= $user->getGravatar($user->email, 50) ?>" alt="<?= $user->username ?>>"></a>
         </div>
-        <div class="user-score">
-            <p>Poäng: <?= $user->score ?></p>
+    </div>
+    <div class="col2">
+        <div class="user-info">
+            <div class="user-username">
+                <a class="username" href="<?= url("user/view/{$user->username}"); ?>"><?= $user->username ?></a>
+            </div>
+            <div class="user-score">
+                <p class="ranking">Ranking: <?= $user->score ?></p>
+            </div>
         </div>
     </div>
 </div>

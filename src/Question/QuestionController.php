@@ -16,6 +16,7 @@ use Hepa19\Comment\HTMLForm\CreateComment;
 use Hepa19\Vote\HTMLForm\VoteForm;
 use Hepa19\Vote\Vote;
 use Hepa19\Vote\HTMLForm\AcceptForm;
+use Hepa19\User\HTMLForm\LoginUser;
 use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
@@ -55,7 +56,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexActionGet() : object
+    public function indexAction() : object
     {
         $page = $this->di->get("page");
         $question = new Question();
@@ -63,23 +64,36 @@ class QuestionController implements ContainerInjectableInterface
 
         $orderBy = $this->di->get("request")->getGet("orderby") ?? "created DESC";
 
-        $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", $orderBy, "Question.*, User.username, User.email, v.votesum");
+        $userId = $this->di->get("session")->get("userId");
 
+        $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", $orderBy, "Question.*, User.username, User.email, v.votesum");
 
         $orderForm = new OrderQuestion($this->di);
 
         foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
             $question->content = $this->filter->substring($question->content, 100);
+            // $voteSum = $this->getVoteSum($question->id, "question");
             $question->votesum = $question->votesum ?? 0;
             $question->answerCount = $this->getAnswerCount($question->id)[0]->answerCount;
             $question->tags = $this->getTags($question->id);
+
+            $upvote = new VoteForm($this->di, $question->id, $userId, "question", "up");
+            $upvote->check();
+
+            $downvote = new VoteForm($this->di, $question->id, $userId, "question", "down");
+            $downvote->check();
+
+            $question->upvote = $upvote->getHTML();
+            $question->downvote = $downvote->getHTML();
         }
 
         $page->add("question/crud/view-all", [
             "questions" => $questions,
             "orderForm" => $orderForm->getHTML()
         ]);
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         return $page->render([
             "title" => "Frågor",
@@ -197,7 +211,7 @@ class QuestionController implements ContainerInjectableInterface
             return $this->di->response->redirect("question");
         }
 
-        $activeUserId = $this->di->get("session")->get("userId");
+        $activeUserId = $this->di->get("session")->get("userId") ?? null;
         $isAuthor = $question->isAuthor($activeUserId);
 
         $question = $question->joinWhere("*", "User", "Question", "Question.user_id = User.id", "Question.id = " . $id)[0];
@@ -211,10 +225,6 @@ class QuestionController implements ContainerInjectableInterface
         $comments = $this->getComments($id, $activeUserId);
         $answers = $this->getAnswers($id, $activeUserId, $orderBy);
         $answers = $this->getCommentsToAnswers($answers, $activeUserId);
-
-        $answerForm = new CreateAnswer($this->di, $id, $activeUserId);
-        $answerForm->check();
-
         $voteSum = $this->getVoteSum($id, "question") ?? 0;
 
         $upvoteQ = new VoteForm($this->di, $id, $activeUserId, "question", "up");
@@ -222,6 +232,9 @@ class QuestionController implements ContainerInjectableInterface
 
         $downvoteQ = new VoteForm($this->di, $id, $activeUserId, "question", "down");
         $downvoteQ->check();
+
+        $loginForm = new LoginUser($this->di);
+        $loginForm->check();
 
         $page->add("question/crud/view", [
             "question" => $question,
@@ -235,13 +248,12 @@ class QuestionController implements ContainerInjectableInterface
             "orderForm" => $orderForm->getHTML()
         ]);
 
-        $page->add("answer/crud/create", [
-            "form" => $answerForm->getHTML()
-        ]);
-
         $page->add("user/crud/sidebar", [
-            "activeUser" => $activeUserId
+            "activeUser" => $activeUserId,
+            "form" => $loginForm->getHTML()
         ], "sidebar-right");
+
+        $page->add("anax/v2/image/default", [], "flash");
 
         return $page->render([
             "title" => "Se fråga",
@@ -346,7 +358,7 @@ class QuestionController implements ContainerInjectableInterface
         $comment->setDb($this->di->get("dbqb"));
 
         foreach ($answers as $answer) {
-            $answer->answerComments = $comment->joinWhere3("Comment", "User", "Comment.user_id = User.id", "Comment.post_id = " . $answer->id, "Comment.type = 'answer'", "Comment.deleted IS NULL");
+            $answer->answerComments = $comment->joinWhere3("User", "Comment", "Comment.user_id = User.id", "Comment.post_id = " . $answer->id, "Comment.type = 'answer'", "Comment.deleted IS NULL");
 
             foreach ($answer->answerComments as $ansC) {
                 $ansC->content = $this->filter->markdown($ansC->content);

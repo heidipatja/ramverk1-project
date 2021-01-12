@@ -24,6 +24,7 @@ endif;
 <div class="tags">
     <?php foreach ($tags as $tag) : ?>
     <div class="tag">
-        <a href="<?= url("tag/view/{$tag->tag}"); ?>"><?= $tag->tag ?></a>
+        <a class="tag" href="<?= url("tag/view/{$tag->tag}"); ?>"><?= $tag->tag ?></a>
+    </div>
     <?php endforeach; ?>
 </div>

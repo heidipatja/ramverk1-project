@@ -39,25 +39,29 @@ endif;
 endif;
 ?>
 
+<div class="tag-questions">
+    <?php foreach ($questions as $question) : ?>
+    <div class="question">
+        <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
+        <div class="by">
+            <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
+        </div>
 
-<?php foreach ($questions as $question) : ?>
-<div class="question">
-    <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
-    <div class="question-by">
-        <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
+        <div class="content">
+            <?= $question->content ?>
+        </div>
+
+        <div class="question-tags tags">
+            <?php foreach ($question->tags as $tag) : ?>
+                <div class="tag">
+                    <a class="tag" href="<?= url("tag/view/{$tag->tag}"); ?>"><?= $tag->tag ?></a>
+                </div>
+            <?php endforeach; ?>
+
+        </div>
     </div>
-
-    <div class="question-content">
-        <?= $question->content ?>
-    </div>
-
-    <div class="question-tags">
-        <?php foreach ($question->tags as $tag) : ?>
-            <div class="tag"><?= $tag->tag ?></div>
-        <?php endforeach; ?>
-
-    </div>
+    <?php endforeach; ?>
 </div>
-<?php endforeach; ?>
 
+<br>
 <a href="<?= $urlToViewTags ?>">Se alla taggar</a>

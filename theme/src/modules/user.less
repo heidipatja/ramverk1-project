@@ -1,0 +1,79 @@
+/** --------------------------------------------------------------
+ * User
+ */
+
+
+.user {
+    clear: both;
+    background: @bgColorBox;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    & .col1 {
+        display: inline-block;
+        width: 50px;
+        float: left;
+    }
+
+    & .col2 {
+        padding-left: 1rem;
+        display: inline-block;
+        width: calc(100% - 50px);
+    }
+
+    & .username,
+    & .user-score,
+    & .ranking,
+    & .email {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+
+.profile {
+    clear: both;
+    background: @bgColorBox;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    & .col1 {
+        display: inline-block;
+        width: 100px;
+        float: left;
+    }
+
+    & .col2 {
+        padding-left: 1rem;
+        display: inline-block;
+        width: calc(100% - 100px);
+    }
+
+    & .username,
+    & .user-score,
+    & .ranking {
+        margin: 0;
+        padding: 0;
+    }
+
+    & .user-presentation {
+        clear: both;
+    }
+
+    & .profile-block {
+        min-height: 100px;
+    }
+}
+
+.post {
+    padding: 1rem;
+    background: @bgColorBox;
+    margin-bottom: 1rem;
+
+    & .post-content,
+    & .post-created,
+    & .post-link {
+        margin: 0;
+        padding: 0;
+    }
+}

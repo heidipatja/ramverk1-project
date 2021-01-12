@@ -30,6 +30,7 @@ class CreateComment extends FormModel
                 "content" => [
                     "type" => "textarea",
                     "validation" => ["not_empty"],
+                    "label" => "Kommentar"
                 ],
 
                 "user-id" => [

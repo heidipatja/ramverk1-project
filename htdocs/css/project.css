@@ -5236,19 +5236,19 @@ html {
 }
 body {
   font: 16px/1.5 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #333;
-  background-color: #acacac;
+  color: #acacac;
+  background-color: #121212;
   font-weight: 300;
 }
 h1 {
-  color: #333;
+  color: #acacac;
   font-weight: 300;
 }
 h2 {
   margin-top: 0;
 }
 p {
-  color: #333;
+  color: #acacac;
 }
 a {
   color: #acacac;
@@ -5271,14 +5271,14 @@ section {
   border-bottom: 1px solid #ccc;
 }
 label {
-  margin-bottom: 0.2rem;
+  margin-bottom: -1.2rem;
   display: block;
   font-weight: 400;
 }
 input {
   padding: 0.3rem;
   height: 36px;
-  border: 1px solid #535353;
+  border: 1px solid #373737;
 }
 input[type=text],
 input[type=number] {
@@ -5295,7 +5295,7 @@ input[type=radio] {
 input[type=submit],
 input[type=reset] {
   font-size: 1em;
-  border: 1px solid #535353;
+  border: 1px solid #373737;
   padding: 0 2em;
   height: 36px;
   text-decoration: none;
@@ -5326,6 +5326,18 @@ fieldset {
 select {
   height: 2.3rem;
   padding: 0.3rem;
+}
+button,
+.button,
+input[type="submit"],
+input[type="reset"] {
+  background: #acacac;
+  color: #121212;
+  padding: 0.5rem 2rem 0.4rem;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  text-decoration: none;
 }
 h1,
 h2,
@@ -5374,8 +5386,8 @@ h2 + h3 {
   margin-top: 24px;
 }
 h3 {
-  font-size: 1.75em;
-  line-height: 1.71428571;
+  font-size: 1.5em;
+  line-height: 1;
   font-weight: normal;
   margin-bottom: 23px;
   border-bottom: 1px solid #EEE;
@@ -5384,8 +5396,8 @@ h3 + h4 {
   margin-top: 24px;
 }
 h4 {
-  font-size: 1.5em;
-  line-height: 1;
+  font-size: 1.4em;
+  line-height: 1.07142857;
   font-weight: normal;
   margin-bottom: 23px;
   border-bottom: 1px solid #EEE;
@@ -5421,7 +5433,7 @@ b {
   font-weight: bold;
 }
 mark {
-  color: #333;
+  color: #acacac;
   background-color: #ff9;
 }
 abbr[title],
@@ -6265,13 +6277,13 @@ figure.figure-codepen {
 }
 .inner-wrap-after-main,
 .inner-wrap-columns-below {
-  background-color: #fff;
+  background-color: #121212;
 }
 .inner-wrap-main {
   min-height: 500px;
 }
 .inner-wrap-header {
-  background-color: #121212;
+  background-color: #1a1a1a;
 }
 .inner-wrap-footer {
   background-color: transparent;
@@ -6288,7 +6300,7 @@ figure.figure-codepen {
 }
 /* Header */
 .outer-wrap-header {
-  background-color: #121212;
+  background-color: #1a1a1a;
   height: 61px;
 }
 .region-header-col-1 {
@@ -6322,7 +6334,7 @@ figure.figure-codepen {
 .inner-wrap-columns-below,
 .inner-wrap-breadcrumb,
 .inner-wrap-flash-message {
-  background-color: #fff;
+  background-color: #121212;
 }
 .toc a {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -6386,12 +6398,12 @@ figure.figure-codepen {
   padding: 1em 0 1em 0.5em;
 }
 .rm-desktop li li a {
-  background-color: #121212;
+  background-color: #1a1a1a;
   min-width: 9em;
   text-align: center;
 }
 .rm-desktop li li a:hover {
-  background-color: #121212;
+  background-color: #1a1a1a;
   color: #fff;
   text-decoration: underline;
 }
@@ -6551,49 +6563,48 @@ article ol {
 /** --------------------------------------------------------------
  * Question
  */
-.question {
+.question,
+.comment,
+.answer {
   clear: both;
+  background: #222;
+  padding: 1rem;
 }
-.question .links > * {
+.question .col1,
+.comment .col1,
+.answer .col1 {
   display: inline-block;
-}
-.question .links {
-  clear: left;
-  margin: 24px 0;
-  float: right;
-}
-.question .col1 {
-  display: inline-block;
-  max-width: 90%;
+  width: 10%;
   float: left;
 }
-.question .col2 {
+.question .col2,
+.comment .col2,
+.answer .col2 {
+  padding-left: 1rem;
   display: inline-block;
-  max-width: 10%;
-  float: right;
+  width: 90%;
+}
+.question {
+  margin-top: 24px;
+}
+.button.comm {
+  background: #d1d1d1;
+}
+.button.answ {
+  background: #8aca8e;
+  margin: 0 0 0 1rem;
 }
 .questions .question {
   margin-bottom: 24px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #acacac;
+  min-height: 12.5rem;
   clear: both;
 }
 .questions .question h2 {
   margin: 0;
-  color: #aa8d4b;
 }
 .questions .question .title a {
   text-decoration: none;
-}
-.questions .question .col1 {
-  display: inline-block;
-  max-width: 90%;
-  float: none;
-}
-.questions .question .col2 {
-  display: inline-block;
-  max-width: 10%;
-  float: right;
 }
 .tags a {
   text-decoration: none;
@@ -6604,20 +6615,32 @@ article ol {
 }
 .links {
   margin: 24px 0;
-  clear: both;
-  float: right;
+  text-align: right;
+}
+.edit-link,
+.delete-link {
+  font-size: 1rem;
+  vertical-align: sub;
+  margin: 0 0.5rem;
 }
 .comments {
-  clear: both;
-  float: right;
-  max-width: 85%;
+  font-size: 0.9rem;
+}
+.comments .comment {
+  min-height: 9rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 5px solid #373737;
 }
 .comments .links > * {
   display: inline-block;
 }
 .comments .links {
-  margin: 24px 0;
-  float: right;
+  margin: 24px 0 0;
+}
+.comments .length {
+  font-size: 1.1rem;
+  margin: 0 0 12px;
 }
 .answers {
   clear: both;
@@ -6633,13 +6656,22 @@ article ol {
   display: inline-block;
   padding: 6px 12px;
   font-size: 0.8rem;
-  background: #e6d4ac;
+  background: #373737;
+  color: #acacac;
 }
 .question-by {
   font-size: 0.9rem;
 }
 .question-by img {
   padding-right: 5px;
+}
+form p {
+  margin: 0 0 12px;
+  padding: 0;
+}
+.votes,
+.accepted {
+  text-align: center;
 }
 .votes form,
 .accepted form,
@@ -6653,6 +6685,12 @@ article ol {
 .accepted fieldset {
   margin: 0;
   padding: 0;
+  height: auto;
+}
+.votes .vote-sum,
+.accepted .vote-sum {
+  font-size: 1.2rem;
+  margin: 2rem 0 0.2rem;
 }
 .votes #form-element-submit,
 .accepted #form-element-submit {
@@ -6660,8 +6698,171 @@ article ol {
   background: none;
   font-size: 2rem;
 }
-.accepted.fa {
-  color: green;
+.votes {
+  min-height: 7rem;
+}
+.answer-length {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.answer-length.number {
+  font-size: 1.2rem;
+}
+.cols > * {
+  width: 50%;
+}
+.cols {
+  min-height: 3rem;
+  padding-top: 1rem;
+}
+.cols .new-question {
+  float: left;
+}
+.cols .new-question .button {
+  background: #8aca8e;
+  padding: 0.5rem 2rem 0.4rem;
+  color: #333;
+  text-decoration: none;
+}
+.cols .sorting,
+.cols .orderby {
+  float: right;
+}
+.cols .sorting #form-element-orderby,
+.cols .orderby #form-element-orderby {
+  float: right;
+}
+.cols .orderby #form-element-orderby {
+  margin-top: 18px;
+}
+.cols .sorting #form-element-orderby {
+  margin-top: -12px;
+}
+.cols .length {
+  float: left;
+}
+.answers .cols {
+  min-height: 6rem;
+}
+#orderbyform p {
+  margin: 0;
+  padding: 0;
+}
+select,
+option {
+  background: #222;
+  color: #d1d1d1;
+  border: none;
+  padding: 0 0.5rem;
+}
+input[type="text"],
+input[type="number"],
+input[type="password"],
+textarea {
+  background: #d1d1d1;
+}
+input[type="submit"] {
+  background: #8aca8e;
+}
+.voteform {
+  height: 3rem;
+}
+.voteform fieldset {
+  height: 0;
+}
+.question-heading {
+  background: #222;
+  margin: 0 0 12px;
+  border: none;
+}
+.created img,
+.by img,
+.profile-img {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+}
+input[type="submit"].fa {
+  color: #acacac;
+}
+input[type="submit"].fa.voted.up,
+input[type="submit"].fa.voted.down {
+  color: #8aca8e;
+}
+input[type="submit"].accepted.fa {
+  color: #8aca8e;
+}
+.accepted #form-element-submit {
+  font-size: 1.2rem;
+}
+.tag-questions h2 {
+  margin-top: 0;
+}
+/** --------------------------------------------------------------
+ * User
+ */
+.user {
+  clear: both;
+  background: #222;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.user .col1 {
+  display: inline-block;
+  width: 50px;
+  float: left;
+}
+.user .col2 {
+  padding-left: 1rem;
+  display: inline-block;
+  width: calc(100% - 50px);
+}
+.user .username,
+.user .user-score,
+.user .ranking,
+.user .email {
+  margin: 0;
+  padding: 0;
+}
+.profile {
+  clear: both;
+  background: #222;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.profile .col1 {
+  display: inline-block;
+  width: 100px;
+  float: left;
+}
+.profile .col2 {
+  padding-left: 1rem;
+  display: inline-block;
+  width: calc(100% - 100px);
+}
+.profile .username,
+.profile .user-score,
+.profile .ranking {
+  margin: 0;
+  padding: 0;
+}
+.profile .user-presentation {
+  clear: both;
+}
+.profile .profile-block {
+  min-height: 100px;
+}
+.post {
+  padding: 1rem;
+  background: #222;
+  margin-bottom: 1rem;
+}
+.post .post-content,
+.post .post-created,
+.post .post-link {
+  margin: 0;
+  padding: 0;
 }
 @font-face {
   font-family: 'Open Sans';
@@ -6690,7 +6891,14 @@ article ol {
 }
 .site-logo-text a {
   text-decoration: none;
-  color: #e3a13e;
+  color: #8aca8e;
+}
+.region-flash {
+  background-repeat: no-repeat;
+  background-image: url(http://www.student.bth.se/~hepa19/dbwebb-kurser/design/me/redovisa/htdocs/img/dark-plant2.jpg);
+  height: 300px;
+  background-size: cover;
+  background-position: center;
 }
 h2,
 h3,
@@ -6709,17 +6917,17 @@ article a {
 }
 .rm-default .selected a,
 .rm-default .selected-parent a {
-  color: #e3a13e;
+  color: #8aca8e;
 }
 .toc .selected {
-  border-left: 6px solid #e3a13e;
+  border-left: 6px solid #8aca8e;
 }
 .toc .selected a {
   padding-left: 18px;
 }
 .toc h4,
 .wrap-sidebar h4 {
-  background: #e6d4ac;
+  background: #222;
 }
 figure.figure.left {
   margin-right: 24px;

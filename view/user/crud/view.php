@@ -13,25 +13,35 @@ namespace Anax\View;
 
  ?>
 
- <h1>Profil</h1>
+<h1>Profil</h1>
 
- <div class="user-container">
-     <h2><?= $user->username ?></h2>
-     <div class="gravatar">
-        <img src="<?= $user->getGravatar($user->email, 100) ?>" alt="<?= $user->username ?>>">
-     </div>
-
-     <div class="user-information">
-         <h2>Information</h2>
-         <p><b>Användarnamn:</b> <?= $user->username ?> </p>
-         <p><b>E-post:</b> <a href="<?= url("mailto:") ?><?= $user->email ?>"><?= $user->email ?></a></p>
-         <p><b>Poäng:</b> <?= $user->score ?></p>
+ <div class="profile">
+     <div class="profile-block">
+         <div class="col1">
+             <div class="gravatar">
+                <img class="profile-img" src="<?= $user->getGravatar($user->email, 100) ?>" alt="<?= $user->username ?>>">
+             </div>
+         </div>
+         <div class="col2">
+             <div class="user-information">
+                 <h2 class="username"><?= $user->username ?></h2>
+                 <p class="ranking"><b>Ranking:</b> <?= $user->score ?></p>
+             </div>
+         </div>
      </div>
 
      <div class="user-presentation">
-         <h2>Presentation</h2>
+         <h3>Presentation</h3>
          <p><?= $user->presentation ?> </p>
      </div>
+
+     <?php if ($activeUser == $user->id) : ?>
+     <div class="links">
+         <div class="user-edit-button">
+             <a class="button save edit" href="<?= url("user/update/" . $user->id) ?>">Redigera</a>
+         </div>
+     </div>
+     <?php endif; ?>
  </div>
 
 
@@ -39,52 +49,82 @@ namespace Anax\View;
 
  <?php if (!$questions) : ?>
      <p><?= $user->username ?> har inte ställt några frågor än.</p>
- <?php
-     return;
- endif;
- ?>
+ <?php endif; ?>
 
+<div class="posts">
  <?php foreach ($questions as $question) : ?>
- <div class="question">
-     <div class="question-title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h3><?= $question->title ?></h3></a></div>
-     <div class="question-by">
-         <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <?= $question->username ?> <?= $question->created ?>
-     </div>
-
-     <div class="question-content">
-         <?= $question->content ?>
-     </div>
-
-     <div class="question-tags">
-         <?php foreach ($question->tags as $tag) : ?>
-            <div class="tag"><?= $tag->tag ?></div>
-         <?php endforeach; ?>
-     </div>
- </div>
- <?php endforeach; ?>
+     <div class="post">
+        <div class="post-created">
+            Postad <?= $question->created ?> av <?= $question->username ?>
+        </div>
+        <div class="post-content">
+        <?= $question->title ?>
+        </div>
+        <div class="post-link">
+             <a href="<?= url("question/view/" . $question->id) ?>">Se fråga</a>
+        </div>
+    </div>
+    <?php endforeach; ?>
+</div>
 
 
 <h2>Svar</h2>
 
 <?php if (!$answers) : ?>
     <p><?= $user->username ?> har inte svarat på några frågor än.</p>
-<?php
-    return;
-endif;
-?>
+<?php endif; ?>
 
-<div class="answers">
+<div class="posts">
     <?php foreach ($answers as $answer) : ?>
-        <div class="answer">
-            <div class="answer-created">
+        <div class="post">
+            <div class="post-created">
                 Postad <?= $answer->created ?> av <?= $answer->username ?>
             </div>
-            <div class="answer-content">
+            <div class="post-content">
             <?= $answer->content ?>
             </div>
-            <div class="link">
-                <a href="<?= url("question/view/{$answer->question_id}"); ?>">Till frågan</a>
+            <div class="post-link">
+                 <a href="<?= url("question/view/" . $answer->question_id) ?>">Se fråga</a>
             </div>
         </div>
     <?php endforeach; ?>
+</div>
+
+<h2>Kommentarer</h2>
+
+<?php if (!$comments) : ?>
+    <p><?= $user->username ?> har inte skrivit några kommentarer än.</p>
+<?php endif; ?>
+
+<div class="posts">
+    <?php foreach ($comments as $comment) : ?>
+        <div class="post">
+            <div class="post-created">
+                Postad <?= $comment->created ?> av <?= $comment->username ?>
+            </div>
+            <div class="post-content">
+            <?= $comment->content ?>
+            </div>
+            <div class="post-link">
+                <?php if ($comment->type == "answer") : ?>
+                 <a href="<?= url("question/view/" . $comment->answer_id) ?>">Se fråga</a>
+                <?php endif; ?>
+                <?php if ($comment->type == "question") : ?>
+                 <a href="<?= url("question/view/" . $comment->question_id) ?>">Se fråga</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<h2>Röstningar</h2>
+
+<?php if (!$votes) : ?>
+    <p><?= $user->username ?> har inte röstat på något än.</p>
+<?php endif; ?>
+
+<div class="posts">
+    <div class="post">
+        <p><?= $user->username ?> har röstat <?= $votes ?> gånger.</p>
+    </div>
 </div>

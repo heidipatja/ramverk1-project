@@ -19,11 +19,10 @@ $urlToDelete = url("question/delete");
 
 ?><h1>Frågor</h1>
 
-
-<a href="<?= $urlToCreate ?>">Ny fråga</a>
-
-
 <?php if (!$questions) : ?>
+    <div class="new-question">
+        <a class="button" href="<?= $urlToCreate ?>">Ny fråga</a>
+    </div>
     <div class="questions">
         <p>Det finns inga frågor än!</p>
     </div>
@@ -32,14 +31,30 @@ $urlToDelete = url("question/delete");
 endif;
 ?>
 
-<div class="sorting">
-    <?= $orderForm ?>
+<div class="cols">
+    <div class="new-question">
+        <a class="button" href="<?= $urlToCreate ?>">Ny fråga</a>
+    </div>
+    <div class="sorting">
+        <?= $orderForm ?>
+    </div>
 </div>
 
 <div class="questions">
     <?php foreach ($questions as $question) : ?>
     <div class="question">
         <div class="col1">
+            <div class="votes q">
+                <?= $question->upvote ?>
+                <p class="vote-sum"><?= $question->votesum ?></p>
+                <?= $question->downvote ?>
+            </div>
+            <div class="length">
+                <p class="answer-length number"><?= $question->answerCount ?></p>
+                <p class="answer-length">svar</p>
+            </div>
+        </div>
+        <div class="col2">
             <div class="title"><a href="<?= url("question/view/{$question->id}"); ?>"> <h2><?= $question->title ?></h2></a></div>
             <div class="by">
                 <img src="<?= $question->getGravatar($question->email, 25) ?>" alt="<?= $question->username ?>>"> Av <a href="<?= url("user/view/{$question->username}"); ?>"><?= $question->username ?></a> <?= $question->created ?>
@@ -55,12 +70,6 @@ endif;
                         <div class="tag"><?= $tag->tag ?></div>
                     </a>
                 <?php endforeach; ?>
-            </div>
-        </div>
-        <div class="col2">
-            <div class="votes">
-                <p><?= $question->votesum ?> i ranking</p>
-                <p><?= $question->answerCount ?> svar</p>
             </div>
         </div>
     </div>

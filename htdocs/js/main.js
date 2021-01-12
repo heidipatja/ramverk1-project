@@ -1,8 +1,11 @@
 /**
- * To show off JS works and can be integrated.
+ * Select form auto submit
  */
 (function() {
     "use strict";
 
-    console.info("main.js ready and loaded.");
+    var select = document.getElementById("form-element-orderby");
+
+    select.setAttribute("onchange", "orderbyform.submit();");
+
 })();
