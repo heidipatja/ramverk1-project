@@ -15,10 +15,9 @@ class MyTextFilterTest extends TestCase
      * Setup the controller, before each testcase, just like the router
      * would set it up.
      */
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->filter = new \Hepa19\MyTextFilter\MyTextFilter();
+        $this->filter = new MyTextFilter();
     }
     /**
      * Construct object and verify that the object has the expected
