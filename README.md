@@ -1,5 +1,13 @@
 # Project for course ramverk1
 
+[![CircleCI](https://circleci.com/gh/heidipatja/ramverk1-project.svg?style=svg)](https://circleci.com/gh/heidipatja/ramverk1-project)
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/heidipatja/ramverk1-project/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/heidipatja/ramverk1-project/?branch=main)
+
+[![Build Status](https://scrutinizer-ci.com/g/heidipatja/ramverk1-project/badges/build.png?b=main)](https://scrutinizer-ci.com/g/heidipatja/ramverk1-project/build-status/main)
+
+[![Build Status](https://api.travis-ci.com/heidipatja/ramverk1-project.svg?branch=main)](https://travis-ci.com/heidipatja/ramverk1-project)
+
 1. Download project
 
 ```
