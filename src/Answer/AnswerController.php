@@ -32,7 +32,7 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexActionGet() : object
+    public function indexActionGet(): object
     {
         $page = $this->di->get("page");
         $answer = new Answer();
@@ -54,7 +54,7 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function createAction(int $id) : object
+    public function createAction(int $id): object
     {
         $page = $this->di->get("page");
         $userId = $this->di->get("session")->get("userId") ?? null;
@@ -85,7 +85,7 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function deleteAction(int $id) : object
+    public function deleteAction(int $id): object
     {
         $page = $this->di->get("page");
         $form = new DeleteAnswer($this->di, $id);
@@ -109,7 +109,7 @@ class AnswerController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function updateAction(int $id) : object
+    public function updateAction(int $id): object
     {
         $page = $this->di->get("page");
         $form = new UpdateAnswer($this->di, $id);

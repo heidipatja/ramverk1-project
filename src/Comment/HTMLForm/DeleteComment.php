@@ -64,7 +64,7 @@ class DeleteComment extends FormModel
      *
      * @return Comment
      */
-    public function getComment($id) : object
+    public function getComment($id): object
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));
@@ -80,7 +80,7 @@ class DeleteComment extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));

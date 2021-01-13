@@ -33,7 +33,7 @@ class Tag extends MyActiveRecord
     *
     * @return bool True if logged in user is author, else false
     */
-    public function isTag($tag) : bool
+    public function isTag($tag): bool
     {
         $res = $this->find("tag", $tag);
 

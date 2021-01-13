@@ -60,7 +60,7 @@ class CreateAnswer extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));

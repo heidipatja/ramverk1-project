@@ -1,26 +1,20 @@
 <?php
 
-namespace Anax\View;
-
-use Hepa19\Vote\HTMLForm\VoteForm;
-
 /**
  * View to display all questions
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $question = isset($question) ? $question : null;
 $answers = isset($answers) ? $answers : null;
 $comments = isset($comments) ? $comments : null;
 
-// var_dump($answers);
-// var_dump($votes);
-// var_dump($voteSum);
-
 ?>
 
 <?php if (!$question) : ?>
-<?php
+    <?php
     return;
 endif;
 ?>
@@ -47,13 +41,13 @@ endif;
                 <?= $question->content ?>
             </div>
             <div class="tags">
-                <?php foreach ($tags as $tag)
-                    if ($tag->question_id == $question->id) { ?>
+                <?php foreach ($tags as $tag) : ?>
+                    <?php if ($tag->question_id == $question->id) : ?>
                         <a href="<?= url("tag/view/{$tag->tag}"); ?>">
                             <div class="tag"><?= $tag->tag ?></div>
                         </a>
-                        <?php
-                    } ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
 
             <div class="links">
@@ -80,9 +74,9 @@ endif;
             <div class="comments">
                 <div class="length">
                     <?php if (count($comments) == 1) : ?>
-                    <?= count($comments) ?> kommentar
+                        <?= count($comments) ?> kommentar
                     <?php else :?>
-                    <?= count($comments) ?> kommentarer
+                        <?= count($comments) ?> kommentarer
                     <?php endif; ?>
                 </div>
                 <?php foreach ($comments as $comment) : ?>

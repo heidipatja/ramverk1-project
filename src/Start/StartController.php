@@ -49,7 +49,7 @@ class StartController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexAction() : object
+    public function indexAction(): object
     {
         $page = $this->di->get("page");
         $question = new Question();
@@ -111,7 +111,7 @@ class StartController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getTags($questionId) : array
+    public function getTags($questionId): array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));

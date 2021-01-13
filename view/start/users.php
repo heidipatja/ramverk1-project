@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * Sidebar on start page with most popular users
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $users = isset($users) ? $users : null;
@@ -16,11 +16,10 @@ $users = isset($users) ? $users : null;
         <h4>Aktiva användare</h4>
         <p>Det finns inga registrerade användare än!</p>
     </div>
-<?php
+    <?php
     return;
 endif;
 ?>
-
 
 <div class="user-sidebar">
     <h4>Aktiva användare</h4>

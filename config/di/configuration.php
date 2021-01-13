@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Configuration file to add as service in the Di container.
  */
-return [
 
+return [
     // Services to add to the container.
     "services" => [
         "configuration" => [

@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * View to display site info
  */
+
+namespace Anax\View;
 
 ?>
 

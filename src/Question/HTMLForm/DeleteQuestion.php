@@ -68,7 +68,7 @@ class DeleteQuestion extends FormModel
      *
      * @return Question
      */
-    public function getQuestion($id) : object
+    public function getQuestion($id): object
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
@@ -78,40 +78,13 @@ class DeleteQuestion extends FormModel
 
 
 
-    // /**
-    //  * Get all items as array suitable for display in select option dropdown.
-    //  *
-    //  * @return array with key value of all items.
-    //  */
-    // protected function getAllItems() : array
-    // {
-    //     $userId = $this->di->get("session")->get("userId");
-    //     if (!$userId) {
-    //         $this->di->get("response")->redirect("user/login")->send();
-    //     }
-    //
-    //     $question = new Question();
-    //     $question->setDb($this->di->get("dbqb"));
-    //
-    //     $questions = ["-1" => "Välj fråga..."];
-    //     foreach ($question->findAll() as $obj) {
-    //         if ($obj->user_id == $userId) {
-    //             $questions[$obj->id] = "{$obj->created}: {$obj->title} ({$obj->id})";
-    //         }
-    //     }
-    //
-    //     return $questions;
-    // }
-
-
-
     /**
      * Callback for submit-button which should return true if it could
      * carry out its work and false if something failed.
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));

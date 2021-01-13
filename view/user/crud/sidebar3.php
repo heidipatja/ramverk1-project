@@ -1,13 +1,13 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * Sidebar on user page
  */
 
- // Gather incoming variables and use default values if not set
- $activeUser = isset($activeUser) ? $activeUser : null;
+namespace Anax\View;
+
+// Gather incoming variables and use default values if not set
+$activeUser = isset($activeUser) ? $activeUser : null;
 
 ?>
 

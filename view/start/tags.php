@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * Sidebar on start page with most popular tags
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $tags = isset($tags) ? $tags : null;
@@ -16,11 +16,10 @@ $tags = isset($tags) ? $tags : null;
         <h4>Populära taggar</h4>
         <p>Det finns inga taggar än!</p>
     </div>
-<?php
+    <?php
     return;
 endif;
 ?>
-
 
 <div class="user-sidebar">
     <h4>Populära taggar</h4>

@@ -81,7 +81,7 @@ class UpdateQuestion extends FormModel
      *
      * @return Question
      */
-    public function getQuestion($id) : object
+    public function getQuestion($id): object
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
@@ -98,7 +98,7 @@ class UpdateQuestion extends FormModel
      *
      * @return $tagString String with tags
      */
-    public function getTags($id) : string
+    public function getTags($id): string
     {
         $tags = new TagToQuestion();
         $tags->setDb($this->di->get("dbqb"));
@@ -126,7 +126,7 @@ class UpdateQuestion extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $title = $this->form->value("title");
         $content = $this->form->value("content");
@@ -134,15 +134,15 @@ class UpdateQuestion extends FormModel
         $tags = $this->form->value("tags");
 
         if (!$title) {
-           $this->form->rememberValues();
-           $this->form->addOutput("Frågan måste ha en ämnesrad.");
-           return false;
+            $this->form->rememberValues();
+            $this->form->addOutput("Frågan måste ha en ämnesrad.");
+            return false;
         }
 
         if (!$content) {
-           $this->form->rememberValues();
-           $this->form->addOutput("Frågan måste ha en beskrivning.");
-           return false;
+            $this->form->rememberValues();
+            $this->form->addOutput("Frågan måste ha en beskrivning.");
+            return false;
         }
 
         if ($tags) {
@@ -181,7 +181,6 @@ class UpdateQuestion extends FormModel
             $t2q->tag_id = $tag->id;
             $t2q->question_id = $id;
             $t2q->save();
-
         }
     }
 

@@ -67,7 +67,7 @@ class CreateQuestion extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $userId = $this->di->get("session")->get("userId");
         if (!$userId) {
@@ -91,7 +91,9 @@ class CreateQuestion extends FormModel
         $question->user_id = $userId;
         $question->save();
 
-        $this->saveTags($tags, $question);
+        if ($tags) {
+            $this->saveTags($tags, $question);
+        }
 
         return true;
     }

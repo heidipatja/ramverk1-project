@@ -58,7 +58,7 @@ class AcceptForm extends FormModel
      *
      * @return string
      */
-    public function getClass($status) : string
+    public function getClass($status): string
     {
         if ($status == 1) {
             return "accepted fa";
@@ -74,7 +74,7 @@ class AcceptForm extends FormModel
      *
      * @return int
      */
-    public function getVote($voteType) : int
+    public function getVote($voteType): int
     {
         if ($voteType == "up") {
             return 1;
@@ -124,7 +124,7 @@ class AcceptForm extends FormModel
      *
      * @return bool
      */
-    public function isOwnQuestion($answerId) : bool
+    public function isOwnQuestion($answerId): bool
     {
         $activeUserId = $this->di->get("session")->get("userId");
 
@@ -151,7 +151,7 @@ class AcceptForm extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $userId = $this->form->value("user-id");
         $answerId = $this->form->value("answer-id");

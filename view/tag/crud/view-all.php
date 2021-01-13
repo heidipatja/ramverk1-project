@@ -1,13 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * View to display all books.
+ * View to display all tags
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $tags = isset($tags) ? $tags : null;
@@ -16,7 +13,7 @@ $tags = isset($tags) ? $tags : null;
 
 <?php if (!$tags) : ?>
     <p>Det finns inga taggar än!</p>
-<?php
+    <?php
     return;
 endif;
 ?>

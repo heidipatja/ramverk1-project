@@ -65,7 +65,7 @@ class CreateComment extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $comment = new Comment();
         $comment->setDb($this->di->get("dbqb"));

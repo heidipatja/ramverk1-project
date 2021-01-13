@@ -1,13 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * View to create a new book.
+ * View to login user
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $form = isset($form) ? $form : null;

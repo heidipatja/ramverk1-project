@@ -74,7 +74,7 @@ class VoteForm extends FormModel
      *
      * @return string
      */
-    public function getIcon($voteType) : string
+    public function getIcon($voteType): string
     {
         if ($voteType == "up") {
             return "";
@@ -90,7 +90,7 @@ class VoteForm extends FormModel
      *
      * @return int
      */
-    public function getVoteValue($voteType) : int
+    public function getVoteValue($voteType): int
     {
         if ($voteType == "up") {
             return 1;
@@ -130,7 +130,7 @@ class VoteForm extends FormModel
      *
      * @return bool true if already voted, else false
      */
-    public function hasAlreadyVoted($userId, $postId, $type) : bool
+    public function hasAlreadyVoted($userId, $postId, $type): bool
     {
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));
@@ -150,7 +150,7 @@ class VoteForm extends FormModel
      *
      * @return bool
      */
-    public function isOwnPost($userId, $postId, $type) : bool
+    public function isOwnPost($userId, $postId, $type): bool
     {
         if ($type == "question") {
             $question = new Question();
@@ -193,12 +193,11 @@ class VoteForm extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $userId = $this->form->value("user-id");
         $postId = $this->form->value("post-id");
         $type = $this->form->value("type");
-        $voteType = $this->form->value("vote-type");
 
         if (!$userId) {
             return false;

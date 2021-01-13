@@ -21,7 +21,7 @@ class CommentController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexActionGet() : object
+    public function indexActionGet(): object
     {
         $page = $this->di->get("page");
         $comment = new Comment();
@@ -43,7 +43,7 @@ class CommentController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function createAction() : object
+    public function createAction(): object
     {
         $page = $this->di->get("page");
         $userId = $this->di->get("session")->get("userId") ?? null;
@@ -77,7 +77,7 @@ class CommentController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function deleteAction($id) : object
+    public function deleteAction($id): object
     {
         $page = $this->di->get("page");
         $questionId = $this->getQuestionId($id);
@@ -103,7 +103,7 @@ class CommentController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function updateAction(int $id) : object
+    public function updateAction(int $id): object
     {
         $page = $this->di->get("page");
         $form = new UpdateComment($this->di, $id);

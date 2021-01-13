@@ -29,15 +29,11 @@ class LoginUser extends FormModel
                 "username" => [
                     "type"        => "text",
                     "label"        => "Användarnamn",
-                    //"description" => "Here you can place a description.",
-                    //"placeholder" => "Here is a placeholder",
                 ],
 
                 "password" => [
                     "type"        => "password",
                     "label"        => "Lösenord",
-                    //"description" => "Here you can place a description.",
-                    //"placeholder" => "Here is a placeholder",
                 ],
 
                 "submit" => [
@@ -68,9 +64,9 @@ class LoginUser extends FormModel
         $res = $user->verifyPassword($username, $password);
 
         if (!$res) {
-           $this->form->rememberValues();
-           $this->form->addOutput("Användarnamn eller lösenord matchade inte.");
-           return false;
+            $this->form->rememberValues();
+            $this->form->addOutput("Användarnamn eller lösenord matchade inte.");
+            return false;
         }
 
         return true;

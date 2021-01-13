@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * View to display all books.
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $questions = isset($questions) ? $questions : null;
@@ -18,7 +18,7 @@ $questions = isset($questions) ? $questions : null;
     <div class="questions">
         <p>Det finns inga frågor än!</p>
     </div>
-<?php
+    <?php
     return;
 endif;
 ?>
@@ -56,5 +56,5 @@ endif;
             </div>
         </div>
     </div>
-<?php endforeach; ?>
+    <?php endforeach; ?>
 </div>

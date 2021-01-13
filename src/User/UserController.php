@@ -40,7 +40,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexAction() : object
+    public function indexAction(): object
     {
         $page = $this->di->get("page");
         $user = new User();
@@ -75,7 +75,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function viewAction(string $username) : object
+    public function viewAction(string $username): object
     {
         $page = $this->di->get("page");
         $user = new User();
@@ -92,11 +92,18 @@ class UserController implements ContainerInjectableInterface
 
         $answers = $question->join2Where("Answer", "User", "Answer.user_id = User.id", "Answer.deleted IS NULL", "User.id = " . $user->id, "created desc", "Answer.*, User.username, User.email");
 
-        $comments = $question->join3leftWhere2("Comment", "User", "Comment.user_id = User.id",
-        "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a", "a.question_id = Comment.post_id",
-        "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
-        "q.id = Comment.post_id",
-        "User.id = " . $user->id, "Comment.deleted IS NULL", "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'");
+        $comments = $question->join3leftWhere2(
+            "Comment",
+            "User",
+            "Comment.user_id = User.id",
+            "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a",
+            "a.question_id = Comment.post_id",
+            "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
+            "q.id = Comment.post_id",
+            "User.id = " . $user->id,
+            "Comment.deleted IS NULL",
+            "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'"
+        );
 
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));
@@ -146,7 +153,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getTags($questionId) : array
+    public function getTags($questionId): array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
@@ -165,7 +172,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return array $answers
      */
-    public function getAnswers(int $id) : array
+    public function getAnswers(int $id): array
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
@@ -180,7 +187,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function loginAction() : object
+    public function loginAction(): object
     {
         $page = $this->di->get("page");
         $form = new LoginUser($this->di);
@@ -205,7 +212,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function logoutAction() : object
+    public function logoutAction(): object
     {
         $session = $this->di->get("session");
         $session->delete("username");
@@ -221,7 +228,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function createAction() : object
+    public function createAction(): object
     {
         $page = $this->di->get("page");
         $form = new CreateUser($this->di);
@@ -247,7 +254,7 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response objectf
      */
-    public function updateAction($id) : object
+    public function updateAction($id): object
     {
         $page = $this->di->get("page");
         $form = new UpdateUser($this->di, $id);
@@ -269,11 +276,9 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function profileAction() : object
+    public function profileAction(): object
     {
         $page = $this->di->get("page");
-        $session = $this->di->get("session");
-
         $activeUser = $this->di->get("session")->get("userId") ?? null;
 
         if (!$activeUser) {
@@ -292,11 +297,18 @@ class UserController implements ContainerInjectableInterface
 
         $answers = $question->join2Where("Answer", "User", "Answer.user_id = User.id", "Answer.deleted IS NULL", "User.id = " . $user->id, "created desc", "Answer.*, User.username, User.email");
 
-        $comments = $question->join3leftWhere2("Comment", "User", "Comment.user_id = User.id",
-        "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a", "a.question_id = Comment.post_id",
-        "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
-        "q.id = Comment.post_id",
-        "User.id = " . $user->id, "Comment.deleted IS NULL", "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'");
+        $comments = $question->join3leftWhere2(
+            "Comment",
+            "User",
+            "Comment.user_id = User.id",
+            "(SELECT Answer.question_id FROM Answer GROUP BY Answer.question_id) AS a",
+            "a.question_id = Comment.post_id",
+            "(SELECT Question.id FROM Question GROUP BY Question.id) AS q",
+            "q.id = Comment.post_id",
+            "User.id = " . $user->id,
+            "Comment.deleted IS NULL",
+            "Comment.*, User.username, User.email, a.question_id as 'answer_id', q.id as 'question_id'"
+        );
 
         $vote = new Vote();
         $vote->setDb($this->di->get("dbqb"));

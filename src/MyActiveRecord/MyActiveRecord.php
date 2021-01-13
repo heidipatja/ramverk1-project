@@ -5,7 +5,8 @@ namespace Hepa19\MyActiveRecord;
 use Anax\DatabaseActiveRecord\ActiveRecordModel;
 
 /**
- * A sample controller to show how a controller class can be implemented.
+ * Extendeds Active REcord
+ * @SuppressWarnings(PHPMD)
  */
 class MyActiveRecord extends ActiveRecordModel
 {
@@ -33,7 +34,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function where($where, $select = "*") : array
+    public function where($where, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -51,7 +52,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function where2($where, $where2, $select = "*") : array
+    public function where2($where, $where2, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -70,7 +71,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function where3($where, $where2, $where3, $select = "*") : array
+    public function where3($where, $where2, $where3, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -90,7 +91,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function joinWhere($select, $fromTable, $withTable, $condition, $where, $orderBy = "created DESC") : array
+    public function joinWhere($select, $fromTable, $withTable, $condition, $where, $orderBy = "created DESC"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -110,7 +111,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2($join, $join2, $condition, $condition2) : array
+    public function join2($join, $join2, $condition, $condition2): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -129,7 +130,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2Where($fromTable, $withTable, $condition, $where, $where2, $orderBy = "created desc", $select = "*") : array
+    public function join2Where($fromTable, $withTable, $condition, $where, $where2, $orderBy = "created desc", $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -150,7 +151,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join3where($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where, $select = "*") : array
+    public function join3where($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -171,7 +172,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2where3($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $where3) : array
+    public function join2where3($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $where3): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -193,7 +194,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2Where2($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2) : array
+    public function join2Where2($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -214,7 +215,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $orderBy, $select = "*") : array
+    public function join2leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $where2, $orderBy, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -236,7 +237,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join3leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where, $where2, $select = "*") : array
+    public function join3leftWhere2($fromTable, $withTable, $condition, $withTable2, $condition2, $withTable3, $condition3, $where, $where2, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -257,7 +258,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function join2leftWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $orderBy, $select = "*", $limit = 100) : array
+    public function join2leftWhere($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $orderBy, $select = "*", $limit = 100): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -279,7 +280,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function joinWhere3($fromTable, $withTable, $condition, $where, $where2, $where3, $select = "*") : array
+    public function joinWhere3($fromTable, $withTable, $condition, $where, $where2, $where3, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -301,7 +302,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function where2Joins($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $select = "*") : array
+    public function where2Joins($fromTable, $withTable, $condition, $withTable2, $condition2, $where, $select = "*"): array
     {
         $this->checkDb();
         return $this->db->connect()
@@ -321,7 +322,7 @@ class MyActiveRecord extends ActiveRecordModel
     *
     * @return array Results
     */
-    public function joinGroupOrder($fromTable, $withTable, $condition, $orderBy, $groupBy, $select = "*", $limit = 100) : array
+    public function joinGroupOrder($fromTable, $withTable, $condition, $orderBy, $groupBy, $select = "*", $limit = 100): array
     {
         $this->checkDb();
         return $this->db->connect()

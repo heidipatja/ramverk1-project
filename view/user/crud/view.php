@@ -1,17 +1,15 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * View to display all questions
+ * View to display user
  */
 
- // Gather incoming variables and use default values if not set
- $questions = isset($questions) ? $questions : null;
+namespace Anax\View;
 
-// var_dump($questions);
+// Gather incoming variables and use default values if not set
+$questions = isset($questions) ? $questions : null;
 
- ?>
+?>
 
 <h1>Profil</h1>
 
@@ -52,8 +50,8 @@ namespace Anax\View;
  <?php endif; ?>
 
 <div class="posts">
- <?php foreach ($questions as $question) : ?>
-     <div class="post">
+<?php foreach ($questions as $question) : ?>
+    <div class="post">
         <div class="post-created">
             Postad <?= $question->created ?> av <?= $question->username ?>
         </div>
@@ -64,7 +62,7 @@ namespace Anax\View;
              <a href="<?= url("question/view/" . $question->id) ?>">Se fråga</a>
         </div>
     </div>
-    <?php endforeach; ?>
+<?php endforeach; ?>
 </div>
 
 

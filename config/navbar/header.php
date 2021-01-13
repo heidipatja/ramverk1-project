@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Supply the basis for the navbar as an array.
  */
+
 $logout = [
     "text" => "Logga ut",
     "url" => "user/logout",

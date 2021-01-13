@@ -1,13 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * View to display all books.
+ * View to display all questions
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $questions = isset($questions) ? $questions : null;
@@ -26,7 +23,7 @@ $urlToDelete = url("question/delete");
     <div class="questions">
         <p>Det finns inga frågor än!</p>
     </div>
-<?php
+    <?php
     return;
 endif;
 ?>
@@ -73,5 +70,5 @@ endif;
             </div>
         </div>
     </div>
-<?php endforeach; ?>
+    <?php endforeach; ?>
 </div>

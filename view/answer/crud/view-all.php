@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * View to display all answers to question
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $answers = isset($answers) ? $answers : null;
@@ -12,11 +12,10 @@ $answers = isset($answers) ? $answers : null;
 ?>
 
 <?php if (!$answers) : ?>
-<?php
+    <?php
     return;
 endif;
 ?>
-
 
 <div class="answers">
     <?php foreach ($answers as $answer) : ?>

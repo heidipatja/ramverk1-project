@@ -35,7 +35,7 @@ class Question extends MyActiveRecord
     *
     * @return bool True if logged in user is author, else false
     */
-    public function isAuthor($activeUserId) : bool
+    public function isAuthor($activeUserId): bool
     {
         return $this->user_id == $activeUserId;
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * View to display all users.
  */
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $users = isset($users) ? $users : null;
@@ -14,11 +14,10 @@ $users = isset($users) ? $users : null;
 
 <?php if (!$users) : ?>
     <p>Det finns inga användare än!</p>
-<?php
+    <?php
     return;
 endif;
 ?>
-
 
 <?php foreach ($users as $user) : ?>
 <div class="user">

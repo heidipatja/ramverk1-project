@@ -1,13 +1,13 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * Sidebar on user page
+ * View to display sidebar on user page
  */
 
- // Gather incoming variables and use default values if not set
- $activeUser = isset($activeUser) ? $activeUser : null;
+namespace Anax\View;
+
+// Gather incoming variables and use default values if not set
+$activeUser = isset($activeUser) ? $activeUser : null;
 
 ?>
 
@@ -17,11 +17,10 @@ namespace Anax\View;
         <p>Logga in för att svara och rösta.</p>
         <?= $form ?>
     </div>
-<?php
+    <?php
     return;
 endif;
 ?>
-
 
 <div class="user-sidebar">
     <h4>Mina sidor</h4>

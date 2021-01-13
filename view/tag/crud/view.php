@@ -1,13 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
- * View to display all books.
+ * View to display all questions matching tag
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
+
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $tag = isset($tag) ? $tag : null;
@@ -17,14 +14,11 @@ $tags = isset($tags) ? $tags : null;
 // Create urls for navigation
 $urlToViewTags = url("tag");
 
-// var_dump($questions);
-// var_dump($tags);
-
 ?>
 
 <?php if (!$tag) : ?>
     <p>Det finns inga taggar än!</p>
-<?php
+    <?php
     return;
 endif;
 ?>
@@ -34,7 +28,7 @@ endif;
 <?php if (!$questions) : ?>
     <p>Det finns inga frågor som matchar taggen <?= $tag ?>.</p>
     <a href="<?= $urlToViewTags ?>">Se alla taggar</a>
-<?php
+    <?php
     return;
 endif;
 ?>

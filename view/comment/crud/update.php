@@ -1,11 +1,10 @@
 <?php
 
-namespace Anax\View;
-
 /**
  * View to update a comment
  */
 
+namespace Anax\View;
 
 // Gather incoming variables and use default values if not set
 $questionId = isset($questionId) ? $questionId : null;

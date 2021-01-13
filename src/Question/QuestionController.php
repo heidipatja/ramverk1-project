@@ -21,6 +21,7 @@ use Hepa19\MyTextFilter\MyTextFilter;
 
 /**
  * A sample controller to show how a controller class can be implemented.
+ * @SuppressWarnings(PHPMD)
  */
 class QuestionController implements ContainerInjectableInterface
 {
@@ -56,7 +57,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexAction() : object
+    public function indexAction(): object
     {
         $page = $this->di->get("page");
         $question = new Question();
@@ -107,7 +108,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getTags($questionId) : array
+    public function getTags($questionId): array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
@@ -124,7 +125,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function createAction() : object
+    public function createAction(): object
     {
         $this->checkIfLoggedIn();
 
@@ -150,7 +151,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function deleteAction($id) : object
+    public function deleteAction($id): object
     {
         $this->checkIfLoggedIn();
 
@@ -160,6 +161,7 @@ class QuestionController implements ContainerInjectableInterface
 
         $page->add("question/crud/delete", [
             "form" => $form->getHTML(),
+            "id" => $id
         ]);
 
         return $page->render([
@@ -176,7 +178,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function updateAction(int $id) : object
+    public function updateAction(int $id): object
     {
         $page = $this->di->get("page");
         $form = new UpdateQuestion($this->di, $id);
@@ -184,6 +186,7 @@ class QuestionController implements ContainerInjectableInterface
 
         $page->add("question/crud/update", [
             "form" => $form->getHTML(),
+            "id" => $id
         ]);
 
         return $page->render([
@@ -200,7 +203,7 @@ class QuestionController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function viewAction(int $id) : object
+    public function viewAction(int $id): object
     {
         $page = $this->di->get("page");
         $question = new Question();
@@ -212,7 +215,6 @@ class QuestionController implements ContainerInjectableInterface
         }
 
         $activeUserId = $this->di->get("session")->get("userId") ?? null;
-        $isAuthor = $question->isAuthor($activeUserId);
 
         $question = $question->joinWhere("*", "User", "Question", "Question.user_id = User.id", "Question.id = " . $id)[0];
 
@@ -258,26 +260,6 @@ class QuestionController implements ContainerInjectableInterface
         return $page->render([
             "title" => "Se fråga",
         ]);
-    }
-
-
-
-    /**
-     * Get accepted status for question
-     *
-     * @return bool true if accepted, false if not
-     */
-    public function getAcceptedStatus($answerId) : bool
-    {
-        $answer = new Answer();
-        $answer->setDb($this->di->get("dbqb"));
-        $answer->findById($answerId);
-
-        if ($answer->accepted == 1) {
-            return true;
-        }
-
-        return false;
     }
 
 

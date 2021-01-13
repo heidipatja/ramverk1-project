@@ -34,7 +34,7 @@ class Vote extends MyActiveRecord
     *
     * @return array Results
     */
-    public function getVote($userId, $postId, $type) : object
+    public function getVote($userId, $postId, $type): object
     {
         $this->checkDb();
         $this->db->connect()

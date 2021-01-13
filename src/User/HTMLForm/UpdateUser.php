@@ -84,7 +84,7 @@ class UpdateUser extends FormModel
      *
      * @return User
      */
-    public function getUser($id) : object
+    public function getUser($id): object
     {
         $user = new User();
         $user->setDb($this->di->get("dbqb"));
@@ -114,15 +114,15 @@ class UpdateUser extends FormModel
         $validPassword = $user->verifyPassword($username, $oldPassword);
 
         if (!$validPassword) {
-           $this->form->rememberValues();
-           $this->form->addOutput("Fel lösenord. Prova igen.");
-           return false;
+            $this->form->rememberValues();
+            $this->form->addOutput("Fel lösenord. Prova igen.");
+            return false;
         }
 
         if ($newPassword !== $newPasswordAgain) {
-           $this->form->rememberValues();
-           $this->form->addOutput("De nya lösenorden matchade inte.");
-           return false;
+            $this->form->rememberValues();
+            $this->form->addOutput("De nya lösenorden matchade inte.");
+            return false;
         }
 
         if ($newPassword) {
@@ -130,7 +130,7 @@ class UpdateUser extends FormModel
         }
 
         $user->presentation = $presentation;
-        $user->updated = date("Y-m-d H:i:s");    
+        $user->updated = date("Y-m-d H:i:s");
         $user->save();
 
         return true;

@@ -61,7 +61,7 @@ class DeleteAnswer extends FormModel
      *
      * @return Answer
      */
-    public function getAnswer($id) : object
+    public function getAnswer($id): object
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
@@ -77,7 +77,7 @@ class DeleteAnswer extends FormModel
      *
      * @return bool true if okey, false if something went wrong.
      */
-    public function callbackSubmit() : bool
+    public function callbackSubmit(): bool
     {
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));

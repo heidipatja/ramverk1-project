@@ -17,6 +17,7 @@ use Hepa19\MyTextFilter\MyTextFilter;
 class TagController implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
+
     /**
      * Initialize controller
      *
@@ -33,7 +34,7 @@ class TagController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexActionGet() : object
+    public function indexActionGet(): object
     {
         $page = $this->di->get("page");
         $tag = new Tag();
@@ -59,7 +60,7 @@ class TagController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function viewActionGet(string $tagString) : object
+    public function viewActionGet(string $tagString): object
     {
         $page = $this->di->get("page");
         $tag = new Tag();
@@ -68,7 +69,7 @@ class TagController implements ContainerInjectableInterface
 
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
-        $questions = $question->join3where("Question", "TagToQuestion", "TagToQuestion.question_id = Question.id", "Tag", "Tag.id = TagToQuestion.tag_id", "User", "User.id = Question.user_id", "Tag.tag = '". $tagString . "'", "Question.*, User.username, User.email");
+        $questions = $question->join3where("Question", "TagToQuestion", "TagToQuestion.question_id = Question.id", "Tag", "Tag.id = TagToQuestion.tag_id", "User", "User.id = Question.user_id", "Tag.tag = '" . $tagString . "'", "Question.*, User.username, User.email");
 
         foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
@@ -95,7 +96,7 @@ class TagController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function getTags($questionId) : array
+    public function getTags($questionId): array
     {
         $question = new Question();
         $question->setDb($this->di->get("dbqb"));
