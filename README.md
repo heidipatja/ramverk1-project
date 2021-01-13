@@ -14,11 +14,11 @@ git clone https://github.com/heidipatja/ramverk1-project.git
 2. Install
 
 ```
-composer install
+cd ramverk1-project/
 ```
 
 ```
-cd ramverk1-project/
+composer install
 ```
 
 ```
@@ -40,7 +40,7 @@ sqlite3 data/db.sqlite
 ```
 
 ```
-Exit by using ctrl + D
+Exit sqlite by using ctrl + D
 ```
 
 ```
