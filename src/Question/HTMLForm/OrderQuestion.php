@@ -41,53 +41,7 @@ class OrderQuestion extends FormModel
                        "v.votesum asc" => "Ranking stigande"
                    ],
                 ],
-
-                // "submit" => [
-                //     "type" => "submit",
-                //     "value" => "Sortera",
-                //     "callback" => [$this, "callbackSubmit"],
-                // ],
             ]
         );
     }
-
-
-    //
-    // /**
-    //  * Callback for submit-button which should return true if it could
-    //  * carry out its work and false if something failed.
-    //  *
-    //  * @return bool true if okey, false if something went wrong.
-    //  */
-    // public function callbackSubmit() : bool
-    // {
-    //     return true;
-    // }
-    //
-    //
-    //
-    //
-    //
-    // /**
-    //  * Callback what to do if the form was successfully submitted, this
-    //  * happen when the submit callback method returns true. This method
-    //  * can/should be implemented by the subclass for a different behaviour.
-    //  */
-    // public function callbackSuccess()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
-    //
-    //
-    //
-    // /**
-    //  * Callback what to do if the form was unsuccessfully submitted, this
-    //  * happen when the submit callback method returns false or if validation
-    //  * fails. This method can/should be implemented by the subclass for a
-    //  * different behaviour.
-    //  */
-    // public function callbackFail()
-    // {
-    //     $this->di->get("response")->redirectSelf()->send();
-    // }
 }

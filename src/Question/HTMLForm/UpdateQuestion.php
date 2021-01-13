@@ -103,7 +103,7 @@ class UpdateQuestion extends FormModel
         $tags = new TagToQuestion();
         $tags->setDb($this->di->get("dbqb"));
         $tags = $tags->find("question_id", $id);
-        $tags = $tags->getTagNames();
+        $tags = $tags->join2("Question", "Tag", "TagToQuestion.question_id = Question.id", "TagToQuestion.tag_id = Tag.id");
 
         $tagString = "";
 

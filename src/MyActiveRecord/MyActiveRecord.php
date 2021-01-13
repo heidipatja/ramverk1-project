@@ -230,6 +230,7 @@ class MyActiveRecord extends ActiveRecordModel
     }
 
 
+
     /**
     * Join with another db table
     *

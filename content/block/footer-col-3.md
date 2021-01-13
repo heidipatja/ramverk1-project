@@ -1,3 +1,7 @@
-#### Footer col 3
+#### Sociala medier
 
-Med brödtext i ett stycke som säger något trevligt om just detta block, eller kanske en lista av länkar.
+Följ oss på sociala medier!
+
+<i class="fab fa-instagram"></i>
+<i class="fab fa-facebook-square"></i>
+<i class="fab fa-twitter-square"></i>

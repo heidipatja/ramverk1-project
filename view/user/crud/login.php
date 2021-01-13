@@ -10,17 +10,16 @@ namespace Anax\View;
 //echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
-$item = isset($item) ? $item : null;
-
-// Create urls for navigation
-$urlToView = url("tag");
+$form = isset($form) ? $form : null;
 
 
 
-?><h1>Update an item</h1>
+?><h1>Logga in</h1>
 
 <?= $form ?>
 
-<p>
-    <a href="<?= $urlToView ?>">View all</a>
-</p>
+<br>
+
+<div class="user-register">
+    <a href="<?= url("user/create"); ?>">Registrera dig</a>
+</div>

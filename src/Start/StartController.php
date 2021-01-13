@@ -59,15 +59,15 @@ class StartController implements ContainerInjectableInterface
 
         $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", "Question.created DESC", "Question.*, User.username, User.email, v.votesum", 3);
 
-        $tags = $question->joinGroupOrder("TagToQuestion", "Tag", "TagToQuestion.tag_id = Tag.id", "tagcount DESC", "TagToQuestion.tag_id", "TagToQuestion.tag_id, count(tag_id) as tagcount, Tag.tag", 5);
+        $tags = $question->joinGroupOrder("TagToQuestion", "Tag", "TagToQuestion.tag_id = Tag.id", "tagcount DESC", "TagToQuestion.tag_id", "TagToQuestion.tag_id, count(tag_id) as tagcount, Tag.tag", 10);
 
         $user = new User();
         $user->setDb($this->di->get("dbqb"));
-        $users = $user->findAllOrderBy("score DESC", 3);
+        $users = $user->findAllOrderBy("score DESC", 5);
 
         foreach ($questions as $question) {
             $question->content = $this->filter->markdown($question->content);
-            $question->content = $this->filter->substring($question->content, 100);
+            $question->content = $this->filter->substring($question->content, 120);
 
             $question->votesum = $question->votesum ?? 0;
             $question->answerCount = $this->getAnswerCount($question->id)[0]->answerCount;

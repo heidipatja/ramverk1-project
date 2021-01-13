@@ -66,7 +66,7 @@ class QuestionController implements ContainerInjectableInterface
 
         $userId = $this->di->get("session")->get("userId");
 
-        $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", $orderBy, "Question.*, User.username, User.email, v.votesum");
+        $questions = $question->join2leftWhere("Question", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote WHERE Vote.type = 'question' GROUP BY Vote.post_id) AS v", "v.post_id = Question.id", "User", "Question.user_id = User.id", "Question.deleted IS NULL", $orderBy, "Question.*, User.username, User.email, v.votesum");
 
         $orderForm = new OrderQuestion($this->di);
 
@@ -392,7 +392,7 @@ class QuestionController implements ContainerInjectableInterface
         $answer = new Answer();
         $answer->setDb($this->di->get("dbqb"));
 
-        $answers = $answer->join2leftWhere2("Answer", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote GROUP BY Vote.post_id) AS v", "v.post_id = Answer.id", "User", "User.id = Answer.user_id", "Answer.question_id = " . $id, "Answer.deleted IS NULL", $orderBy, "Answer.*, User.username, User.email, v.votesum");
+        $answers = $answer->join2leftWhere2("Answer", "(SELECT Vote.*, SUM(vote) AS 'votesum' FROM Vote WHERE Vote.type = 'answer' GROUP BY Vote.post_id) AS v", "v.post_id = Answer.id", "User", "User.id = Answer.user_id", "Answer.question_id = " . $id, "Answer.deleted IS NULL", $orderBy, "Answer.*, User.username, User.email, v.votesum");
 
         foreach ($answers as $answer) {
             $answer->content = $this->filter->markdown($answer->content);

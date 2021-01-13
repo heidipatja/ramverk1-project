@@ -2,12 +2,12 @@
 
 namespace Hepa19\Tag;
 
-use Anax\DatabaseActiveRecord\ActiveRecordModel;
+use Hepa19\MyActiveRecord\MyActiveRecord;
 
 /**
  * A database driven model using the Active Record design pattern.
  */
-class TagToQuestion extends ActiveRecordModel
+class TagToQuestion extends MyActiveRecord
 {
     /**
      * @var string $tableName name of the database table.

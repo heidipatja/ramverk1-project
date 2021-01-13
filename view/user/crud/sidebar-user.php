@@ -14,7 +14,7 @@ namespace Anax\View;
 <?php if (!$activeUser) : ?>
     <div class="user-sidebar">
         <h4>Logga in</h4>
-        <p>Logga in för att svara och rösta.</p>
+        <p>Logga in för att redigera din profil.</p>
         <?= $form ?>
     </div>
 <?php

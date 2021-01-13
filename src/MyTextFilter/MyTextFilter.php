@@ -127,6 +127,9 @@ class MyTextFilter
      */
     public function substring($text, $characters)
     {
+        if (strlen($text) > $characters) {
+            return substr($text, 0, $characters) . " ...";
+        }
         return substr($text, 0, $characters);
     }
 

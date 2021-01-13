@@ -40,15 +40,24 @@ class UserController implements ContainerInjectableInterface
      *
      * @return object as a response object
      */
-    public function indexActionGet() : object
+    public function indexAction() : object
     {
         $page = $this->di->get("page");
         $user = new User();
         $user->setDb($this->di->get("dbqb"));
 
+        $activeUserId = $this->di->get("session")->get("userId") ?? null;
+        $loginForm = new LoginUser($this->di);
+        $loginForm->check();
+
         $page->add("user/crud/view-all", [
             "users" => $user->findAll(),
         ]);
+
+        $page->add("user/crud/sidebar-user", [
+            "activeUser" => $activeUserId,
+            "form" => $loginForm->getHTML()
+        ], "sidebar-right");
 
         $page->add("anax/v2/image/default", [], "flash");
 
@@ -177,11 +186,9 @@ class UserController implements ContainerInjectableInterface
         $form = new LoginUser($this->di);
         $form->check();
 
-        $page->add("anax/v2/article/default", [
-            "content" => $form->getHTML(),
+        $page->add("user/crud/login", [
+            "form" => $form->getHTML(),
         ]);
-
-        $page->add("user/login");
 
         $page->add("anax/v2/image/default", [], "flash");
 

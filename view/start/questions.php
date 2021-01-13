@@ -9,7 +9,7 @@ namespace Anax\View;
 // Gather incoming variables and use default values if not set
 $questions = isset($questions) ? $questions : null;
 
-?><h1>Senaste frågor</h1>
+?><div class="wrap-sidebar"><h4>Senaste frågor</h4></div>
 
 <?php if (!$questions) : ?>
     <div class="new-question">

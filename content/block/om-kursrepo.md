@@ -1,3 +1,3 @@
-#### Kursrepo
+#### Om kursen
 
-Skriv något kort om kursen och länka till [kursens hemsida på dbwebb.se](XXX) och till [kursrepot på GitHub](XXX).
+Läs mer om kursen [ramverk1](https://dbwebb.se/kurser/ramverk1-v2) eller titta på [kursrepot på GitHub](https://github.com/dbwebb-se/ramverk1).

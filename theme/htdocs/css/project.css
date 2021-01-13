@@ -6283,7 +6283,7 @@ figure.figure-codepen {
   min-height: 500px;
 }
 .inner-wrap-header {
-  background-color: #1a1a1a;
+  background-color: #121212;
 }
 .inner-wrap-footer {
   background-color: transparent;
@@ -6300,7 +6300,7 @@ figure.figure-codepen {
 }
 /* Header */
 .outer-wrap-header {
-  background-color: #1a1a1a;
+  background-color: #121212;
   height: 61px;
 }
 .region-header-col-1 {
@@ -6398,12 +6398,12 @@ figure.figure-codepen {
   padding: 1em 0 1em 0.5em;
 }
 .rm-desktop li li a {
-  background-color: #1a1a1a;
+  background-color: #121212;
   min-width: 9em;
   text-align: center;
 }
 .rm-desktop li li a:hover {
-  background-color: #1a1a1a;
+  background-color: #121212;
   color: #fff;
   text-decoration: underline;
 }
@@ -6670,7 +6670,7 @@ article ol {
   padding-right: 5px;
 }
 form p {
-  margin: 0 0 12px;
+  margin: 0;
   padding: 0;
 }
 .votes,
@@ -6779,6 +6779,7 @@ input[type="submit"] {
   background: #222;
   margin: 0 0 12px;
   border: none;
+  padding: 1rem 1.5rem 1rem 0;
 }
 .created img,
 .by img,
@@ -6802,6 +6803,9 @@ input[type="submit"].accepted.fa {
 }
 .tag-questions h2 {
   margin-top: 0;
+}
+.answer-body .by {
+  margin-top: 0.5rem;
 }
 /** --------------------------------------------------------------
  * User
@@ -6868,6 +6872,9 @@ input[type="submit"].accepted.fa {
   margin: 0;
   padding: 0;
 }
+.user-sidebar form {
+  margin-top: -24px;
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -6910,6 +6917,11 @@ h4,
 h5,
 h6 {
   border-bottom: none;
+}
+h1 {
+  border-bottom: 0;
+  background: #373737;
+  padding: 1rem 1.5rem;
 }
 article a {
   text-decoration: underline;
