@@ -6359,6 +6359,7 @@ figure.figure-codepen {
 /* Flash */
 .region-flash img {
   float: left;
+  width: 100%;
 }
 /* Menu */
 .rm-desktop ul {
@@ -6905,13 +6906,6 @@ input[type="submit"].accepted.fa {
 .site-logo-text a {
   text-decoration: none;
   color: #8aca8e;
-}
-.region-flash {
-  background-repeat: no-repeat;
-  background-image: url(http://www.student.bth.se/~hepa19/dbwebb-kurser/design/me/redovisa/htdocs/img/dark-plant2.jpg);
-  height: 300px;
-  background-size: cover;
-  background-position: center;
 }
 h2,
 h3,

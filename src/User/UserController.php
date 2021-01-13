@@ -59,7 +59,7 @@ class UserController implements ContainerInjectableInterface
             "form" => $loginForm->getHTML()
         ], "sidebar-right");
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Användare",

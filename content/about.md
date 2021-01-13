@@ -15,6 +15,11 @@ views:
             meta:
                 type: single
                 route: block/om-redovisa
+    flash:
+        region: flash
+        template: anax/v2/image/default
+        data:
+            src: "image/theme/dark-plant2.jpg?width=2000&height=400&q=100"
 ---
 Om
 =========================

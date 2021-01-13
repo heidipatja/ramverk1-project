@@ -89,7 +89,7 @@ class StartController implements ContainerInjectableInterface
             "questions" => $questions,
         ]);
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         $page->add("start/tags", [
             "tags" => $tags,

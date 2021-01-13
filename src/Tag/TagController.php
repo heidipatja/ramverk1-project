@@ -44,7 +44,7 @@ class TagController implements ContainerInjectableInterface
             "tags" => $tag->findAll(),
         ]);
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Taggar",
