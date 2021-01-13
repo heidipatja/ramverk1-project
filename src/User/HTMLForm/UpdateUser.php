@@ -34,7 +34,7 @@ class UpdateUser extends FormModel
                     "value" => $user->id,
                 ],
                 "username" => [
-                    "type"        => "text",
+                    "type" => "hidden",
                     "label"        => "Användarnamn",
                     "value" => $user->username,
                     "readonly" => true
@@ -53,12 +53,12 @@ class UpdateUser extends FormModel
 
                 "new-password" => [
                     "type"        => "password",
-                    "label"        => "Nytt lösenord",
+                    "label"        => "Nytt lösenord (vid byte)",
                 ],
 
                 "new-password-again" => [
                     "type"        => "password",
-                    "label"        => "Bekräfta nytt lösenord",
+                    "label"        => "Bekräfta nytt lösenord (vid byte)",
                 ],
 
                 "submit" => [

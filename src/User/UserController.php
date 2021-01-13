@@ -92,6 +92,9 @@ class UserController implements ContainerInjectableInterface
 
         $answers = $question->join2Where("Answer", "User", "Answer.user_id = User.id", "Answer.deleted IS NULL", "User.id = " . $user->id, "created desc", "Answer.*, User.username, User.email");
 
+        $loginForm = new LoginUser($this->di);
+        $loginForm->check();
+
         $comments = $question->join3leftWhere2(
             "Comment",
             "User",
@@ -126,20 +129,11 @@ class UserController implements ContainerInjectableInterface
         ]);
 
         $page->add("user/crud/sidebar2", [
-            "activeUser" => $activeUser
+            "activeUser" => $activeUser,
+            "form" => $loginForm->getHTML()
         ], "sidebar-right");
 
         $page->add("anax/v2/image/default", [], "flash");
-
-        $form = new LoginUser($this->di);
-        $form->check();
-
-        if (!$activeUser) {
-            $page->add("anax/v2/article/default", [
-                "activeUser" => $activeUser,
-                "content" => $form->getHTML(),
-            ], "sidebar-right");
-        }
 
         return $page->render([
             "title" => "Profil",
@@ -260,8 +254,8 @@ class UserController implements ContainerInjectableInterface
         $form = new UpdateUser($this->di, $id);
         $form->check();
 
-        $page->add("anax/v2/article/default", [
-            "content" => $form->getHTML(),
+        $page->add("user/crud/update", [
+            "form" => $form->getHTML(),
         ]);
 
         return $page->render([
