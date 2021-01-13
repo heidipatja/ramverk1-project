@@ -133,7 +133,7 @@ class UserController implements ContainerInjectableInterface
             "form" => $loginForm->getHTML()
         ], "sidebar-right");
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Profil",
@@ -191,7 +191,7 @@ class UserController implements ContainerInjectableInterface
             "form" => $form->getHTML(),
         ]);
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Logga in",
@@ -232,7 +232,7 @@ class UserController implements ContainerInjectableInterface
             "content" => $form->getHTML(),
         ]);
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Ny användare",
@@ -328,7 +328,7 @@ class UserController implements ContainerInjectableInterface
             "activeUser" => $activeUser
         ], "sidebar-right");
 
-        $page->add("anax/v2/image/default", [], "flash");
+        $page->add("start/flash", [], "flash");
 
         return $page->render([
             "title" => "Profil",
