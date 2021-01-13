@@ -1,9 +1,5 @@
 # Project for course ramverk1
 
-## Install
-
-This is a project done for the course ramverk1 at Blekinge Tekniska Högskola.
-
 1. Download project
 
 ```
@@ -40,7 +36,7 @@ sqlite3 data/db.sqlite
 ```
 
 ```
-Exit sqlite by using ctrl + D
+ctrl + D (to exit database)
 ```
 
 ```
